@@ -15,22 +15,26 @@ import javafx.stage.Stage;
     //Group mapRoot = new Group();
     
     TilePane tilePane = new TilePane();
-    int boxSize = 40;
+    static int boxSize = 10;
     
     ArrayList<int[]> housesStart = new ArrayList<int[]>();
-    ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
+    static ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
 
     MapGeneration() {
 
         // Generere tilfældige tal til kortet.
         Random ran = new Random();
-        int max_random_house = ran.nextInt(15);
+        int max_random_house = 3;
 
         for (int i = 0; i < max_random_house; i++) {
             // generating integer
-            int x_coordinate = ran.nextInt(26);
-            int y_coordinate = ran.nextInt(12);
-            int widthh = ran.nextInt(5)+2;
+            int x_coordinate = ran.nextInt(App.width/boxSize);
+            int y_coordinate = ran.nextInt(App.height/boxSize);
+            int maxWidth = 5;
+            int minWidth = 2;
+            int random = ran.nextInt(maxWidth);
+            if(random < minWidth){ random = minWidth;}
+            int widthh = random;
             housesStart.add(new int[3]);
             housesStart.get(i)[0] = x_coordinate;
             housesStart.get(i)[1] = y_coordinate;
@@ -60,9 +64,8 @@ import javafx.stage.Stage;
             int x_coordinate = housesStart.get(k)[0];
             int y_coordinate = housesStart.get(k)[1];;
             int width = housesStart.get(k)[2];
-            System.out.println(x_coordinate + " " + y_coordinate + " " + width);
 
-            int max_height_of_house = 18;
+            int max_height_of_house = App.height/boxSize;
 
             for(int i = 0; i < width; i++){
                 houses.add(new ArrayList<>());

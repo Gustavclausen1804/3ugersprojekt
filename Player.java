@@ -16,7 +16,7 @@ class Player extends App{
     TextField textFieldForce= new TextField();
     
     
-   static final int size = 30;
+   final int size = 30;
    int id;
    boolean shootsFired;
    double shootingForce, shootingAngle;

@@ -1,4 +1,5 @@
 import java.awt.Canvas;
+import java.util.Map;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -93,6 +94,18 @@ public class Shot{
         if(ballYPos == App.height){
             // removeShot();
         }
+        for(int i = 0; i < MapGeneration.houses.size();i++){
+            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){
+                int xPosWall = MapGeneration.houses.get(i).get(j)[0];
+                int yPosWall = MapGeneration.houses.get(i).get(j)[0];
+                int wallSize = MapGeneration.boxSize;
+                if((ballXPos >= xPosWall && ballXPos <= xPosWall+wallSize) && (ballYPos >= yPosWall && ballYPos <= yPosWall+wallSize)){
+                    MapGeneration.houses.get(i).remove(j);
+                }
+
+            }
+        }
+        //if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
     }
     void removeShot(){
         //Player.skud.remove(this);  //Der skal findes en ordentlig måde at slette de her på
@@ -111,15 +124,17 @@ public class Shot{
 
     void playerCollision(){
         App.spiller.forEach((p) -> {
-            if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
-                if(p.id == shooterId){
-                    App.score.get(p.id-1).counter--;
-                } else{
-                    App.score.get(shooterId-1).counter++;
-
-                }
+            for(int i = 0; i < 360; i+=45){
+               Double angleRadian = Math.toRadians(i);
+                if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
+                    if(p.id == shooterId){
+                        App.score.get(p.id-1).counter--;
+                    } else{
+                        App.score.get(shooterId-1).counter++;
+                    }
                 
-                removeShot();
+                    removeShot();
+                }
             }
         });
     }
