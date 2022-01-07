@@ -17,7 +17,7 @@ public class Shot{
     private double massObject = 1;
 
     private static final int BALL_R = 15;
-    private int explosion_R = 50;
+    private int explosion_R = 100;
 
     private int shooterId;
     

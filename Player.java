@@ -15,15 +15,16 @@ class Player extends App{
     TextField textFieldAngle= new TextField();
     TextField textFieldForce= new TextField();
     
-    
+    String name;
    final int size = 30;
    int id;
    boolean shootsFired;
    double shootingForce, shootingAngle;
-    Player(int yPos, int id){
+    Player(int yPos, int id, String name){
         this.xPos = 0;
         this.yPos = yPos;
         this.id = id;
+        this.name = name;
         //laver 
         textFieldAngle.setVisible(false);
         textFieldAngle.relocate(525, 380);
@@ -67,11 +68,11 @@ class Player extends App{
             gc.setFill(Color.BLACK);
             gc.setFont(Font.font ("Verdana", 15));
             if(angleChosen == false){
-                gc.fillText("Player "+id+": angle ",400,400);   
+                gc.fillText(name+": angle ",400,400);   
                 textFieldAngle.setVisible(true);
             }
             if(angleChosen && ForceChosen == false){
-                gc.fillText("Player "+id+": Force ",400,400);   
+                gc.fillText(name+": Force ",400,400);   
                 textFieldForce.setVisible(true);
             }
 

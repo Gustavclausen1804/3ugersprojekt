@@ -20,7 +20,13 @@ class Score {
         gc.setFill(Color.GREEN);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setFont(Font.font ("Verdana", 20));
-        gc.fillText("Player"+ id +": "+ counter,xPos, yPos);
+        App.spiller.forEach((p) -> {
+            if(id == p.id ){
+                gc.fillText(p.name+": "+ counter,xPos, yPos);
+            }
+        });
+        
+        
     }
 
     public void xLocation(){
