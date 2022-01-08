@@ -39,7 +39,7 @@ class MapGeneration {
                                                                                                    // of the
                                                                                                    // stage.
 
-            int minHeight = (App.height / boxSize) / 4; // blocks from the top of the stage.
+            int minHeight = (App.height / boxSize) / 5; // blocks from the top of the stage.
             if (y_coordinate < minHeight) {
                 y_coordinate = minHeight + ran.nextInt(minHeight - 2);
                 System.out.println(y_coordinate);

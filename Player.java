@@ -39,6 +39,7 @@ class Player extends App{
     public void draw(GraphicsContext gc){
         
         //Draws the players
+        
         gc.setFill(Color.BLACK);
         gc.fillRect( xPos, yPos,size,size);
         textDisplay(gc);
@@ -73,6 +74,20 @@ class Player extends App{
             if(angleChosen == false){
                 gc.fillText(name+": angle ",400,400);   
                 textFieldAngle.setVisible(true);
+
+                // Draws the arrow which show the angle of the shot
+                gc.setStroke(Color.BLUE);
+                gc.setLineWidth(5);
+                
+                String text = textFieldAngle.getText();
+                text = text.replaceAll("[^\\d.]", "");
+                if (text == "" || text.length() == 0) {
+                    text = "0.";
+                }
+                Double angle = Math.toRadians(Double.parseDouble(text));
+                
+                Double arrowLength = 20.;
+                gc.strokeLine(xPos+size/2,yPos+size/2, (xPos+(size/2))+Math.cos(angle)*arrowLength,(yPos+(size/2))+Math.sin(angle)*arrowLength*(-1));
             }
             if(angleChosen && ForceChosen == false){
                 gc.fillText(name+": Force ",400,400);   

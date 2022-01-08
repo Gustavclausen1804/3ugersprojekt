@@ -167,7 +167,7 @@ public class App extends Application {
         }
         CustomButton btn = new CustomButton("Begin");
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        nameGrid.add(btn, 1, 2);
+        nameGrid.add(btn, 1, playerAmount);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
