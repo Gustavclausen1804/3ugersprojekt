@@ -159,25 +159,18 @@ public class Shot{
         if(ballYPos == App.height){
             // removeShot();
         }
-        for(int i = 0; i < MapGeneration.houses.size();i++){
-            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){
-                int xPosWall = MapGeneration.houses.get(i).get(j)[0];
-                int yPosWall = MapGeneration.houses.get(i).get(j)[1];
-                int wallSize = MapGeneration.boxSize;
-                // for(int k = 0; k < 360; k+=15){
-                //     Double angleRadian = Math.toRadians(k);
-                //     if((ballXPos+(BALL_R*Math.cos(angleRadian))  >= xPosWall && ballXPos+(BALL_R*Math.cos(angleRadian)) <= xPosWall+wallSize) 
-                //     && (ballYPos+(BALL_R*Math.sin(angleRadian)) >= yPosWall && ballYPos+(BALL_R*Math.sin(angleRadian)) <= yPosWall+wallSize)){
-                //         MapGeneration.houses.get(i).remove(j);
-                //         explosion();
-                //         removeShot();
-                //         break;
-                //     }
-                // }
-
+        // Loops through the all houses(blocks)
+        for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
+            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
+                int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
+                int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
+                int wallSize = MapGeneration.boxSize; // gets the size of each block
+                
+                //Skal skrives om
                 if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) 
-                    && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){
-                        MapGeneration.houses.get(i).remove(j);
+                    && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
+                        
+                        MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
                         explosion();
                         removeShot();
                         break;
@@ -223,26 +216,28 @@ public class Shot{
     }
 
     void explosion(){
-        for(int i = 0; i < MapGeneration.houses.size();i++){
-            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){
-                int xPosWall = MapGeneration.houses.get(i).get(j)[0];
-                int yPosWall = MapGeneration.houses.get(i).get(j)[1];
-                int wallSize = MapGeneration.boxSize;
+        // Loops through the all houses(blocks)
+        for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
+            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
+                int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
+                int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
+                int wallSize = MapGeneration.boxSize; // gets the size of each block
                 for(int h = 0; h < 4; h++){
-                    Double x = 0., y = 0.,xWallD = Double.valueOf(xPosWall) ,yWallD = Double.valueOf(yPosWall) ;
-                    switch(h){
-                        case 0:
+                    Double x = 0., y = 0.; // creates two empty variables x and y
+                    Double xWallD = Double.valueOf(xPosWall) ,yWallD = Double.valueOf(yPosWall); //converts the position of the wall from int to double
+                    switch(h){ // This switch is used to create values for x and y which each represents each corner of the block
+                        case 0: // top left corner
                         x = xWallD; y = yWallD; break;
                         case 1:
-                        x = xWallD+wallSize; y = yWallD; break;
+                        x = xWallD+wallSize; y = yWallD; break; //top right corner
                         case 3:
-                        x = xWallD; y = yWallD+wallSize; break;
+                        x = xWallD; y = yWallD+wallSize; break; // bottom left corner
                         case 4:
-                        x = xWallD+wallSize; y = yWallD+wallSize; break;
+                        x = xWallD+wallSize; y = yWallD+wallSize; break; // bottom right corner
                     }
-                    double distance = Math.sqrt(Math.pow(ballXPos-x, 2)+Math.pow(ballYPos-y, 2));
+                    double distance = Math.sqrt(Math.pow(ballXPos-x, 2)+Math.pow(ballYPos-y, 2)); //calculates the distance between the shot and each corner of the ball
                     if(distance <=explosion_R){
-                        MapGeneration.houses.get(i).remove(j);
+                        MapGeneration.houses.get(i).remove(j); //removes the shot if it
                     }
                 }  
             }

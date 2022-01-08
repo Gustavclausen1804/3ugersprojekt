@@ -12,6 +12,7 @@ class Player extends App{
     boolean myTurn,angleChosen,ForceChosen;
     
     Group playerRoot = new Group();
+    //Creates two text fields where the player writes the angle and force of their shot
     TextField textFieldAngle= new TextField();
     TextField textFieldForce= new TextField();
     
@@ -25,7 +26,8 @@ class Player extends App{
         this.yPos = yPos;
         this.id = id;
         this.name = name;
-        //laver 
+        
+        //Gives the textfield a position for where to create them, hides them and add them to the group 
         textFieldAngle.setVisible(false);
         textFieldAngle.relocate(525, 380);
         textFieldForce.setVisible(false);
@@ -36,6 +38,7 @@ class Player extends App{
 
     public void draw(GraphicsContext gc){
         
+        //Draws the players
         gc.setFill(Color.BLACK);
         gc.fillRect( xPos, yPos,size,size);
         textDisplay(gc);
@@ -64,7 +67,7 @@ class Player extends App{
     
 
      void textDisplay(GraphicsContext gc){
-        if(myTurn){
+        if(myTurn){ // if it is the players turn, text is shown asking for the angle of their shot and then the force
             gc.setFill(Color.BLACK);
             gc.setFont(Font.font ("Verdana", 15));
             if(angleChosen == false){

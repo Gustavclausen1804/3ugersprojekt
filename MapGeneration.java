@@ -19,8 +19,8 @@ class MapGeneration {
     static int buildColorsAmount = 2; //Different colors of houses
     static int buildAmount = 3; //amount of pictures pr color
 
-
-    ArrayList<int[]> housesStart = new ArrayList<int[]>();
+    //Creates two arraylists which are used for the generation of houses
+    ArrayList<int[]> housesStart = new ArrayList<int[]>(); 
     static ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
 
     MapGeneration() {
@@ -53,10 +53,10 @@ class MapGeneration {
             }
             widthh = random;
             int colorID = ran.nextInt(buildColorsAmount);
-            housesStart.add(new int[4]);
-            housesStart.get(i)[0] = x_coordinate_in_loop;
-            housesStart.get(i)[1] = y_coordinate;
-            housesStart.get(i)[2] = widthh;
+            housesStart.add(new int[4]); // adds an array with 4 spaces to the houses start arraylist
+            housesStart.get(i)[0] = x_coordinate_in_loop; // represents the x coordinate for the top left of the house
+            housesStart.get(i)[1] = y_coordinate; // represents the y coordinate for the top left of the house
+            housesStart.get(i)[2] = widthh; // represents the width of the house (number of blocks)
             housesStart.get(i)[3] = colorID;
         }
 
@@ -81,9 +81,9 @@ class MapGeneration {
     public void GenerateHouse() {
         Random ran = new Random();
         for (int k = 0; k < housesStart.size(); k++) {
+            // creates variables so it is easier to keep track of code
             int x_coordinate = housesStart.get(k)[0];
             int y_coordinate = housesStart.get(k)[1];
-            ;
             int width = housesStart.get(k)[2];
             int colorID = housesStart.get(k)[3];
             
@@ -92,10 +92,13 @@ class MapGeneration {
             int max_height_of_house = (App.height / boxSize);
 
             for (int i = 0; i < width; i++) {
-                houses.add(new ArrayList<>());
+                houses.add(new ArrayList<>()); // adds an arraylist to the which represents each column of the house
                 for (int j = 0; j < max_height_of_house; j++) {
                     int imageID =ran.nextInt(buildAmount);
-                    houses.get(i).add(new int[] { (x_coordinate + i) * boxSize, (y_coordinate + j) * boxSize, colorID, imageID});
+
+                    houses.get(i).add(new int[] { (x_coordinate + i) * boxSize, (y_coordinate + j) * boxSize, colorID, imageID});   // Adds an array with 4 spaces
+                                                                                                                                    //which holds the x- , y-postion
+                                                                                                                                    //colorId and ImageId of each block 
                 }
             }
         }
