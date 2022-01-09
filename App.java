@@ -102,8 +102,8 @@ public class App extends Application {
         playerSlider.setShowTickLabels(true);
         playerSlider.setSnapToTicks(true);
         playerSlider.setShowTickMarks(true);
-        playerSlider.setStyle("-fx-control-inner-background: yellow;");
-
+       // playerSlider.setStyle("-fx-control-inner-background: yellow;");
+       // playerSlider.setStyle(".playerSlider > .thumb { -fx-background-color: green; }");
         grid.add(playerSlider, 1, 1);
 
         // line 2
@@ -139,6 +139,7 @@ public class App extends Application {
         });
 
         Scene scene = new Scene(grid, width, height);
+        scene.getStylesheets().add("stylesheet.css");
         Image backG = new Image("resources/background.jpg");
         BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -218,6 +219,7 @@ public class App extends Application {
 
         Scene scene = new Scene(root, width, height);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
+        
         stage.setScene(scene);
         stage.show();
         tl.play();
