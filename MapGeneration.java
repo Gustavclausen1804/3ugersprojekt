@@ -1,15 +1,9 @@
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Random;
-import javafx.application.HostServices;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 class MapGeneration {
     // Group mapRoot = new Group();

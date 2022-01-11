@@ -1,9 +1,6 @@
-import java.awt.Canvas;
-import java.util.Map;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
 public class Shot {
@@ -41,7 +38,7 @@ public class Shot {
         this.shooterId = shooterId;
         // Load explosion images into array.
         for (int i = 0; i < explosionImage.length; i++) {
-            explosionImage[i] = new Image("explosion" + i + ".png", explosion_R, explosion_R, false, false);
+            explosionImage[i] = new Image("/resources/explosion" + i + ".png", explosion_R*2, explosion_R*2, false, false);
         }
     }
 
@@ -52,8 +49,10 @@ public class Shot {
         explosionAnimation(gc);
 
         // Ball
+        if(!explosionActive){
         gc.setFill(Color.BLACK);
-        gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
+        gc.fillOval(ballXPos-(BALL_R/2), ballYPos-(BALL_R/2), BALL_R, BALL_R);
+        }
 
     }
 
@@ -182,7 +181,9 @@ public class Shot {
 
                     MapGeneration.houses.get(i).remove(j); // Removes the block which the shot hit
                     explosion();
-                    removeShot();
+                    xDir = 0;
+                    yDir = 0;
+                    gravityForce = 0;
                     // explosionAnimation(gc); // Show explosion animation.
                     // System.out.println("Explosion");
 
@@ -280,9 +281,13 @@ public class Shot {
         // gc.drawImage(explosionImage[, this.ballXPos, this.ballYPos);
 
         if (explosionActive) {
-            gc.drawImage(explosionImage[currentImage], this.ballXPos, this.ballYPos);
-            if (animationTimer % 10 == 0 && currentImage <= explosionImage.length) {
+            gc.drawImage(explosionImage[currentImage], this.ballXPos-(explosion_R/2), this.ballYPos-(explosion_R/2));
+            if (animationTimer % 10 == 0 && currentImage < explosionImage.length) {
                 currentImage++;
+            }
+            if(currentImage == explosionImage.length-1){
+                explosionActive = false;
+                removeShot();
             }
             animationTimer++;
 
