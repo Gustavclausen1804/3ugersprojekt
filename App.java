@@ -27,7 +27,6 @@ import javafx.scene.layout.GridPane;
 
 import javafx.geometry.Pos;
 
-
 public class App extends Application {
 
     public static ArrayList<Player> spiller;
@@ -54,7 +53,7 @@ public class App extends Application {
 
     static int turn = 1;
     private GridPane grid = new GridPane();
-    private GridPane nameGrid = new GridPane(); 
+    private GridPane nameGrid = new GridPane();
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
     public void start(Stage primaryStage) throws Exception {
@@ -76,8 +75,9 @@ public class App extends Application {
         playerSlider.setShowTickLabels(true);
         playerSlider.setSnapToTicks(true);
         playerSlider.setShowTickMarks(true);
-       // playerSlider.setStyle("-fx-control-inner-background: yellow;");
-       // playerSlider.setStyle(".playerSlider > .thumb { -fx-background-color: green; }");
+        // playerSlider.setStyle("-fx-control-inner-background: yellow;");
+        // playerSlider.setStyle(".playerSlider > .thumb { -fx-background-color: green;
+        // }");
         grid.add(playerSlider, 1, 1);
 
         // line 2
@@ -126,18 +126,18 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    public void playerNames(Stage stage) throws Exception{
-        
-        
+
+    public void playerNames(Stage stage) throws Exception {
+
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
         CustomLabel Players = new CustomLabel("Suck my ");
         ArrayList<CustomLabel> playerLabel = new ArrayList<>();
-        for(int i = 0; i < playerAmount;i++){
-            playerLabel.add(new CustomLabel("Player " + (i+1) +" name: "));  
+        for (int i = 0; i < playerAmount; i++) {
+            playerLabel.add(new CustomLabel("Player " + (i + 1) + " name: "));
             nameGrid.add(playerLabel.get(i), 0, i);
-            playerNameTextField.add(new TextField("Player " + (i+1)));  
+            playerNameTextField.add(new TextField("Player " + (i + 1)));
             nameGrid.add(playerNameTextField.get(i), 1, i);
         }
         CustomButton btn = new CustomButton("Begin");
@@ -157,13 +157,13 @@ public class App extends Application {
                 }
             }
         });
-        
-        
+
         Scene scene = new Scene(nameGrid, width, height);
         stage.setScene(scene);
+        scene.getStylesheets().add("stylesheet.css");
+
         stage.show();
     }
-
 
     public void gamestart(Stage stage) throws Exception {
         Group root = new Group();
@@ -178,9 +178,9 @@ public class App extends Application {
         spiller = new ArrayList<Player>();
         score = new ArrayList<Score>();
         for (int i = 1; i <= playerAmount; i++) {
-            String name = playerNameTextField.get(i-1).getText();
-            if(name.length() == 0){
-                name = "Player " +i;
+            String name = playerNameTextField.get(i - 1).getText();
+            if (name.length() == 0) {
+                name = "Player " + i;
             }
             score.add(new Score(20, i));
             spiller.add(new Player(200, i, name));
@@ -193,7 +193,7 @@ public class App extends Application {
 
         Scene scene = new Scene(root, width, height);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
-        
+
         stage.setScene(scene);
         stage.show();
         tl.play();
