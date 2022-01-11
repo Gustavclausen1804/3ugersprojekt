@@ -3,8 +3,12 @@ import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+
+
 
 class Player extends App{
     int xPos, yPos;
@@ -21,6 +25,9 @@ class Player extends App{
    int id;
    boolean shootsFired;
    double shootingForce, shootingAngle;
+
+   
+
     Player(int yPos, int id, String name){
         this.xPos = 0;
         this.yPos = yPos;
@@ -33,6 +40,7 @@ class Player extends App{
         textFieldForce.setVisible(false);
         textFieldForce.relocate(525, 380);
         playerRoot.getChildren().addAll(textFieldAngle,textFieldForce);
+        shotExplosionBilleder();
         
     }
 
@@ -98,4 +106,5 @@ class Player extends App{
             
         }
     }
+    
 }
