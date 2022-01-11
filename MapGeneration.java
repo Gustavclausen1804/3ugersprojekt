@@ -58,6 +58,13 @@ class MapGeneration {
             housesStart.get(i)[1] = y_coordinate; // represents the y coordinate for the top left of the house
             housesStart.get(i)[2] = widthh; // represents the width of the house (number of blocks)
             housesStart.get(i)[3] = colorID;
+            int antalBlocks = 0;
+            for(int j = 0; j < housesStart.size(); j++){
+                antalBlocks+=housesStart.get(j)[2];
+            }
+            if(antalBlocks >= max_random_house){
+                i = max_random_house +1;
+            }
         }
 
         GenerateHouse();
@@ -79,6 +86,7 @@ class MapGeneration {
     // Metode som genere huset baseret på x-koordinat, y-koordinat og ønsket bredde
     // af huset.
     public void GenerateHouse() {
+        System.out.println(housesStart.size());
         Random ran = new Random();
         for (int k = 0; k < housesStart.size(); k++) {
             // creates variables so it is easier to keep track of code
@@ -186,8 +194,25 @@ class MapGeneration {
                 gc.drawImage(img, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
                 gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
 
+                
+
             }
         }
-
+        mapMove();
     }
+
+    void mapMove(){
+        if(App.frameCount % 20 == 0){
+            for (int i = 0; i < houses.size(); i++) {   
+                for (int j = 0; j < houses.get(i).size(); j++) {
+                    if(houses.get(i).get(j)[1] + boxSize < App.height){
+                        if(houses.get(i).get(j)[1] + boxSize != houses.get(i).get(j+1)[1]){
+                            houses.get(i).get(j)[1] += boxSize;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }

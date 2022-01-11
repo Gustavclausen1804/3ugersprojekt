@@ -83,6 +83,8 @@ public class App extends Application {
     private GridPane nameGrid = new GridPane(); 
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
+    static int frameCount = 0;
+
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
         primaryStage.setTitle("Start Screen");
@@ -298,7 +300,7 @@ public class App extends Application {
         if (turn > spiller.size()) {
             turn = 1;
         }
-
+        frameCount++;
     }
 
     private int runA = 1;
