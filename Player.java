@@ -46,7 +46,7 @@ class Player extends App{
 
     public void draw(GraphicsContext gc){
         
-        //Draws the players
+        //Draws the players 
         
         gc.setFill(Color.BLACK);
         gc.fillRect( xPos, yPos,size,size);
@@ -56,16 +56,21 @@ class Player extends App{
 
     public void startLocation() {
         this.xPos = App.xRange*id;
-
+        System.out.println(MapGeneration.houses.size());
     }
 
     public void move(){
         //if(frameCount % 20 == 0){
-            for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
-                if(i > 0 && i < MapGeneration.houses.size()-1){
-                    System.out.println(i);
-                }
-            }
+            // for(int k = 0; k < MapGeneration.houses.size();k++){ // Loops through the column of blocks
+            //     // if(k > 0 && k < MapGeneration.houses.size()-1){
+            //     // //     // System.out.println(MapGeneration.houses.size());
+                    
+            //     // }
+            //     // System.out.println(MapGeneration.houses.size());
+            //     if(MapGeneration.houses.size() == 34){
+            //         System.out.println("cocksuckers");
+            //     }
+            // }
         // }
     }
 
