@@ -83,6 +83,10 @@ public class App extends Application {
     private GridPane nameGrid = new GridPane(); 
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
+
+    static Image[] explosionImage = new Image[11];
+    static int explosionRadius = 50;
+
     static int frameCount = 0;
 
     public void start(Stage primaryStage) throws Exception {
@@ -160,7 +164,6 @@ public class App extends Application {
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
-        CustomLabel Players = new CustomLabel("Suck my ");
         ArrayList<CustomLabel> playerLabel = new ArrayList<>();
         for(int i = 0; i < playerAmount;i++){
             playerLabel.add(new CustomLabel("Player " + (i+1) +" name: "));  
@@ -211,7 +214,7 @@ public class App extends Application {
                 name = "Player " +i;
             }
             score.add(new Score(20, i));
-            spiller.add(new Player(200, i, name));
+            spiller.add(new Player( i, name));
         }
 
         root.getChildren().add(canvas);
@@ -280,7 +283,7 @@ public class App extends Application {
         map.drawMap(gc);
 
         spiller.forEach((p) -> {
-            p.startLocation();
+            p.move();
             p.draw(gc);
             p.skud.forEach((b) -> {
                 b.draw_ball(gc);
@@ -331,6 +334,13 @@ public class App extends Application {
          * }
          */
     }
+
+    void shotExplosionBilleder(){
+        // Load explosion images into array.
+        for (int i = 0; i < explosionImage.length; i++) {
+           explosionImage[i] = new Image("/resources/explosion" + i + ".png", explosionRadius*2, explosionRadius*2, false, false);
+       }
+   }
 
     public static void main(String[] args) {
         launch(args);

@@ -17,9 +17,14 @@ public class Shot{
     private double massObject = 1;
 
     private static final int BALL_R = 15;
-    private int explosion_R = 100;
+    private int explosion_R = App.explosionRadius;
 
     private int shooterId;
+
+
+    int animationTimer = 0;
+    int currentImage = 0;
+    boolean explosionActive;
     
 
     Shot(int x, int y){
@@ -41,11 +46,14 @@ public class Shot{
         move_ball();
         DrawDir(gc);
         collision();
+        explosionAnimation(gc);
 
 
         //Ball
+        if(!explosionActive){
         gc.setFill(Color.BLACK);
         gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+        }
         
     }
 
@@ -171,8 +179,12 @@ public class Shot{
                     && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
                         
                         MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
+                        explosionActive = true;
                         explosion();
-                        removeShot();
+                        xDir = 0;
+                        yDir = 0;
+                        gravityForce = 0;
+                        //removeShot();
                         break;
                     }
                    
@@ -244,6 +256,19 @@ public class Shot{
         }
     }
 
+    void explosionAnimation(GraphicsContext gc) {
+        if (explosionActive) {
+                gc.drawImage(App.explosionImage[currentImage], this.ballXPos-(explosion_R/2), this.ballYPos-(explosion_R/2));
+                if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
+                    currentImage++;
+                }
+                if(currentImage == App.explosionImage.length-1){
+                    explosionActive = false;
+                    removeShot();
+                }
+            animationTimer++;
+        }
+    }
 
     // //Enemy shot
     // public void enemyShot(int x, int y){
@@ -302,7 +327,6 @@ public class Shot{
     //         }
     //     }
     // }
-
 
 
 

@@ -3,12 +3,16 @@ import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+
+
+
 class Player extends App{
-    int xPos, yPos;
-     ArrayList<Shot> skud = new ArrayList<Shot>();
+    int xPos = 0, yPos = 0;
+    ArrayList<Shot> skud = new ArrayList<Shot>();
     boolean myTurn,angleChosen,ForceChosen;
     
     Group playerRoot = new Group();
@@ -21,9 +25,10 @@ class Player extends App{
    int id;
    boolean shootsFired;
    double shootingForce, shootingAngle;
-    Player(int yPos, int id, String name){
-        this.xPos = 0;
-        this.yPos = yPos;
+
+   
+
+    Player( int id, String name){
         this.id = id;
         this.name = name;
         
@@ -33,6 +38,9 @@ class Player extends App{
         textFieldForce.setVisible(false);
         textFieldForce.relocate(525, 380);
         playerRoot.getChildren().addAll(textFieldAngle,textFieldForce);
+        shotExplosionBilleder();
+
+        startLocation();
         
     }
 
@@ -48,6 +56,38 @@ class Player extends App{
 
     public void startLocation() {
         this.xPos = App.xRange*id;
+    }
+
+    public void move(){
+        //if(frameCount % 20 == 0){
+            for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
+                for(int j = 0; j < MapGeneration.houses.get(i).size();j++){
+                    if(j==0){
+                        //Checks if the player is within on block or not
+                        if(xPos >= MapGeneration.houses.get(i).get(j)[0] && xPos+size <= MapGeneration.houses.get(i).get(j)[0]+MapGeneration.boxSize){ 
+                            //yPos = MapGeneration.houses.get(i).get(j)[1]-size;
+                        }
+                        if(i > 0 && i < MapGeneration.houses.size()-1){
+                            // if(xPos >= MapGeneration.houses.get(i).get(j)[0] && xPos+size >= MapGeneration.houses.get(i).get(j)[0]+MapGeneration.boxSize){ 
+                            //if(xPos+size <= MapGeneration.houses.get(i+1).get(j)[0]+MapGeneration.boxSize){
+                            if(xPos > MapGeneration.houses.get(i).get(j)[0] && xPos+size> MapGeneration.houses.get(i).get(j)[0]+ MapGeneration.boxSize){ 
+                                // if( MapGeneration.houses.get(i).get(j)[1] >= MapGeneration.houses.get(i+1).get(j)[1]){
+                                // if(yPos+size <){
+                                    System.out.println(MapGeneration.houses.get(i+1).get(j)[1]);
+                                   this.yPos = MapGeneration.houses.get(i).get(j)[1]-size;
+                                // }
+                                // } else{yPos = MapGeneration.houses.get(i+1).get(j)[1]-size;}
+                            }
+                            //  else if(xPos >= MapGeneration.houses.get(i-1).get(j)[0] && xPos+size <= MapGeneration.houses.get(i).get(j)[0]+MapGeneration.boxSize){
+                            //     if( MapGeneration.houses.get(i).get(j)[1] >= MapGeneration.houses.get(i-1).get(j)[1]){
+                            //         yPos = MapGeneration.houses.get(i).get(j)[1]-size;
+                            //     } else{yPos = MapGeneration.houses.get(i-1).get(j)[1]-size;}
+                            // }
+                        }
+                    }   
+                }
+            }
+        // }
     }
 
     public void shoot(){
@@ -98,4 +138,5 @@ class Player extends App{
             
         }
     }
+    
 }
