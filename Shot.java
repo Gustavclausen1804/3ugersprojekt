@@ -166,6 +166,7 @@ public class Shot{
     void wallCollision(){
         if(ballYPos == App.height){
             // removeShot();
+            
         }
         // Loops through the all houses(blocks)
         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
@@ -193,7 +194,7 @@ public class Shot{
         //if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
     }
     void removeShot(){
-        //Player.skud.remove(this);  //Der skal findes en ordentlig måde at slette de her på
+        //  //Der skal findes en ordentlig måde at slette de her på
                 //Dårlig hack for nu
             ballXPos = 0;
             ballYPos = 0;
@@ -206,6 +207,8 @@ public class Shot{
             App.spiller.get(shooterId-1).ForceChosen=false;
             App.spiller.get(shooterId-1).angleChosen=false;
             App.turn++;
+            Player.skud.remove(this);
+            
 
                 
     }

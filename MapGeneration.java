@@ -24,12 +24,13 @@ class MapGeneration {
     static ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
     Image[][] houseImageArray = new Image[buildColorsAmount][buildAmount];
     Image houseImage;
+    int max_random_house;
 
     MapGeneration() {
 
         // Generere tilfældige tal til kortet.
         Random ran = new Random();
-        int max_random_house = (App.width / boxSize);
+        max_random_house = (App.width / boxSize);
 
         int widthh = 0;
         int x_coordinate_in_loop = 0;
@@ -58,6 +59,7 @@ class MapGeneration {
             housesStart.add(new int[4]); // adds an array with 4 spaces to the houses start arraylist
             housesStart.get(i)[0] = x_coordinate_in_loop; // represents the x coordinate for the top left of the house
             housesStart.get(i)[1] = y_coordinate; // represents the y coordinate for the top left of the house
+            
             housesStart.get(i)[2] = widthh; // represents the width of the house (number of blocks)
             housesStart.get(i)[3] = colorID;
             int antalBlocks = 0;
@@ -97,6 +99,12 @@ class MapGeneration {
                     houses.get(i).add(new int[] { (x_coordinate + i) * boxSize, (y_coordinate + j) * boxSize, colorID, imageID});   // Adds an array with 4 spaces
                                                                                                                                     //which holds the x- , y-postion
                                                                                                                                     //colorId and ImageId of each block 
+                }
+            }
+            System.out.println(houses.size());
+            for(int i = 0; i < houses.size(); i++){
+                if(houses.size() > max_random_house){
+                   houses.remove(i);
                 }
             }
         }
