@@ -164,7 +164,6 @@ public class App extends Application {
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
-        CustomLabel Players = new CustomLabel("Suck my ");
         ArrayList<CustomLabel> playerLabel = new ArrayList<>();
         for(int i = 0; i < playerAmount;i++){
             playerLabel.add(new CustomLabel("Player " + (i+1) +" name: "));  
@@ -215,7 +214,7 @@ public class App extends Application {
                 name = "Player " +i;
             }
             score.add(new Score(20, i));
-            spiller.add(new Player(200, i, name));
+            spiller.add(new Player( i, name));
         }
 
         root.getChildren().add(canvas);
@@ -284,7 +283,7 @@ public class App extends Application {
         map.drawMap(gc);
 
         spiller.forEach((p) -> {
-            p.startLocation();
+            p.move();
             p.draw(gc);
             p.skud.forEach((b) -> {
                 b.draw_ball(gc);

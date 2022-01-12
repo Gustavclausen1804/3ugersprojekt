@@ -11,8 +11,8 @@ import javafx.scene.text.Font;
 
 
 class Player extends App{
-    int xPos, yPos;
-     ArrayList<Shot> skud = new ArrayList<Shot>();
+    int xPos = 0, yPos = 0;
+    static ArrayList<Shot> skud = new ArrayList<Shot>();
     boolean myTurn,angleChosen,ForceChosen;
     
     Group playerRoot = new Group();
@@ -28,9 +28,7 @@ class Player extends App{
 
    
 
-    Player(int yPos, int id, String name){
-        this.xPos = 0;
-        this.yPos = yPos;
+    Player( int id, String name){
         this.id = id;
         this.name = name;
         
@@ -41,6 +39,8 @@ class Player extends App{
         textFieldForce.relocate(525, 380);
         playerRoot.getChildren().addAll(textFieldAngle,textFieldForce);
         shotExplosionBilleder();
+
+        startLocation();
         
     }
 
@@ -56,6 +56,17 @@ class Player extends App{
 
     public void startLocation() {
         this.xPos = App.xRange*id;
+
+    }
+
+    public void move(){
+        //if(frameCount % 20 == 0){
+            for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
+                if(i > 0 && i < MapGeneration.houses.size()-1){
+                    System.out.println(i);
+                }
+            }
+        // }
     }
 
     public void shoot(){
