@@ -1,7 +1,11 @@
 import java.awt.Canvas;
 import java.util.Map;
 
+import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
+
+import javafx.event.EventType;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
@@ -21,11 +25,9 @@ public class Shot{
 
     private int shooterId;
 
-
     int animationTimer = 0;
     int currentImage = 0;
     boolean explosionActive;
-    
 
     Shot(int x, int y){
         this.ballXPos = x;
@@ -48,11 +50,10 @@ public class Shot{
         collision();
         explosionAnimation(gc);
 
-
-        //Ball
-        if(!explosionActive){
-        gc.setFill(Color.BLACK);
-        gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+        // Ball
+        if (!explosionActive) {
+            gc.setFill(Color.BLACK);
+            gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
         }
         
     }
@@ -158,11 +159,12 @@ public class Shot{
         return Math.sqrt((Math.pow(xDir, 2)+Math.pow(yDir, 2)));
     }
 
-    public void collision(){
-       playerCollision();
-       wallCollision();
+    public void collision() {
+        playerCollision();
+        wallCollision();
 
     }
+
     void wallCollision(){
         if(ballYPos == App.height){
             // removeShot();
@@ -173,21 +175,22 @@ public class Shot{
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
                 int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
-                
-                //Skal skrives om
-                if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) 
-                    && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
-                        
-                        MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
-                        explosionActive = true;
-                        explosion();
-                        xDir = 0;
-                        yDir = 0;
-                        gravityForce = 0;
-                        //removeShot();
-                        break;
-                    }
-                   
+
+                // Skal skrives om
+                if ((ballXPos >= xPosWall && ballXPos <= xPosWall + wallSize)
+                        && (ballYPos >= yPosWall && ballYPos <= yPosWall + wallSize)) { // Checks if the shot hits a
+                                                                                        // block
+
+                    MapGeneration.houses.get(i).remove(j); // Removes the block which the shot hit
+                    explosionActive = true;
+                    explosion();
+                    xDir = 0;
+                    yDir = 0;
+                    gravityForce = 0;
+                    // removeShot();
+                    break;
+                }
+
             }
         }
         //if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
@@ -247,9 +250,14 @@ public class Shot{
                         case 4:
                         x = xWallD+wallSize; y = yWallD+wallSize; break; // bottom right corner
                     }
-                    double distance = Math.sqrt(Math.pow(ballXPos-x, 2)+Math.pow(ballYPos-y, 2)); //calculates the distance between the shot and each corner of the ball
-                    if(distance <=explosion_R){
-                        MapGeneration.houses.get(i).remove(j); //removes the shot if it
+                    double distance = Math.sqrt(Math.pow(ballXPos - x, 2) + Math.pow(ballYPos - y, 2)); // calculates
+                                                                                                        // the distance
+                                                                                                        // between the
+                                                                                                        // shot and each
+                                                                                                        // corner of the
+                                                                                                        // ball
+                    if (distance <= explosion_R) {
+                        MapGeneration.houses.get(i).remove(j); // removes the shot if it
                     }
                 }  
             }
@@ -258,14 +266,15 @@ public class Shot{
 
     void explosionAnimation(GraphicsContext gc) {
         if (explosionActive) {
-                gc.drawImage(App.explosionImage[currentImage], this.ballXPos-(explosion_R/2), this.ballYPos-(explosion_R/2));
-                if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
-                    currentImage++;
-                }
-                if(currentImage == App.explosionImage.length-1){
-                    explosionActive = false;
-                    removeShot();
-                }
+            gc.drawImage(App.explosionImage[currentImage], this.ballXPos - (explosion_R / 2),
+                    this.ballYPos - (explosion_R / 2));
+            if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
+                currentImage++;
+            }
+            if (currentImage == App.explosionImage.length - 1) {
+                explosionActive = false;
+                removeShot();
+            }
             animationTimer++;
         }
     }

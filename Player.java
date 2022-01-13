@@ -7,104 +7,99 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-
-
-
-class Player extends App{
+class Player extends App {
     int xPos, yPos;
-     ArrayList<Shot> skud = new ArrayList<Shot>();
-    boolean myTurn,angleChosen,ForceChosen;
-    
+    ArrayList<Shot> skud = new ArrayList<Shot>();
+    boolean myTurn, angleChosen, ForceChosen;
+
     Group playerRoot = new Group();
     //Creates two text fields where the player writes the angle and force of their shot
     TextField textFieldAngle= new TextField();
     TextField textFieldForce= new TextField();
     
     String name;
-   final int size = 30;
-   int id;
-   boolean shootsFired;
-   double shootingForce, shootingAngle;
+    final int size = 30;
+    int id;
+    boolean shootsFired;
+    double shootingForce, shootingAngle;
 
-   
-
-    Player(int yPos, int id, String name){
+    Player(int yPos, int id, String name) {
         this.xPos = 0;
         this.yPos = yPos;
         this.id = id;
         this.name = name;
-        
-        //Gives the textfield a position for where to create them, hides them and add them to the group 
+
+        // Gives the textfield a position for where to create them, hides them and add
+        // them to the group
         textFieldAngle.setVisible(false);
         textFieldAngle.relocate(525, 380);
         textFieldForce.setVisible(false);
         textFieldForce.relocate(525, 380);
-        playerRoot.getChildren().addAll(textFieldAngle,textFieldForce);
+        playerRoot.getChildren().addAll(textFieldAngle, textFieldForce);
         shotExplosionBilleder();
-        
+
     }
 
-    public void draw(GraphicsContext gc){
-        
-        //Draws the players
-        
+    public void draw(GraphicsContext gc) {
+
+        // Draws the players
+
         gc.setFill(Color.BLACK);
-        gc.fillRect( xPos, yPos,size,size);
+        gc.fillRect(xPos, yPos, size, size);
         textDisplay(gc);
-        //.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
+        // .addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
     }
 
     public void startLocation() {
-        this.xPos = App.xRange*id;
+        this.xPos = App.xRange * id;
     }
 
-    public void shoot(){
-        
-        if(shootsFired == false){
-            Double sizeD = Math.sqrt(Math.pow(size/2,2)+Math.pow(size/2,2));
+    public void shoot() {
+
+        if (shootsFired == false) {
+            Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
             Double shootingAngleRadian = Math.toRadians(shootingAngle);
-            skud.add(new Shot(xPos+(size/2)+(sizeD*Math.cos(shootingAngleRadian)),yPos+(size/2)+(sizeD*Math.sin(shootingAngleRadian)*(-1)),shootingAngle,shootingForce,id));
+            skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)),
+                    yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), shootingAngle, shootingForce,
+                    id));
             myTurn = false;
             shootsFired = true;
-            
-            
+
         }
-            
-        
 
     }
-    
 
-     void textDisplay(GraphicsContext gc){
-        if(myTurn){ // if it is the players turn, text is shown asking for the angle of their shot and then the force
+    void textDisplay(GraphicsContext gc) {
+        if (myTurn) { // if it is the players turn, text is shown asking for the angle of their shot
+                      // and then the force
             gc.setFill(Color.BLACK);
-            gc.setFont(Font.font ("Verdana", 15));
-            if(angleChosen == false){
-                gc.fillText(name+": angle ",400,400);   
+            gc.setFont(Font.font("Verdana", 15));
+            if (angleChosen == false) {
+                gc.fillText(name + ": angle ", 400, 400);
                 textFieldAngle.setVisible(true);
 
                 // Draws the arrow which show the angle of the shot
                 gc.setStroke(Color.BLUE);
                 gc.setLineWidth(5);
-                
+
                 String text = textFieldAngle.getText();
                 text = text.replaceAll("[^\\d.]", "");
                 if (text == "" || text.length() == 0) {
                     text = "0.";
                 }
                 Double angle = Math.toRadians(Double.parseDouble(text));
-                
+
                 Double arrowLength = 20.;
-                gc.strokeLine(xPos+size/2,yPos+size/2, (xPos+(size/2))+Math.cos(angle)*arrowLength,(yPos+(size/2))+Math.sin(angle)*arrowLength*(-1));
+                gc.strokeLine(xPos + size / 2, yPos + size / 2, (xPos + (size / 2)) + Math.cos(angle) * arrowLength,
+                        (yPos + (size / 2)) + Math.sin(angle) * arrowLength * (-1));
             }
-            if(angleChosen && ForceChosen == false){
-                gc.fillText(name+": Force ",400,400);   
+            if (angleChosen && ForceChosen == false) {
+                gc.fillText(name + ": Force ", 400, 400);
                 textFieldForce.setVisible(true);
             }
 
-            
-            
         }
     }
     
+
 }

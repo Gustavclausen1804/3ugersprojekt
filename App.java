@@ -67,6 +67,10 @@ public class App extends Application {
     static final int width = 1280;
     static final int height = 720;
 
+    // Mouse x & y coordinate
+    public double MouseX;
+    public double MouseY;
+
     // Set min and max players
     private final int minPlayers = 2; // atleast 2 for game to work
     private final int maxPlayers = 8; // max depends on screen size
@@ -111,6 +115,7 @@ public class App extends Application {
         // playerSlider.setStyle("-fx-control-inner-background: yellow;");
         // playerSlider.setStyle(".playerSlider > .thumb { -fx-background-color: green;
         // }");
+
         grid.add(playerSlider, 1, 1);
 
         // line 2
@@ -193,8 +198,6 @@ public class App extends Application {
 
         Scene scene = new Scene(nameGrid, width, height);
         stage.setScene(scene);
-        scene.getStylesheets().add("stylesheet.css");
-
         stage.show();
     }
 
@@ -226,6 +229,7 @@ public class App extends Application {
 
         Scene scene = new Scene(root, width, height);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
+        scene.setOnMousePressed(this::handleMouseMove);
 
         stage.setScene(scene);
         stage.show();
@@ -233,6 +237,44 @@ public class App extends Application {
 
     }
 
+    private void handleMouseMove(MouseEvent event) {
+
+        // Mouse x & y coordinate
+        this.MouseX = event.getX();
+        this.MouseY = event.getY();
+    }
+
+    private double[] getForcesFromMouse(double PlayerXPos, double PlayerYPos) {
+        // player x & y coordinate
+        double ForceVectorX = (PlayerXPos - this.MouseX); // To invert, so it is easier to set angle for humans
+        double ForceVectorY = (PlayerYPos - this.MouseY); // To invert, so it is easier to set angle for humans
+        System.out.println("Force vector x" + ForceVectorX);
+        System.out.println("Force vector y" + ForceVectorY);
+
+        double ForceVectorLength = (Math.sqrt(Math.pow(ForceVectorX, 2) + Math.pow(ForceVectorY, 2))) / 10; // Vector
+                                                                                                            // length
+                                                                                                            // reduced
+                                                                                                            // with
+                                                                                                            // factor
+
+        // We adjust to the angle game's inverted coordinate system. // 10.
+        double VectorAngle = Math.toDegrees(Math.cos(ForceVectorX / ForceVectorY));
+        if (ForceVectorX <= 0 && ForceVectorY <= 0) { // 4. kvadrant. // x = - y = -
+            VectorAngle = VectorAngle + 270;
+        } else if (ForceVectorX >= 0 && ForceVectorY <= 0) { // 3. kvadrant // x = + y = -
+            VectorAngle = VectorAngle + 180;
+        } else if (ForceVectorX >= 0 && ForceVectorY >= 0) { // 2. kvadrant x = + y +
+            VectorAngle = VectorAngle + 90;
+        } else {
+            VectorAngle = VectorAngle * -1; // Invert the angle to match vision.
+        }
+
+        double[] array = { ForceVectorLength, VectorAngle };
+        System.out.println("x = " + this.MouseX + "   y = " + this.MouseY);
+        return array;
+    }
+
+    // Input for each player.
     private void handleKey(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             spiller.forEach((p) -> {
@@ -240,7 +282,7 @@ public class App extends Application {
                     if (p.shootsFired == false) {
                         if (p.angleChosen == false) {
                             if (p.textFieldAngle.getText().length() != 0) {
-                                p.shootingAngle = getDoubFromTextField(p.textFieldAngle);
+                                p.shootingAngle = getForcesFromMouse(p.xPos, p.yPos)[1];
                                 p.angleChosen = true;
                                 p.textFieldAngle.setText("");
                                 p.textFieldAngle.setVisible(false);
@@ -248,7 +290,12 @@ public class App extends Application {
                         }
                         if (p.angleChosen && p.ForceChosen == false) {
                             if (p.textFieldForce.getText().length() != 0) {
-                                p.shootingForce = getDoubFromTextField(p.textFieldForce);
+                                p.shootingForce = getForcesFromMouse(p.xPos, p.yPos)[0];
+                                System.out.println("Frcevector length: " + getForcesFromMouse(p.xPos, p.yPos)[0]);
+                                System.out.println("Spiller" + this.MouseX);
+                                System.out.println("Player x pos" + p.xPos + " Player y pos: " + p.yPos);
+                                System.out.println("Angle " + getForcesFromMouse(p.xPos, p.yPos)[1]);
+
                                 p.ForceChosen = true;
                                 p.textFieldForce.setText("");
                                 p.textFieldForce.setVisible(false);
@@ -264,6 +311,39 @@ public class App extends Application {
             });
         }
     }
+
+    // // Input for each player.
+    // private void handleKey(KeyEvent event) {
+    // if (event.getCode() == KeyCode.ENTER) {
+    // spiller.forEach((p) -> {
+    // if (turn == p.id) {
+    // if (p.shootsFired == false) {
+    // if (p.angleChosen == false) {
+    // if (p.textFieldAngle.getText().length() != 0) {
+    // p.shootingAngle = getDoubFromTextField(p.textFieldAngle);
+    // p.angleChosen = true;
+    // p.textFieldAngle.setText("");
+    // p.textFieldAngle.setVisible(false);
+    // }
+    // }
+    // if (p.angleChosen && p.ForceChosen == false) {
+    // if (p.textFieldForce.getText().length() != 0) {
+    // p.shootingForce = getDoubFromTextField(p.textFieldForce);
+    // p.ForceChosen = true;
+    // p.textFieldForce.setText("");
+    // p.textFieldForce.setVisible(false);
+    // }
+    // }
+    // if (p.angleChosen && p.ForceChosen) {
+    // p.shoot();
+    // }
+
+    // }
+
+    // }
+    // });
+    // }
+    // }
 
     public static Double getDoubFromTextField(TextField textField) {
         String text = textField.getText();
@@ -337,12 +417,20 @@ public class App extends Application {
          */
     }
 
-    void shotExplosionBilleder(){
+    void shotExplosionBilleder() {
         // Load explosion images into array.
         for (int i = 0; i < explosionImage.length; i++) {
-           explosionImage[i] = new Image("/resources/explosion" + i + ".png", explosionRadius*2, explosionRadius*2, false, false);
-       }
-   }
+            explosionImage[i] = new Image("/resources/explosion" + i + ".png", explosionRadius * 2, explosionRadius * 2,
+                    false, false);
+        }
+    }
+
+    // private void handleMouseMove(MouseEvent event) {
+    // this.MouseX = event.getX();
+    // this.MouseY = event.getY();
+    // System.out.println("x = " + this.MouseX + " y = " + this.MouseY);
+
+    // }
 
     public static void main(String[] args) {
         launch(args);
