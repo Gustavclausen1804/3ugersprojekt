@@ -250,6 +250,8 @@ public class App extends Application {
                         }
                         if (p.angleChosen && p.ForceChosen) {
                             p.shoot();
+                            p.angleChosen = false;
+                            p.ForceChosen = false;
                         }
 
                     }
@@ -283,10 +285,15 @@ public class App extends Application {
 
             if (p.playerShot != null){    //Shot is 'null' when non-excisting or removed.
                 p.playerShot.draw_ball(gc);
-                p.removeShot();
+                
+                if (p.removeShot() == true){
+                    turn++;
+                }
             }
-            if (turn == p.id){
-            p.shootsFired = false;
+            if (turn == p.id && p.playerShot == null){
+                if (p.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
+                p.shoot();
+                }
             }
         });
 
@@ -294,11 +301,8 @@ public class App extends Application {
             p.xLocation();
             p.draw(gc);
         });
-        spiller.forEach((p) -> {
-            if (turn == p.id && p.shootsFired == false) {
-                p.myTurn = true;
-            }
-        });
+
+
         if (turn > spiller.size()) {
             turn = 1;
             System.out.println("turn " + turn);

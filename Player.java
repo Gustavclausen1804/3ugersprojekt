@@ -47,30 +47,24 @@ class Player extends App {
         // Draws the players
         gc.setFill(Color.BLACK);
         gc.fillRect(xPos, yPos, size, size);
-        textDisplay(gc);
+        // textDisplay(gc);
     }
 
     public void shoot() {
-
-        if (shootsFired == false) {
             Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
             Double shootingAngleRadian = Math.toRadians(shootingAngle);
             // skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, false));
             this.playerShot = new Shot(xPos+20, yPos+2, true, true);
             playerShot.applyForce(shootingAngle, shootingForce);
-
-            myTurn = false; 
-            shootsFired = true;
-        }
     }
 
-    public void removeShot(){
+    public boolean removeShot(){
         if (this.playerShot.getRemoveShot()){
             System.out.println("Player, removeShot()");
             this.playerShot = null;
-
-            
+            return true;
         }
+        return false;
     }
 
    
@@ -80,11 +74,10 @@ class Player extends App {
 
 
 
-    void textDisplay(GraphicsContext gc) {
-        if (myTurn) { // if it is the players turn, text is shown asking for the angle of their shot
-                      // and then the force
+    public boolean textDisplay(GraphicsContext gc) {
             gc.setFill(Color.BLACK);
             gc.setFont(Font.font("Verdana", 15));
+
             if (angleChosen == false) {
                 gc.fillText(name + ": angle ", 400, 400);
                 textFieldAngle.setVisible(true);
@@ -108,7 +101,9 @@ class Player extends App {
                 gc.fillText(name + ": Force ", 400, 400);
                 textFieldForce.setVisible(true);
             }
-
-        }
+            if (angleChosen == true && ForceChosen == true){
+                return true;
+            }
+            return false;
     }
 }
