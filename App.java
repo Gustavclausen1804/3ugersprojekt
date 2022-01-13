@@ -279,11 +279,14 @@ public class App extends Application {
         map.drawMap(gc);
 
         spiller.forEach((p) -> {
-            p.startLocation();
             p.draw(gc);
+
             if (p.playerShot != null){    //Shot is 'null' when non-excisting or removed.
                 p.playerShot.draw_ball(gc);
                 p.removeShot();
+            }
+            if (turn == p.id){
+            p.shootsFired = false;
             }
         });
 
@@ -298,6 +301,7 @@ public class App extends Application {
         });
         if (turn > spiller.size()) {
             turn = 1;
+            System.out.println("turn " + turn);
         }
 
     }

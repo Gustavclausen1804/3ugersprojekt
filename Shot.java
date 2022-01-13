@@ -26,7 +26,7 @@ public class Shot{
     public boolean show = true;
     public boolean move = true;
 
-    boolean removeTest = false;
+    boolean removeShotFlag = false;
 
     Shot(int x, int y, boolean move, boolean show){
         this.ballXPos = x;
@@ -146,7 +146,7 @@ public class Shot{
         updateShot();
         // DrawDir(gc);
 
-        if (removeTest == true){
+        if (removeShotFlag == true){
 
         }
 
@@ -300,7 +300,7 @@ public class Shot{
                         
                         MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
                         // explosion();
-                        removeTest = true;
+                        removeShotFlag = true;
                         removeShot();
                         break;
                     }
@@ -310,27 +310,11 @@ public class Shot{
         //if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
     }
     void removeShot(){
-        //Player.skud.remove(this);  //Der skal findes en ordentlig måde at slette de her på
-                //Dårlig hack for nu
-            
-            System.out.println("remove");
-            removeTest = true;
-
-            // ballXPos = 0;
-            // ballYPos = 0;
-            // xDir = 0;
-            // yDir = 0;
-            // gravityForce = 0;
-
-            // Tror nedenstående står for at resette forrige spillers tur.
-            // App.spiller.get(shooterId-1).shootsFired=false;
-            // App.spiller.get(shooterId-1).ForceChosen=false;
-            // App.spiller.get(shooterId-1).angleChosen=false;
-            App.turn++; 
+            removeShotFlag = true;
     }
 
-    public boolean checkRemoveShot(){
-        return removeTest;
+    public boolean getRemoveShot(){
+        return removeShotFlag;
     }
 
     void playerCollision(){

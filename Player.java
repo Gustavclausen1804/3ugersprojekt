@@ -23,11 +23,11 @@ class Player extends App {
     String name;
     final int size = 30;
     int id;
-    boolean shootsFired;
+    public boolean shootsFired;
     double shootingForce, shootingAngle;
 
     public Player(int yPos, int id, String name) {
-        this.xPos = 0;
+        this.xPos = App.xRange * id;
         this.yPos = yPos;
         this.id = id;
         this.name = name;
@@ -45,15 +45,9 @@ class Player extends App {
     public void draw(GraphicsContext gc) {
 
         // Draws the players
-
         gc.setFill(Color.BLACK);
         gc.fillRect(xPos, yPos, size, size);
         textDisplay(gc);
-        // .addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
-    }
-
-    public void startLocation() {
-        this.xPos = App.xRange * id;
     }
 
     public void shoot() {
@@ -65,17 +59,26 @@ class Player extends App {
             this.playerShot = new Shot(xPos+20, yPos+2, true, true);
             playerShot.applyForce(shootingAngle, shootingForce);
 
-            myTurn = false;
+            myTurn = false; 
             shootsFired = true;
         }
     }
 
     public void removeShot(){
-        if (this.playerShot.checkRemoveShot()){
-            System.out.println("remove shot");
+        if (this.playerShot.getRemoveShot()){
+            System.out.println("Player, removeShot()");
             this.playerShot = null;
+
+            
         }
     }
+
+   
+
+
+
+
+
 
     void textDisplay(GraphicsContext gc) {
         if (myTurn) { // if it is the players turn, text is shown asking for the angle of their shot
