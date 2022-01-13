@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Map;
 
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,25 +8,28 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-class Player extends App {
-    int xPos, yPos;
-    ArrayList<Shot> skud = new ArrayList<Shot>();
-    boolean myTurn, angleChosen, ForceChosen;
 
+
+
+class Player extends App{
+    int xPos = 0, yPos = 0;
+    static ArrayList<Shot> skud = new ArrayList<Shot>();
+    boolean myTurn,angleChosen,ForceChosen;
+    
     Group playerRoot = new Group();
     //Creates two text fields where the player writes the angle and force of their shot
     TextField textFieldAngle= new TextField();
     TextField textFieldForce= new TextField();
     
     String name;
-    final int size = 30;
-    int id;
-    boolean shootsFired;
-    double shootingForce, shootingAngle;
+   final int size = 30;
+   int id;
+   boolean shootsFired;
+   double shootingForce, shootingAngle;
 
-    Player(int yPos, int id, String name) {
-        this.xPos = 0;
-        this.yPos = yPos;
+   
+
+    Player( int id, String name){
         this.id = id;
         this.name = name;
 
@@ -35,9 +39,11 @@ class Player extends App {
         textFieldAngle.relocate(525, 380);
         textFieldForce.setVisible(false);
         textFieldForce.relocate(525, 380);
-        playerRoot.getChildren().addAll(textFieldAngle, textFieldForce);
+        playerRoot.getChildren().addAll(textFieldAngle,textFieldForce);
         shotExplosionBilleder();
 
+        startLocation();
+        
     }
 
     public void draw(GraphicsContext gc) {
@@ -51,7 +57,34 @@ class Player extends App {
     }
 
     public void startLocation() {
-        this.xPos = App.xRange * id;
+        this.xPos = App.xRange*id;
+
+    }
+
+    public void move(){
+        if(frameCount % 20 == 0){
+            for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
+                for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){
+                    int mapX =MapGeneration.houses.get(i).get(j)[0], 
+                    mapY = MapGeneration.houses.get(i).get(j)[0],
+                    mapSize = MapGeneration.boxSize;
+                    if(xPos > mapX && xPos < mapX+ mapSize){
+                        xPos =mapX;
+                    }
+                    int topbuilding = App.height;
+                    if(xPos == mapX){
+                        for(int k = 0; k < MapGeneration.houses.get(i).size(); k++){
+                            if(MapGeneration.houses.get(i).get(k)[0] == mapX){
+                                if(MapGeneration.houses.get(i).get(k)[1]<topbuilding){
+                                    topbuilding = MapGeneration.houses.get(i).get(k)[1];
+                                }
+                            }
+                        }
+                        yPos = topbuilding-size;
+                    }
+                }
+            }
+        }
     }
 
     public void shoot() {
@@ -101,5 +134,4 @@ class Player extends App {
         }
     }
     
-
 }

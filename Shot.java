@@ -4,6 +4,7 @@ import java.util.Map;
 import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
 
 import javafx.event.EventType;
+import javafx.css.Size;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -25,9 +26,13 @@ public class Shot{
 
     private int shooterId;
 
+
     int animationTimer = 0;
     int currentImage = 0;
     boolean explosionActive;
+    boolean countOnce;
+    boolean shotGone;
+    
 
     Shot(int x, int y){
         this.ballXPos = x;
@@ -45,15 +50,18 @@ public class Shot{
     }
 
     public void draw_ball(GraphicsContext gc){
-        move_ball();
-        DrawDir(gc);
-        collision();
-        explosionAnimation(gc);
+        if(!shotGone){
+            move_ball();
+            DrawDir(gc);
+            collision();
+            explosionAnimation(gc);
 
-        // Ball
-        if (!explosionActive) {
-            gc.setFill(Color.BLACK);
-            gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
+
+            //Ball
+            if(!explosionActive){
+                gc.setFill(Color.BLACK);
+                gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+            }
         }
         
     }
@@ -166,8 +174,9 @@ public class Shot{
     }
 
     void wallCollision(){
-        if(ballYPos == App.height){
-            // removeShot();
+        if(ballYPos >= App.height-2*BALL_R){
+            explosion();
+            
         }
         // Loops through the all houses(blocks)
         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
@@ -175,56 +184,56 @@ public class Shot{
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
                 int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
-
-                // Skal skrives om
-                if ((ballXPos >= xPosWall && ballXPos <= xPosWall + wallSize)
-                        && (ballYPos >= yPosWall && ballYPos <= yPosWall + wallSize)) { // Checks if the shot hits a
-                                                                                        // block
-
-                    MapGeneration.houses.get(i).remove(j); // Removes the block which the shot hit
-                    explosionActive = true;
-                    explosion();
-                    xDir = 0;
-                    yDir = 0;
-                    gravityForce = 0;
-                    // removeShot();
-                    break;
-                }
-
+                
+                //Skal skrives om
+                if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) 
+                    && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
+                        
+                        MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
+                        
+                        explosion();
+                        xDir = 0;
+                        yDir = 0;
+                        gravityForce = 0;
+                        //removeShot();
+                        break;
+                    }
+                   
             }
         }
         //if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos && ballYPos<= p.yPos+p.size)){
     }
     void removeShot(){
-        //Player.skud.remove(this);  //Der skal findes en ordentlig måde at slette de her på
+        //  //Der skal findes en ordentlig måde at slette de her på
                 //Dårlig hack for nu
             ballXPos = 0;
             ballYPos = 0;
-            xDir = 0;
-            yDir = 0;
-            gravityForce = 0;
 
             
             App.spiller.get(shooterId-1).shootsFired=false;
             App.spiller.get(shooterId-1).ForceChosen=false;
             App.spiller.get(shooterId-1).angleChosen=false;
             App.turn++;
+            shotGone = true;
+            
+            
 
                 
     }
 
     void playerCollision(){
         App.spiller.forEach((p) -> {
-
-            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
-                && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
-                if(p.id == shooterId){
-                    App.score.get(p.id-1).counter--;
-                } else{
-                    App.score.get(shooterId-1).counter++;
-                }
-                //explosion();
-                removeShot();
+            if(countOnce == false){
+                if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
+                    && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
+                    if(p.id == shooterId){
+                        App.score.get(p.id-1).counter--;
+                    } else{
+                        App.score.get(shooterId-1).counter++;
+                    }
+                    countOnce = true;
+                    explosion(); 
+                }   
             }
             
         });
@@ -232,6 +241,10 @@ public class Shot{
 
     void explosion(){
         // Loops through the all houses(blocks)
+        explosionActive = true;
+        xDir = 0;
+        yDir = 0;
+        gravityForce = 0;
         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
             for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
@@ -266,15 +279,14 @@ public class Shot{
 
     void explosionAnimation(GraphicsContext gc) {
         if (explosionActive) {
-            gc.drawImage(App.explosionImage[currentImage], this.ballXPos - (explosion_R / 2),
-                    this.ballYPos - (explosion_R / 2));
-            if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
-                currentImage++;
-            }
-            if (currentImage == App.explosionImage.length - 1) {
-                explosionActive = false;
-                removeShot();
-            }
+                gc.drawImage(App.explosionImage[currentImage], this.ballXPos-(explosion_R/2), this.ballYPos-(explosion_R/2));
+                if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
+                    currentImage++;
+                }
+                if(currentImage == App.explosionImage.length-1){
+                    explosionActive = false;
+                    removeShot();
+                }
             animationTimer++;
         }
     }
