@@ -281,10 +281,10 @@ public class App extends Application {
         spiller.forEach((p) -> {
             p.startLocation();
             p.draw(gc);
-            p.skud.forEach((b) -> {
-                b.draw_ball(gc);
-
-            });
+            if (p.playerShot != null){    //Shot is 'null' when non-excisting or removed.
+                p.playerShot.draw_ball(gc);
+                p.removeShot();
+            }
         });
 
         score.forEach((p) -> {

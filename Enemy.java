@@ -24,8 +24,6 @@ public class Enemy extends Player{
             for (int iA = 0; iA < iterationAngle; iA++) {
                   for (int iF = 0; iF < iterationForce; iF++) {
 
-                        Shot simulation = new Shot(xPos, yPos, false);
-
                         // Calculate the step size.
                         double AngleStep = ((angleMinMax[1] - angleMinMax[0]) / iterationAngle);
                         double ForceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);
@@ -33,6 +31,8 @@ public class Enemy extends Player{
                         // Set-up for the variables for the next shot in line.
                         double angleNext = angleMinMax[0] + AngleStep * iA;
                         double forceNext = forceMinMax[0] + ForceStep * iF;
+
+                        Shot simulation = new Shot(xPos, yPos, true, false);
 
                         simulation.applyForce(angleNext,forceNext);
 
@@ -85,8 +85,8 @@ public class Enemy extends Player{
                   }
             }
             System.out.println("Modstander: " + bestShot[0] + " " + bestShot[1]);
-            Shot shot = new Shot(xPos, yPos, true);
-            shot.applyForce(bestShot[0],bestShot[1]);
+            Shot shot = new Shot(xPos, yPos, true, true);
+            // shot.applyForce(bestShot[0],bestShot[1]);
 
       }
 

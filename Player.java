@@ -7,6 +7,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 class Player extends App {
+
+    Shot playerShot;
+
     int xPos, yPos;
     ArrayList<Shot> skud = new ArrayList<Shot>();
     boolean myTurn, angleChosen, ForceChosen;
@@ -23,8 +26,8 @@ class Player extends App {
     boolean shootsFired;
     double shootingForce, shootingAngle;
 
-    Player(int yPos, int id, String name) {
-        this.xPos = 20;
+    public Player(int yPos, int id, String name) {
+        this.xPos = 0;
         this.yPos = yPos;
         this.id = id;
         this.name = name;
@@ -58,14 +61,20 @@ class Player extends App {
         if (shootsFired == false) {
             Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
             Double shootingAngleRadian = Math.toRadians(shootingAngle);
-            skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)),
-                        yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), shootingAngle, shootingForce,
-                    id));
+            // skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, false));
+            this.playerShot = new Shot(xPos+20, yPos+2, true, true);
+            playerShot.applyForce(shootingAngle, shootingForce);
+
             myTurn = false;
             shootsFired = true;
-
         }
+    }
 
+    public void removeShot(){
+        if (this.playerShot.checkRemoveShot()){
+            System.out.println("remove shot");
+            this.playerShot = null;
+        }
     }
 
     void textDisplay(GraphicsContext gc) {
