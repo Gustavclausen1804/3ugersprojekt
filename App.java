@@ -197,6 +197,7 @@ public class App extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         map = new MapGeneration();
 
+
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
 
