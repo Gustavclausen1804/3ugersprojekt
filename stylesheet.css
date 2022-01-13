@@ -1,25 +1,51 @@
 /* Styling the slider track */
+
+.slider > .axis {
+  -fx-tick-label-fill: rgb(255, 217, 0);
+  -fx-tick-fill: rgb(255, 217, 0);
+}
+.slider .axis .axis-tick-mark,
+.slider .axis .axis-minor-tick-mark {
+  -fx-fill: null;
+  -fx-stroke: rgb(255, 238, 0);
+}
+
 .slider > .track {
-    -fx-background-color: yellow;
+  -fx-background-color: rgb(255, 230, 0);
 }
 
 /* Styling the slider thumb */
 .slider > .thumb {
-    -fx-background-color: green;
+  -fx-background-color: rgba(63, 63, 62, 0.897);
 }
+/* .slider > .axis {
+  -fx-background-color: rgb(48, 29, 51);
+} */
 
 /* Styling the filled track */
 .slider > .colored-track {
-    -fx-background-color: green;
+  -fx-background-color: green;
 }
 
 /* Styling the animated thumb */
 .slider > .animated-thumb {
-    -fx-background-color: green;
+  -fx-background-color: green;
 }
 
 /* Styling the slider value text inside animated thumb */
 .slider .slider-value {
-    -fx-fill: white;
-    -fx-stroke: white;
+  -fx-fill: white;
+  -fx-stroke: white;
+}
+
+.text-field {
+  -fx-font-family: "Quicksand";
+  -fx-font-size: 15;
+  -fx-padding: 1, 1, 1, 1;
+  -fx-border-color: rgb(255, 238, 0);
+  -fx-border-width: 2;
+  -fx-border-radius: 1;
+  -fx-border: gone;
+  -fx-background-color: transparent;
+  -fx-text-fill: rgb(0, 0, 0);
 }
