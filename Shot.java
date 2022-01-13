@@ -1,6 +1,12 @@
+import java.awt.Canvas;
+import java.util.Map;
 
+import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
+
+import javafx.event.EventType;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
 public class Shot {
@@ -15,13 +21,13 @@ public class Shot {
     private double massObject = 1;
 
     private static final int BALL_R = 15;
-    private int explosion_R = 100;
+    private int explosion_R = App.explosionRadius;
 
     private int shooterId;
+
     int animationTimer = 0;
     int currentImage = 0;
     boolean explosionActive;
-    Image[] explosionImage = new Image[11];
 
     Shot(int x, int y) {
         this.ballXPos = x;
@@ -36,10 +42,6 @@ public class Shot {
         this.xDir += Math.cos(Math.toRadians(angle)) * force;
         this.yDir += -Math.sin(Math.toRadians(angle)) * force;
         this.shooterId = shooterId;
-        // Load explosion images into array.
-        for (int i = 0; i < explosionImage.length; i++) {
-            explosionImage[i] = new Image("/resources/explosion" + i + ".png", explosion_R*2, explosion_R*2, false, false);
-        }
     }
 
     public void draw_ball(GraphicsContext gc) {
@@ -49,9 +51,9 @@ public class Shot {
         explosionAnimation(gc);
 
         // Ball
-        if(!explosionActive){
-        gc.setFill(Color.BLACK);
-        gc.fillOval(ballXPos-(BALL_R/2), ballYPos-(BALL_R/2), BALL_R, BALL_R);
+        if (!explosionActive) {
+            gc.setFill(Color.BLACK);
+            gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
         }
 
     }
@@ -161,6 +163,7 @@ public class Shot {
     public void collision() {
         playerCollision();
         wallCollision();
+
     }
 
     void wallCollision() {
@@ -180,13 +183,12 @@ public class Shot {
                                                                                         // block
 
                     MapGeneration.houses.get(i).remove(j); // Removes the block which the shot hit
+                    explosionActive = true;
                     explosion();
                     xDir = 0;
                     yDir = 0;
                     gravityForce = 0;
-                    // explosionAnimation(gc); // Show explosion animation.
-                    // System.out.println("Explosion");
-
+                    // removeShot();
                     break;
                 }
 
@@ -269,7 +271,6 @@ public class Shot {
                                                                                                         // ball
                     if (distance <= explosion_R) {
                         MapGeneration.houses.get(i).remove(j); // removes the shot if it
-                        explosionActive = true;
                     }
                 }
             }
@@ -277,20 +278,17 @@ public class Shot {
     }
 
     void explosionAnimation(GraphicsContext gc) {
-
-        // gc.drawImage(explosionImage[, this.ballXPos, this.ballYPos);
-
         if (explosionActive) {
-            gc.drawImage(explosionImage[currentImage], this.ballXPos-(explosion_R/2), this.ballYPos-(explosion_R/2));
-            if (animationTimer % 10 == 0 && currentImage < explosionImage.length) {
+            gc.drawImage(App.explosionImage[currentImage], this.ballXPos - (explosion_R / 2),
+                    this.ballYPos - (explosion_R / 2));
+            if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
                 currentImage++;
             }
-            if(currentImage == explosionImage.length-1){
+            if (currentImage == App.explosionImage.length - 1) {
                 explosionActive = false;
                 removeShot();
             }
             animationTimer++;
-
         }
     }
 
