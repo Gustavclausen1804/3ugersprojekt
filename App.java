@@ -248,7 +248,7 @@ public class App extends Application {
                                 p.textFieldForce.setVisible(false);
                             }
                         }
-                        if (p.angleChosen && p.ForceChosen) {
+                        if (p.angleChosen && p.ForceChosen) {   //if both are chosen, shoot and reset variables.
                             p.shoot();
                             p.angleChosen = false;
                             p.ForceChosen = false;
@@ -280,19 +280,21 @@ public class App extends Application {
     private void run(GraphicsContext gc) {
         map.drawMap(gc);
 
-        spiller.forEach((p) -> {
-            p.draw(gc);
+        spiller.forEach((playerList) -> {   //Runs through all registered playerobjects
+            playerList.draw(gc);
 
-            if (p.playerShot != null){    //Shot is 'null' when non-excisting or removed.
-                p.playerShot.draw_ball(gc);
+            if (playerList.playerShot != null){    //Shot is 'null' when non-excisting or removed.
+                playerList.playerShot.updateShot();
+                playerList.playerShot.drawShot(gc);
                 
-                if (p.removeShot() == true){
+                
+                if (playerList.removeShot() == true){
                     turn++;
                 }
             }
-            if (turn == p.id && p.playerShot == null){
-                if (p.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
-                p.shoot();
+            if (turn == playerList.id && playerList.playerShot == null){    //
+                if (playerList.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
+                playerList.shoot();
                 }
             }
         });

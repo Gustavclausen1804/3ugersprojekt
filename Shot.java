@@ -142,13 +142,9 @@ public class Shot{
         return bestShot;
     }
 
-    public void draw_ball(GraphicsContext gc){
-        updateShot();
-        // DrawDir(gc);
+    public void drawShot(GraphicsContext gc){
+        DrawDir(gc);
 
-        if (removeShotFlag == true){
-
-        }
 
         collision();
 
@@ -219,16 +215,16 @@ public class Shot{
         this.ballYPos += yDir;
 
         //Make sure it is within the screen, if not, correct it.
-        if (this.ballXPos > 799){
-            this.ballXPos = 799;
+        if (this.ballXPos > App.width-1){  //Account for the 0-offset
+            this.ballXPos = App.width-1;
             this.xDir *= -1;
         }
         if (this.ballXPos < 0){
             this.ballXPos = 0;
             this.xDir *= -1;
         }
-        if (this.ballYPos > 799){
-            this.ballYPos = 799;
+        if (this.ballYPos > App.height-1){
+            this.ballYPos = App.height-1;
             this.yDir *= -1;
         }
         if (this.ballYPos < 0){
@@ -247,17 +243,17 @@ public class Shot{
         this.move = state;
     }
 
-    public double[] getPosition(){
+    public double[] getPosition(){  //Returns the coordiantes of the shot.
         double[] array = {ballXPos,ballYPos};
         return array;  
     }
 
-    public double[] GetDirection(){
+    public double[] GetDirection(){ //Returns the components of the directional vector
         double[] array = {xDir,yDir};
         return array;  
     }
 
-    public double getAngle(){
+    public double getAngle(){   //Returns the angle of the directional vector
         //Calculate angle between components
         double angle = Math.toDegrees(Math.atan((yDir)/xDir));   
 
@@ -274,19 +270,17 @@ public class Shot{
         return angle;
         
     }
-    public double getSpeed(){
+    public double getSpeed(){   //Returns the length of the directional vector
         return Math.sqrt((Math.pow(xDir, 2)+Math.pow(yDir, 2)));
     }
 
     public void collision(){
-    //    playerCollision();
-       wallCollision();
+        //playerCollision();
+        wallCollision();
 
     }
     void wallCollision(){
-        if(ballYPos == App.height){
-            // removeShot();
-        }
+
         // Loops through the all houses(blocks)
         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
             for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
