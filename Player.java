@@ -119,7 +119,7 @@ class Player extends App {
             Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
             Double shootingAngleRadian = Math.toRadians(angle);
             // skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, false));
-            this.playerShot = new Shot(xPos+20, yPos+2, true, true);
+            this.playerShot = new Shot(xPos+20, yPos+2, true, true, id);
             // this.playerShot = new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, true);
 
             playerShot.applyForce(angle, force);

@@ -40,11 +40,12 @@ public class Shot{
 
     boolean removeShotFlag = false;
 
-    Shot(int x, int y, boolean move, boolean show){
+    Shot(int x, int y, boolean move, boolean show, int id){
         this.ballXPos = x;
         this.ballYPos = y;
         this.move = move;
         this.show = show;
+        this.shooterId = id; 
     }
     
 
@@ -342,10 +343,10 @@ public class Shot{
             if(countOnce == false){
                 if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
                     && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
-                    if(p.playerShot != null && App.turn == p.id){
-                        p.playerScore.counter--;
+                    if(p.id == shooterId){
+                        App.spiller.get(shooterId-1).playerScore.counter--;
                     } else{
-                        p.playerScore.counter++;
+                        App.spiller.get(shooterId-1).playerScore.counter++;
                     }
                     countOnce = true;
                     explosion();
