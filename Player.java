@@ -20,9 +20,10 @@ class Player extends App {
 
     Shot playerShot;
 
+    Score playerScore;
+
     int xPos, yPos;
-    ArrayList<Shot> skud = new ArrayList<Shot>();
-    boolean myTurn, angleChosen, ForceChosen;
+    boolean  parameterChosen = false;
 
     Group playerRoot = new Group();
     CustomButton btn = new CustomButton("Shoot");
@@ -33,12 +34,12 @@ class Player extends App {
     int id;
     public boolean shootsFired;
     double shootingForce, shootingAngle;
+    double[] forceAndAngle;
 
     int score = 0;
 
-    public Player(int yPos, int id, String name) {
+    public Player(int id, String name) {
         this.xPos = App.xRange * id;
-        this.yPos = yPos;
         this.id = id;
         this.name = name;
 
@@ -55,8 +56,9 @@ class Player extends App {
                 // starts gameloop
                 try {
                     if(parameterChosen){
-                        shoot();
+                        shoot(shootingAngle,shootingForce);
                         btn.setVisible(false);
+                        parameterChosen = false;
                     }
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
@@ -67,6 +69,8 @@ class Player extends App {
 
         playerRoot.getChildren().add(btn);
 
+        playerScore = new Score(id);
+
     }
 
     public void draw(GraphicsContext gc) {
@@ -74,7 +78,11 @@ class Player extends App {
         // Draws the players
         gc.setFill(Color.BLACK);
         gc.fillRect(xPos, yPos, size, size);
-        textDisplay(gc);
+        if (id == App.turn) {
+            textDisplay(gc);
+        }
+
+        playerScore.draw(gc);
     }
     public void startLocation() {
         this.xPos = App.xRange*id;
@@ -128,10 +136,10 @@ class Player extends App {
     }
 
     void textDisplay(GraphicsContext gc) {
-        if (myTurn) { // if it is the players turn, text is shown asking for the angle of their shot
+         // if it is the players turn, text is shown asking for the angle of their shot
                       // and then the force
             if(!parameterChosen){
-             forceAndAngle = App.getForcesFromMouse(new double[]{xPos+size/2,yPos+size/2}, new double[] {App.MouseX,App.MouseY});
+                forceAndAngle = App.getForcesFromMouse(new double[]{xPos+size/2,yPos+size/2}, new double[] {App.MouseX,App.MouseY});
             }
             gc.setFill(Color.BLACK);
             gc.setFont(Font.font("Verdana", 15));
@@ -161,11 +169,11 @@ class Player extends App {
                 if(parameterChosen){
                     gc.setFont(Font.font("Verdana", 10));
                     gc.fillText("To go back press Any Key",640,210);
+
                 }
                 
         
 
-        }
     }
 
     public static double round(double value, int places) {

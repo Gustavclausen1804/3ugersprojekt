@@ -29,6 +29,7 @@ public class Shot{
     public int shooterId;
 
     public boolean show = true;
+    boolean showBullet = true;
     public boolean move = true;
 
     int animationTimer = 0;
@@ -155,15 +156,18 @@ public class Shot{
 
     public void drawShot(GraphicsContext gc){
         if (show == true){
-            DrawDir(gc);
+            
 
 
             collision();
             explosionAnimation(gc);
-            //Ball
-            gc.setFill(Color.BLACK);
-            // gc.fillRect(200, 200, 30, 30);
-            gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+            if(!explosionActive){
+                DrawDir(gc);
+                //Ball
+                gc.setFill(Color.BLACK);
+                // gc.fillRect(200, 200, 30, 30);
+                gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+            }
         }
     }
 
@@ -294,7 +298,7 @@ public class Shot{
     }
 
     public void collision(){
-        // playerCollision();
+        playerCollision();
         wallCollision();
 
     }
@@ -316,9 +320,7 @@ public class Shot{
                     && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
                         
                         MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
-                        // explosion();
-                        removeShotFlag = true;
-                        removeShot();
+                        explosion();
                         break;
                     }
                    
@@ -328,6 +330,7 @@ public class Shot{
     }
     void removeShot(){
             removeShotFlag = true;
+
     }
 
     public boolean getRemoveShot(){
@@ -339,14 +342,13 @@ public class Shot{
             if(countOnce == false){
                 if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
                     && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
-                    if(p.id == shooterId){
-                        App.score.get(p.id-1).counter--;
+                    if(p.playerShot != null && App.turn == p.id){
+                        p.playerScore.counter--;
                     } else{
-                        App.score.get(shooterId-1).counter++;
+                        p.playerScore.counter++;
                     }
                     countOnce = true;
-                    //explosion();
-                    //removeShot(); 
+                    explosion();
                 }   
             }
             
@@ -356,9 +358,7 @@ public class Shot{
     void explosion(){
         // Loops through the all houses(blocks)
         explosionActive = true;
-        xDir = 0;
-        yDir = 0;
-        gravityForce = 0;
+        this.move = false;
         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
             for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
@@ -397,7 +397,6 @@ public class Shot{
                     currentImage++;
                 }
                 if(currentImage == App.explosionImage.length-1){
-                    explosionActive = false;
                     removeShot();
                 }
             animationTimer++;

@@ -61,7 +61,6 @@ public class App extends Application {
     public static ArrayList<Player> spiller;
     public static ArrayList<Player> modstander;
 
-    public static ArrayList<Score> score;
     MapGeneration map;
 
     // Billede
@@ -224,13 +223,12 @@ public class App extends Application {
         spiller = new ArrayList<Player>();
         modstander = new ArrayList<Player>();
 
-        score = new ArrayList<Score>();
         for (int i = 1; i <= playerAmount; i++) {
             String name = playerNameTextField.get(i - 1).getText();
             if (name.length() == 0) {
                 name = "Player " + i;
             }
-            score.add(new Score(20, i));
+            
             spiller.add(new Player( i, name));
         }
 
@@ -264,9 +262,7 @@ public class App extends Application {
                 if(!p.parameterChosen){
                     p.shootingAngle = p.forceAndAngle[1];
                     p.shootingForce = p.forceAndAngle[0];
-                    
                     p.parameterChosen = true;
-                    p.shoot(p.shootingAngle,p.shootingForce);
                     p.btn.setVisible(true);
                 }
 
@@ -300,10 +296,8 @@ public class App extends Application {
                                                                                                             // reduced
                                                                                                             // with
                                                                                                             // factor
-
-        double[] array = { ForceVectorLength, VectorAngle };
         
-        return array;
+        return new double[] {ForceVectorLength, VectorAngle};
     }
     // Input for each player.
     private void handleKey(KeyEvent event) {
@@ -341,6 +335,7 @@ public class App extends Application {
             playerList.draw(gc);
 
             if (playerList.playerShot != null){    //Shot is 'null' when non-excisting or removed.
+
                 playerList.playerShot.updateShot(); //Update the shot's position.
                 playerList.playerShot.drawShot(gc); //Draw the show on the screen.
                 
@@ -349,16 +344,12 @@ public class App extends Application {
                     turn++;                                 //Next turn
                 }
             }
-            if (turn == playerList.id && playerList.playerShot == null){    //
-                if (playerList.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
-                    playerList.shoot(playerList.shootingAngle,playerList.shootingForce);
-                }
-            }
-        });
-
-        score.forEach((p) -> {
-            p.xLocation();
-            p.draw(gc);
+            // if (turn == playerList.id && playerList.playerShot == null){    //
+            //     if (playerList.hitlerDidNothingWrong){ //Will return true when angle and force has been set, otherwise false.
+            //         playerList.
+            //         playerList.hitlerDidNothingWrong = false;
+            //     }
+            // }
         });
 
 
