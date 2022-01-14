@@ -59,6 +59,8 @@ import javafx.util.Duration;
 public class App extends Application {
 
     public static ArrayList<Player> spiller;
+    public static ArrayList<Player> modstander;
+
     public static ArrayList<Score> score;
     MapGeneration map;
 
@@ -212,6 +214,7 @@ public class App extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         map = new MapGeneration();
 
+
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
 
@@ -219,6 +222,8 @@ public class App extends Application {
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
+        modstander = new ArrayList<Player>();
+
         score = new ArrayList<Score>();
         for (int i = 1; i <= playerAmount; i++) {
             String name = playerNameTextField.get(i - 1).getText();
@@ -259,7 +264,9 @@ public class App extends Application {
                 if(!p.parameterChosen){
                     p.shootingAngle = p.forceAndAngle[1];
                     p.shootingForce = p.forceAndAngle[0];
+                    
                     p.parameterChosen = true;
+                    p.shoot(p.shootingAngle,p.shootingForce);
                     p.btn.setVisible(true);
                 }
 
@@ -329,26 +336,35 @@ public class App extends Application {
     private void run(GraphicsContext gc) {
         map.drawMap(gc);
 
-        spiller.forEach((p) -> {
-            p.move();
-            p.draw(gc);
-            p.skud.forEach((b) -> {
-                b.draw_ball(gc);
+        spiller.forEach((playerList) -> {   //Runs through all registered playerobjects
+            playerList.move();
+            playerList.draw(gc);
 
-            });
+            if (playerList.playerShot != null){    //Shot is 'null' when non-excisting or removed.
+                playerList.playerShot.updateShot(); //Update the shot's position.
+                playerList.playerShot.drawShot(gc); //Draw the show on the screen.
+                
+                
+                if (playerList.removeShot() == true){   //When the shot i removed by colission or hit.
+                    turn++;                                 //Next turn
+                }
+            }
+            if (turn == playerList.id && playerList.playerShot == null){    //
+                if (playerList.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
+                    playerList.shoot(playerList.shootingAngle,playerList.shootingForce);
+                }
+            }
         });
 
         score.forEach((p) -> {
             p.xLocation();
             p.draw(gc);
         });
-        spiller.forEach((p) -> {
-            if (turn == p.id && p.shootsFired == false) {
-                p.myTurn = true;
-            }
-        });
+
+
         if (turn > spiller.size()) {
             turn = 1;
+            System.out.println("turn " + turn);
         }
         frameCount++;
     }

@@ -16,34 +16,31 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
 
+class Player extends App {
 
+    Shot playerShot;
 
+    int xPos, yPos;
+    ArrayList<Shot> skud = new ArrayList<Shot>();
+    boolean myTurn, angleChosen, ForceChosen;
 
-
-class Player extends App{
-    int xPos = 0, yPos = 0;
-    static ArrayList<Shot> skud = new ArrayList<Shot>();
-    boolean myTurn,parameterChosen;
-    
     Group playerRoot = new Group();
     CustomButton btn = new CustomButton("Shoot");
-    
 
 
-    
     String name;
-   final int size = 30;
-   int id;
-   boolean shootsFired;
-   double shootingForce, shootingAngle;
-   double[] forceAndAngle;
+    final int size = 30;
+    int id;
+    public boolean shootsFired;
+    double shootingForce, shootingAngle;
 
-   
+    int score = 0;
 
-    Player( int id, String name){
+    public Player(int yPos, int id, String name) {
+        this.xPos = App.xRange * id;
+        this.yPos = yPos;
         this.id = id;
         this.name = name;
-        startLocation();
 
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btn.setLayoutX(640);
@@ -69,19 +66,16 @@ class Player extends App{
         });
 
         playerRoot.getChildren().add(btn);
-        
+
     }
 
     public void draw(GraphicsContext gc) {
 
         // Draws the players
-
         gc.setFill(Color.BLACK);
         gc.fillRect(xPos, yPos, size, size);
         textDisplay(gc);
-        // .addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
     }
-
     public void startLocation() {
         this.xPos = App.xRange*id;
 
@@ -113,19 +107,24 @@ class Player extends App{
         }
     }
 
-    public void shoot() {
+    public void shoot(double angle, double force) {
+            Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
+            Double shootingAngleRadian = Math.toRadians(angle);
+            // skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, false));
+            this.playerShot = new Shot(xPos+20, yPos+2, true, true);
+            // this.playerShot = new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, true);
 
-        if (shootsFired == false) {
-            double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
-            double shootingAngleRadian = Math.toRadians(shootingAngle);
-            skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)),
-                    yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), shootingAngle, shootingForce,
-                    id));
-            myTurn = false;
-            shootsFired = true;
+            playerShot.applyForce(angle, force);
+            
+    }
 
+    public boolean removeShot(){
+        if (this.playerShot.getRemoveShot()){
+            System.out.println("Player, removeShot()");
+            this.playerShot = null;
+            return true;
         }
-
+        return false;
     }
 
     void textDisplay(GraphicsContext gc) {
