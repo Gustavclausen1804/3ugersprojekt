@@ -26,6 +26,8 @@ class Player extends App {
     public boolean shootsFired;
     double shootingForce, shootingAngle;
 
+    int score = 0;
+
     public Player(int yPos, int id, String name) {
         this.xPos = App.xRange * id;
         this.yPos = yPos;
@@ -50,12 +52,14 @@ class Player extends App {
         // textDisplay(gc);
     }
 
-    public void shoot() {
+    public void shoot(double angle, double force) {
             Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
-            Double shootingAngleRadian = Math.toRadians(shootingAngle);
+            Double shootingAngleRadian = Math.toRadians(angle);
             // skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, false));
-            this.playerShot = new Shot(xPos+20, yPos+2, false, true);
-            playerShot.applyForce(shootingAngle, shootingForce);
+            this.playerShot = new Shot(xPos+20, yPos+2, true, true);
+            // this.playerShot = new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, true);
+
+            playerShot.applyForce(angle, force);
             
     }
 

@@ -57,6 +57,8 @@ import javafx.util.Duration;
 public class App extends Application {
 
     public static ArrayList<Player> spiller;
+    public static ArrayList<Player> modstander;
+
     public static ArrayList<Score> score;
     MapGeneration map;
 
@@ -203,6 +205,8 @@ public class App extends Application {
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
+        modstander = new ArrayList<Player>();
+
         score = new ArrayList<Score>();
         for (int i = 1; i <= playerAmount; i++) {
             String name = playerNameTextField.get(i-1).getText();
@@ -249,7 +253,7 @@ public class App extends Application {
                             }
                         }
                         if (p.angleChosen && p.ForceChosen) {   //if both are chosen, shoot and reset variables.
-                            p.shoot();
+                            p.shoot(p.shootingAngle,p.shootingForce);
                             p.angleChosen = false;
                             p.ForceChosen = false;
                         }
@@ -284,17 +288,17 @@ public class App extends Application {
             playerList.draw(gc);
 
             if (playerList.playerShot != null){    //Shot is 'null' when non-excisting or removed.
-                playerList.playerShot.updateShot();
-                playerList.playerShot.drawShot(gc);
+                playerList.playerShot.updateShot(); //Update the shot's position.
+                playerList.playerShot.drawShot(gc); //Draw the show on the screen.
                 
                 
-                if (playerList.removeShot() == true){
-                    turn++;
+                if (playerList.removeShot() == true){   //When the shot i removed by colission or hit.
+                    turn++;                                 //Next turn
                 }
             }
             if (turn == playerList.id && playerList.playerShot == null){    //
                 if (playerList.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
-                playerList.shoot();
+                    playerList.shoot(playerList.shootingAngle,playerList.shootingForce);
                 }
             }
         });

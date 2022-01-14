@@ -143,15 +143,17 @@ public class Shot{
     }
 
     public void drawShot(GraphicsContext gc){
-        DrawDir(gc);
+        if (show == true){
+            DrawDir(gc);
 
 
-        collision();
+            collision();
 
-        //Ball
-        gc.setFill(Color.BLACK);
-        // gc.fillRect(200, 200, 30, 30);
-        gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+            //Ball
+            gc.setFill(Color.BLACK);
+            // gc.fillRect(200, 200, 30, 30);
+            gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+        }
     }
 
     public void DrawDir(GraphicsContext gc){
@@ -210,6 +212,8 @@ public class Shot{
 
     public void updateShot(){
 
+        if (move == true){
+
         //Update the balls position according to its direction vector components
         this.ballXPos += xDir;
         this.ballYPos += yDir;
@@ -238,9 +242,13 @@ public class Shot{
             //Gravity
             applyForce("downConstant", (massObject*gravityForce)/75);
         }
+    }
 
-    public void changeMove(boolean state){
+    public void setMove(boolean state){
         this.move = state;
+    }
+        public void setShow(boolean state){
+        this.show = state;
     }
 
     public double[] getPosition(){  //Returns the coordiantes of the shot.
@@ -275,7 +283,7 @@ public class Shot{
     }
 
     public void collision(){
-        //playerCollision();
+        // playerCollision();
         wallCollision();
 
     }
@@ -313,6 +321,7 @@ public class Shot{
 
     void playerCollision(){
         App.spiller.forEach((p) -> {
+            System.out.println("shot, playerCollision()");
 
             if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
                 && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
