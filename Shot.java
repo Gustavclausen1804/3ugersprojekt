@@ -1,7 +1,12 @@
 import java.awt.Canvas;
 import java.util.Map;
 
+import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
+
+import javafx.event.EventType;
+import javafx.css.Size;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
@@ -25,6 +30,8 @@ public class Shot{
     int animationTimer = 0;
     int currentImage = 0;
     boolean explosionActive;
+    boolean countOnce;
+    boolean shotGone;
     
 
     Shot(int x, int y){
@@ -33,7 +40,7 @@ public class Shot{
         // enemyShot(x,y);
     }
     
-    Shot(Double ballXPos, Double ballYPos, double angle, double force, int shooterId){
+    Shot(double ballXPos, double ballYPos, double angle, double force, int shooterId){
         
         this.ballXPos = ballXPos;
         this.ballYPos = ballYPos;
@@ -43,16 +50,18 @@ public class Shot{
     }
 
     public void draw_ball(GraphicsContext gc){
-        move_ball();
-        DrawDir(gc);
-        collision();
-        explosionAnimation(gc);
+        if(!shotGone){
+            move_ball();
+            DrawDir(gc);
+            collision();
+            explosionAnimation(gc);
 
 
-        //Ball
-        if(!explosionActive){
-        gc.setFill(Color.BLACK);
-        gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+            //Ball
+            if(!explosionActive){
+                gc.setFill(Color.BLACK);
+                gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+            }
         }
         
     }
@@ -158,14 +167,15 @@ public class Shot{
         return Math.sqrt((Math.pow(xDir, 2)+Math.pow(yDir, 2)));
     }
 
-    public void collision(){
-       playerCollision();
-       wallCollision();
+    public void collision() {
+        playerCollision();
+        wallCollision();
 
     }
+
     void wallCollision(){
-        if(ballYPos == App.height){
-            // removeShot();
+        if(ballYPos >= App.height-2*BALL_R){
+            explosion();
             
         }
         // Loops through the all houses(blocks)
@@ -180,7 +190,7 @@ public class Shot{
                     && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
                         
                         MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
-                        explosionActive = true;
+                        
                         explosion();
                         xDir = 0;
                         yDir = 0;
@@ -198,16 +208,13 @@ public class Shot{
                 //Dårlig hack for nu
             ballXPos = 0;
             ballYPos = 0;
-            xDir = 0;
-            yDir = 0;
-            gravityForce = 0;
 
             
             App.spiller.get(shooterId-1).shootsFired=false;
-            App.spiller.get(shooterId-1).ForceChosen=false;
-            App.spiller.get(shooterId-1).angleChosen=false;
+            App.spiller.get(shooterId-1).parameterChosen=false;
             App.turn++;
-            Player.skud.remove(this);
+            shotGone = true;
+            
             
 
                 
@@ -215,16 +222,17 @@ public class Shot{
 
     void playerCollision(){
         App.spiller.forEach((p) -> {
-
-            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
-                && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
-                if(p.id == shooterId){
-                    App.score.get(p.id-1).counter--;
-                } else{
-                    App.score.get(shooterId-1).counter++;
-                }
-                //explosion();
-                removeShot();
+            if(countOnce == false){
+                if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) 
+                    && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
+                    if(p.id == shooterId){
+                        App.score.get(p.id-1).counter--;
+                    } else{
+                        App.score.get(shooterId-1).counter++;
+                    }
+                    countOnce = true;
+                    explosion(); 
+                }   
             }
             
         });
@@ -232,27 +240,35 @@ public class Shot{
 
     void explosion(){
         // Loops through the all houses(blocks)
+        explosionActive = true;
+        xDir = 0;
+        yDir = 0;
+        gravityForce = 0;
         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
             for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
                 int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
                 for(int h = 0; h < 4; h++){
-                    Double x = 0., y = 0.; // creates two empty variables x and y
-                    Double xWallD = Double.valueOf(xPosWall) ,yWallD = Double.valueOf(yPosWall); //converts the position of the wall from int to double
+                    double x = 0, y = 0; // creates two empty variables x and y
                     switch(h){ // This switch is used to create values for x and y which each represents each corner of the block
                         case 0: // top left corner
-                        x = xWallD; y = yWallD; break;
+                        x = xPosWall; y = yPosWall; break;
                         case 1:
-                        x = xWallD+wallSize; y = yWallD; break; //top right corner
+                        x = xPosWall+wallSize; y = yPosWall; break; //top right corner
                         case 3:
-                        x = xWallD; y = yWallD+wallSize; break; // bottom left corner
+                        x = xPosWall; y = yPosWall+wallSize; break; // bottom left corner
                         case 4:
-                        x = xWallD+wallSize; y = yWallD+wallSize; break; // bottom right corner
+                        x = xPosWall+wallSize; y = yPosWall+wallSize; break; // bottom right corner
                     }
-                    double distance = Math.sqrt(Math.pow(ballXPos-x, 2)+Math.pow(ballYPos-y, 2)); //calculates the distance between the shot and each corner of the ball
-                    if(distance <=explosion_R){
-                        MapGeneration.houses.get(i).remove(j); //removes the shot if it
+                    double distance = Math.sqrt(Math.pow(ballXPos - x, 2) + Math.pow(ballYPos - y, 2)); // calculates
+                                                                                                        // the distance
+                                                                                                        // between the
+                                                                                                        // shot and each
+                                                                                                        // corner of the
+                                                                                                        // ball
+                    if (distance <= explosion_R) {
+                        MapGeneration.houses.get(i).remove(j); // removes the shot if it
                     }
                 }  
             }
