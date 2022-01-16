@@ -5,7 +5,7 @@ public class Enemy extends Player{
       
 
       public Enemy(int xPos, int yPos, int id, String name) {
-            super(yPos,id,name);
+            super(id,name);
             System.out.println("ENEMY OPRETTET");
       }
 
@@ -32,7 +32,7 @@ public class Enemy extends Player{
                         double angleNext = angleMinMax[0] + AngleStep * iA;
                         double forceNext = forceMinMax[0] + ForceStep * iF;
 
-                        Shot simulation = new Shot(xPos, yPos, true, false);
+                        Shot simulation = new Shot(xPos, yPos, true, false, id);
 
                         simulation.applyForce(angleNext,forceNext);
 
@@ -85,7 +85,7 @@ public class Enemy extends Player{
                   }
             }
             System.out.println("Modstander: " + bestShot[0] + " " + bestShot[1]);
-            Shot shot = new Shot(xPos, yPos, true, true);
+            Shot shot = new Shot(xPos, yPos, true, true, id);
             // shot.applyForce(bestShot[0],bestShot[1]);
 
       }

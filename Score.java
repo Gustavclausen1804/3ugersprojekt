@@ -58,6 +58,7 @@ class Score {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Lolcat");
         return PlayerScoreObject;
 
     }

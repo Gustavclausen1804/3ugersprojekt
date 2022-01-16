@@ -52,6 +52,7 @@ class Player extends App {
                 // starts gameloop
                 try {
                     if (parameterChosen) {
+                        shootsFired = true;
                         shoot(shootingAngle, shootingForce);
                         btn.setVisible(false);
                         parameterChosen = false;
@@ -74,8 +75,10 @@ class Player extends App {
         // Draws the players
         gc.setFill(Color.BLACK);
         gc.fillRect(xPos, yPos, size, size);
-        if (id == App.turn) {
-            textDisplay(gc);
+        if(!App.gameEnded){
+            if (id == App.turn) {
+                textDisplay(gc);
+            }
         }
 
         playerScore.draw(gc);

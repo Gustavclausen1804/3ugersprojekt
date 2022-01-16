@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
-
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -86,6 +86,9 @@ public class App extends Application {
     public static int playerAmount = 2; // Default value
     public static int xRange;
 
+    int winnerScore;
+    static boolean gameEnded;
+
     static int turn = 1;
     private GridPane grid = new GridPane();
     private GridPane nameGrid = new GridPane();
@@ -96,14 +99,17 @@ public class App extends Application {
 
     static int frameCount = 0;
 
+    boolean Ting;
+
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
         primaryStage.setTitle("Start Screen");
 
-        grid.setAlignment(Pos.CENTER);
-        grid.setVgap(hightGap);
-        grid.setHgap(sideGap);
-
+        if(!Ting){
+            grid.setAlignment(Pos.CENTER);
+            grid.setVgap(hightGap);
+            grid.setHgap(sideGap);
+        }
         // line 1
         CustomLabel Players = new CustomLabel("How many players:");
         grid.add(Players, 0, 1);
@@ -129,7 +135,7 @@ public class App extends Application {
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         grid.add(btn, 1, 2);
 
-        CustomButton ScoreBoardButton = new CustomButton("View Scoreboard");
+        CustomButton ScoreBoardButton = new CustomButton("History");
         ScoreBoardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         grid.add(ScoreBoardButton, 1, 3);
         ScoreBoardButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -192,9 +198,22 @@ public class App extends Application {
             playerNameTextField.add(new TextField("Player " + (i + 1)));
             nameGrid.add(playerNameTextField.get(i), 1, i);
         }
+
+        CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
+        nameGrid.add(scoreLabel,0,playerAmount);
+
+        Slider scoreSlider = new Slider(1, 10, 1);
+        scoreSlider.setMajorTickUnit(1);
+        scoreSlider.setBlockIncrement(1);
+        scoreSlider.setMinorTickCount(0);
+        scoreSlider.setShowTickLabels(true);
+        scoreSlider.setSnapToTicks(true);
+        scoreSlider.setShowTickMarks(true);
+        nameGrid.add(scoreSlider, 1, playerAmount);
+
         CustomButton btn = new CustomButton("Begin");
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        nameGrid.add(btn, 1, playerAmount);
+        nameGrid.add(btn, 1, playerAmount+1);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -202,6 +221,7 @@ public class App extends Application {
             public void handle(ActionEvent e) {
                 // starts gameloop
                 try {
+                    winnerScore = (int) scoreSlider.getValue();
                     gamestart(stage);
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
@@ -241,6 +261,24 @@ public class App extends Application {
             player2Label.add(new CustomLabel(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[1].toString()));
             nameGrid.add(player2Label.get(i), 2, i);
         }
+
+        CustomButton btn = new CustomButton("Back");
+        btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        nameGrid.add(btn, 1, scoresArray.size());
+
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    start(stage);
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
         Scene scene = new Scene(nameGrid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -297,8 +335,8 @@ public class App extends Application {
     private void handleMousePressed(MouseEvent event) {
 
         spiller.forEach((p) -> {
-            if (turn == p.id) {
-                if (!p.parameterChosen) {
+            if (turn == p.id && !gameEnded) {
+                if (!p.parameterChosen && !p.shootsFired) {
                     p.shootingAngle = p.forceAndAngle[1];
                     p.shootingForce = p.forceAndAngle[0];
                     p.parameterChosen = true;
@@ -389,12 +427,25 @@ public class App extends Application {
             // playerList.hitlerDidNothingWrong = false;
             // }
             // }
+
+            //Check if a Player Won
+            if(playerList.playerScore.counter == winnerScore){
+                if(!gameEnded){
+                gameEnded = true;
+                Score.toJSONString();
+                }
+                gc.setFont(Font.font("Verdana", 30));
+                gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
+            }
         });
 
         if (turn > spiller.size()) {
             turn = 1;
             System.out.println("turn " + turn);
         }
+
+        
+
         frameCount++;
     }
 

@@ -246,10 +246,10 @@ public class Shot {
                 this.ballYPos = App.height - 1;
                 this.yDir *= -1;
             }
-            if (this.ballYPos < 0) {
-                this.ballYPos = 0;
-                this.yDir *= -1;
-            }
+            // if (this.ballYPos < 0) {
+            //     this.ballYPos = 0;
+            //     this.yDir *= -1;
+            // }
             // Wind resistiance
             if (getSpeed() > 0) {
                 applyForce("follow", -(Math.pow(getSpeed(), 2) / 500));
@@ -334,6 +334,7 @@ public class Shot {
     }
 
     void removeShot() {
+        App.spiller.get(shooterId-1).shootsFired=false;
         removeShotFlag = true;
 
     }
@@ -354,7 +355,7 @@ public class Shot {
                     }
                     countOnce = true;
                     explosion();
-                    Score.toJSONString();
+                    
                 }
             }
 
