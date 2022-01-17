@@ -5,13 +5,15 @@ import javafx.scene.text.TextAlignment;
 
 
 class Score {
-    int xPos, yPos = 20,counter = 0,id;
+    int xPos, yPos,counter,id;
 
     static final int size = 30;
    
-    Score(int id){
+    Score(int yPos, int id){
+        this.xPos = 0;
+        this.yPos = yPos;
+        this.counter = 0;
         this.id = id;
-        this.xPos = App.xRange*id;   
     }
 
     public void draw(GraphicsContext gc){
@@ -25,6 +27,10 @@ class Score {
         });
         
         
+    }
+
+    public void xLocation(){
+        this.xPos = App.xRange*id;   
     }
 
 

@@ -16,32 +16,34 @@ import javafx.scene.paint.Color;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
 
-class Player extends App {
 
-    Shot playerShot;
 
-    Score playerScore;
 
-    int xPos, yPos;
-    boolean  parameterChosen = false;
 
+class Player extends App{
+    int xPos = 0, yPos = 0;
+    static ArrayList<Shot> skud = new ArrayList<Shot>();
+    boolean myTurn,parameterChosen;
+    
     Group playerRoot = new Group();
     CustomButton btn = new CustomButton("Shoot");
+    
 
 
+    
     String name;
-    final int size = 30;
-    int id;
-    public boolean shootsFired;
-    double shootingForce, shootingAngle;
-    double[] forceAndAngle;
+   final int size = 30;
+   int id;
+   boolean shootsFired;
+   double shootingForce, shootingAngle;
+   double[] forceAndAngle;
 
-    int score = 0;
+   
 
-    public Player(int id, String name) {
-        this.xPos = App.xRange * id;
+    Player( int id, String name){
         this.id = id;
         this.name = name;
+        startLocation();
 
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btn.setLayoutX(640);
@@ -56,9 +58,8 @@ class Player extends App {
                 // starts gameloop
                 try {
                     if(parameterChosen){
-                        shoot(shootingAngle,shootingForce);
+                        shoot();
                         btn.setVisible(false);
-                        parameterChosen = false;
                     }
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
@@ -68,22 +69,18 @@ class Player extends App {
         });
 
         playerRoot.getChildren().add(btn);
-
-        playerScore = new Score(id);
-
+        
     }
 
     public void draw(GraphicsContext gc) {
 
         // Draws the players
+
         gc.setFill(Color.BLACK);
         gc.fillRect(xPos, yPos, size, size);
-        if (id == App.turn) {
-            textDisplay(gc);
-        }
-
-        playerScore.draw(gc);
+        textDisplay(gc);
     }
+
     public void startLocation() {
         this.xPos = App.xRange*id;
 
@@ -115,41 +112,30 @@ class Player extends App {
         }
     }
 
-    public void shoot(double angle, double force) {
-            Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
-            Double shootingAngleRadian = Math.toRadians(angle);
-            // skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, false));
-            this.playerShot = new Shot(xPos+20, yPos+2, true, true);
-            // this.playerShot = new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), true, true);
+    public void shoot() {
 
-            playerShot.applyForce(angle, force);
-            
-    }
+        if (shootsFired == false) {
+            double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
+            double shootingAngleRadian = Math.toRadians(shootingAngle);
+            skud.add(new Shot(xPos + (size / 2) + (sizeD * Math.cos(shootingAngleRadian)),
+                    yPos + (size / 2) + (sizeD * Math.sin(shootingAngleRadian) * (-1)), shootingAngle, shootingForce,
+                    id));
+            myTurn = false;
+            shootsFired = true;
 
-    public boolean removeShot(){
-        if (this.playerShot.getRemoveShot()){
-            System.out.println("Player, removeShot()");
-            this.playerShot = null;
-            return true;
         }
-        return false;
+
     }
 
     void textDisplay(GraphicsContext gc) {
-         // if it is the players turn, text is shown asking for the angle of their shot
+        if (myTurn) { // if it is the players turn, text is shown asking for the angle of their shot
                       // and then the force
             if(!parameterChosen){
-                forceAndAngle = App.getForcesFromMouse(new double[]{xPos+size/2,yPos+size/2}, new double[] {App.MouseX,App.MouseY});
+             forceAndAngle = App.getForcesFromMouse(new double[]{xPos+size/2,yPos+size/2}, new double[] {App.MouseX,App.MouseY});
             }
             gc.setFill(Color.BLACK);
             gc.setFont(Font.font("Verdana", 15));
 
-
-
-            //PointerInfo a = MouseInfo.getPointerInfo();
-            // Point point = new Point(a.getLocation());
-            // SwingUtilities.convertPointFromScreen(point, e.getComponent());
-            // System.out.println(point.x + "," + point.y);
 
                 // Draws the arrow which show the angle of the shot
                 gc.setStroke(Color.BLUE);
@@ -169,11 +155,11 @@ class Player extends App {
                 if(parameterChosen){
                     gc.setFont(Font.font("Verdana", 10));
                     gc.fillText("To go back press Any Key",640,210);
-
                 }
                 
         
 
+        }
     }
 
     public static double round(double value, int places) {

@@ -44,7 +44,6 @@ class MapGeneration {
             int minHeight = (App.height / boxSize) / 2; // blocks from the top of the stage.
             if (y_coordinate < minHeight) {
                 y_coordinate = minHeight + ran.nextInt(minHeight - 2);
-                System.out.println(y_coordinate);
             }
             
             int maxWidth = 5;
