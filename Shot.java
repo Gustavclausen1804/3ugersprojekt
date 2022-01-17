@@ -144,7 +144,7 @@ public class Shot{
     }
 
     public void updateShot(){
-        int refinementFactor = 4;
+        int refinementFactor = 2;
         if (move == true){
 
                 //Update the balls position according to its direction vector components

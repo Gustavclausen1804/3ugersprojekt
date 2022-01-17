@@ -121,13 +121,16 @@ class Player extends App {
             Double shootingAngleRadian = Math.toRadians(angle);
 
             if (App.turn == 2 && enemyEnable == true){
-                double[] shot = enemyDifficulty(enemyShot( xPos, yPos), 1);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
+                // double[] shot = enemyDifficulty(enemyShot( xPos, yPos), 1);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
+                double[] shot = enemyShot( xPos, yPos);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
+
                 angle = shot[0];
                 force = shot[1];
+                System.gc();
             }
-
             this.playerShot = new Shot(xPos, yPos, true, true, id);
             playerShot.applyForce(angle, force);
+            
     }
 
     public boolean removeShot(){

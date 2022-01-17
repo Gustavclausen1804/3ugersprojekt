@@ -214,7 +214,7 @@ public class App extends Application {
         map = new MapGeneration();
 
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(5), e -> run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
 
         
