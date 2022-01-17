@@ -65,6 +65,7 @@ public class App extends Application {
     public static ArrayList<Player> spiller;
     public static ArrayList<Player> modstander;
     public static ArrayList<ToggleButton> toggleButtonList = new ArrayList<>();
+    public static ArrayList<Slider> EnemyLevelList = new ArrayList<>();
 
     MapGeneration map;
 
@@ -206,6 +207,14 @@ public class App extends Application {
             nameGrid.add(playerNameTextField.get(i), 1, i);
             toggleButtonList.add(new ToggleButton("Toggle AI"));
             nameGrid.add(toggleButtonList.get(i), 2, i);
+            EnemyLevelList.add(new Slider(0, 3, 1));
+            EnemyLevelList.get(i).setMajorTickUnit(1);
+            EnemyLevelList.get(i).setBlockIncrement(1);
+            EnemyLevelList.get(i).setMinorTickCount(0);
+            EnemyLevelList.get(i).setShowTickLabels(true);
+            EnemyLevelList.get(i).setSnapToTicks(true);
+            EnemyLevelList.get(i).setShowTickMarks(true);
+            nameGrid.add(EnemyLevelList.get(i), 3, i);
         }
 
         CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
@@ -315,7 +324,9 @@ public class App extends Application {
                 name = "Player " + i;
             }
             if (toggleButtonList.get(i - 1).isSelected() == true) { // ADD ENENMY TOOGLE HERE
-                spiller.add(new Enemy(i, name));
+                spiller.add(new Enemy(i, name, EnemyLevelList.get(i - 1))); // Skal hente .get(i-1) fra EnemyLevelList,
+                                                                            // er dog ikke helt sikker på den kaldes
+                                                                            // sådan her.
             }
             if (toggleButtonList.get(i - 1).isSelected() == false) {
                 spiller.add(new Player(i, name));
