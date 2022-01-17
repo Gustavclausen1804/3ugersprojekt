@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
+
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,7 +38,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 
 import javafx.scene.Scene;
@@ -59,7 +61,6 @@ public class App extends Application {
     public static ArrayList<Player> spiller;
     public static ArrayList<Player> modstander;
 
-    public static ArrayList<Score> score;
     MapGeneration map;
 
     // Billede
@@ -68,6 +69,10 @@ public class App extends Application {
     // Screen Size
     static final int width = 1280;
     static final int height = 720;
+
+    // Mouse x & y coordinate
+    public static double MouseX;
+    public static double MouseY;
 
     // Set min and max players
     private final int minPlayers = 2; // atleast 2 for game to work
@@ -82,8 +87,16 @@ public class App extends Application {
 
     static int turn = 1;
     private GridPane grid = new GridPane();
-    private GridPane nameGrid = new GridPane(); 
+    private GridPane nameGrid = new GridPane();
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
+
+
+    static Image[] explosionImage = new Image[11];  
+    static int explosionRadius = 50;
+    
+    
+    boolean enemyEnable = true;
+    static int frameCount = 0;
 
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
@@ -97,6 +110,8 @@ public class App extends Application {
         CustomLabel Players = new CustomLabel("How many players:");
         grid.add(Players, 0, 1);
 
+        
+
         Slider playerSlider = new Slider(2, 8, 1);
         playerSlider.setMajorTickUnit(1);
         playerSlider.setBlockIncrement(1);
@@ -104,8 +119,10 @@ public class App extends Application {
         playerSlider.setShowTickLabels(true);
         playerSlider.setSnapToTicks(true);
         playerSlider.setShowTickMarks(true);
-       // playerSlider.setStyle("-fx-control-inner-background: yellow;");
-       // playerSlider.setStyle(".playerSlider > .thumb { -fx-background-color: green; }");
+        // playerSlider.setStyle("-fx-control-inner-background: yellow;");
+        // playerSlider.setStyle(".playerSlider > .thumb { -fx-background-color: green;
+        // }");
+
         grid.add(playerSlider, 1, 1);
 
         // line 2
@@ -154,18 +171,17 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    public void playerNames(Stage stage) throws Exception{
-        
-        
+
+    public void playerNames(Stage stage) throws Exception {
+
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
-        CustomLabel Players = new CustomLabel("Suck my ");
         ArrayList<CustomLabel> playerLabel = new ArrayList<>();
-        for(int i = 0; i < playerAmount;i++){
-            playerLabel.add(new CustomLabel("Player " + (i+1) +" name: "));  
+        for (int i = 0; i < playerAmount; i++) {
+            playerLabel.add(new CustomLabel("Player " + (i + 1) + " name: "));
             nameGrid.add(playerLabel.get(i), 0, i);
-            playerNameTextField.add(new TextField("Player " + (i+1)));  
+            playerNameTextField.add(new TextField("Player " + (i + 1)));
             nameGrid.add(playerNameTextField.get(i), 1, i);
         }
         CustomButton btn = new CustomButton("Begin");
@@ -185,13 +201,11 @@ public class App extends Application {
                 }
             }
         });
-        
-        
+
         Scene scene = new Scene(nameGrid, width, height);
         stage.setScene(scene);
         stage.show();
     }
-
 
     public void gamestart(Stage stage) throws Exception {
         Group root = new Group();
@@ -200,21 +214,25 @@ public class App extends Application {
         map = new MapGeneration();
 
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(5), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
+
+        
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
         modstander = new ArrayList<Player>();
 
-        score = new ArrayList<Score>();
         for (int i = 1; i <= playerAmount; i++) {
-            String name = playerNameTextField.get(i-1).getText();
-            if(name.length() == 0){
-                name = "Player " +i;
+            String name = playerNameTextField.get(i - 1).getText();
+            if (name.length() == 0) {
+                name = "Player " + i;
             }
-            score.add(new Score(20, i));
-            spiller.add(new Player(200, i, name));
+            if (enemyEnable == true && i == 2){
+                spiller.add(new Enemy( i, name));
+            } else {
+            spiller.add(new Player( i, name));
+            }
         }
 
         root.getChildren().add(canvas);
@@ -222,47 +240,78 @@ public class App extends Application {
             root.getChildren().add(p.playerRoot);
         });
 
+        shotExplosionBilleder();
+
         Scene scene = new Scene(root, width, height);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
-        
+        scene.setOnMouseMoved(this::handleMouseMove);
+        scene.setOnMousePressed(this::handleMousePressed);
         stage.setScene(scene);
         stage.show();
         tl.play();
 
     }
 
-    private void handleKey(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            spiller.forEach((p) -> {
-                if (turn == p.id) {
-                    if (p.shootsFired == false) {
-                        if (p.angleChosen == false) {
-                            if (p.textFieldAngle.getText().length() != 0) {
-                                p.shootingAngle = getDoubFromTextField(p.textFieldAngle);
-                                p.angleChosen = true;
-                                p.textFieldAngle.setText("");
-                                p.textFieldAngle.setVisible(false);
-                            }
-                        }
-                        if (p.angleChosen && p.ForceChosen == false) {
-                            if (p.textFieldForce.getText().length() != 0) {
-                                p.shootingForce = getDoubFromTextField(p.textFieldForce);
-                                p.ForceChosen = true;
-                                p.textFieldForce.setText("");
-                                p.textFieldForce.setVisible(false);
-                            }
-                        }
-                        if (p.angleChosen && p.ForceChosen) {   //if both are chosen, shoot and reset variables.
-                            p.shoot(p.shootingAngle,p.shootingForce);
-                            p.angleChosen = false;
-                            p.ForceChosen = false;
-                        }
+    private void handleMouseMove(MouseEvent event) {
 
-                    }
+        // Mouse x & y coordinate
+        this.MouseX = event.getX();
+        this.MouseY = event.getY();
+    }
+    private void handleMousePressed(MouseEvent event) {
 
+        spiller.forEach((p) -> {
+            if (turn == p.id) {
+                if(!p.parameterChosen){
+                    p.shootingAngle = p.forceAndAngle[1];
+                    p.shootingForce = p.forceAndAngle[0];
+                    p.parameterChosen = true;
+                    p.btn.setVisible(true);
                 }
-            });
-        }
+
+            }
+        });
+    }
+
+    static double[] getForcesFromMouse(double[] PlayerPos, double[] mousePosition) {
+        // player x & y coordinate
+        double ForceVectorX = (mousePosition[0]-PlayerPos[0]); // To invert, so it is easier to set angle for humans
+        double ForceVectorY = (mousePosition[1]-PlayerPos[1]); // To invert, so it is easier to set angle for humans
+
+        double[] vector1 = new double[]{ForceVectorX, ForceVectorY}; // Is the vector from the playpos to the mouse
+        double[] vector2 = new double[]{ForceVectorX, 0}; 
+
+        double crossProduct = vector1[0]*vector2[0]+vector1[1]*vector2[1];
+
+        double vector1Length = Math.sqrt(Math.pow(vector1[0], 2)+Math.pow(vector1[1], 2));
+
+        double cosToAngle = crossProduct/(vector1Length*vector2[0]);
+        
+        double VectorAngle = Math.toDegrees(Math.acos(cosToAngle)); 
+
+        if(ForceVectorY > 0){
+            VectorAngle = 360-VectorAngle;
+        }   
+        
+
+        double ForceVectorLength = (Math.sqrt(Math.pow(ForceVectorX, 2) + Math.pow(ForceVectorY, 2))) / 10; // Vector
+                                                                                                            // length
+                                                                                                            // reduced
+                                                                                                            // with
+                                                                                                            // factor
+        
+        return new double[] {ForceVectorLength, VectorAngle};
+    }
+    // Input for each player.
+    private void handleKey(KeyEvent event) {
+        spiller.forEach((p) -> {
+            if (turn == p.id) {
+                if(p.parameterChosen){
+                    p.parameterChosen = false;
+                    p.btn.setVisible(false);
+                }    
+            }
+        }); 
     }
 
     public static Double getDoubFromTextField(TextField textField) {
@@ -285,9 +334,11 @@ public class App extends Application {
         map.drawMap(gc);
 
         spiller.forEach((playerList) -> {   //Runs through all registered playerobjects
+            playerList.move();
             playerList.draw(gc);
 
             if (playerList.playerShot != null){    //Shot is 'null' when non-excisting or removed.
+
                 playerList.playerShot.updateShot(); //Update the shot's position.
                 playerList.playerShot.drawShot(gc); //Draw the show on the screen.
                 
@@ -296,16 +347,12 @@ public class App extends Application {
                     turn++;                                 //Next turn
                 }
             }
-            if (turn == playerList.id && playerList.playerShot == null){    //
-                if (playerList.textDisplay(gc) == true){ //Will return true when angle and force has been set, otherwise false.
-                    playerList.shoot(playerList.shootingAngle,playerList.shootingForce);
-                }
-            }
-        });
-
-        score.forEach((p) -> {
-            p.xLocation();
-            p.draw(gc);
+            // if (turn == playerList.id && playerList.playerShot == null){    //
+            //     if (playerList.hitlerDidNothingWrong){ //Will return true when angle and force has been set, otherwise false.
+            //         playerList.
+            //         playerList.hitlerDidNothingWrong = false;
+            //     }
+            // }
         });
 
 
@@ -313,7 +360,7 @@ public class App extends Application {
             turn = 1;
             System.out.println("turn " + turn);
         }
-
+        frameCount++;
     }
 
     private int runA = 1;
@@ -344,6 +391,13 @@ public class App extends Application {
          * }
          */
     }
+
+    void shotExplosionBilleder(){
+        // Load explosion images into array.
+        for (int i = 0; i < explosionImage.length; i++) {
+           explosionImage[i] = new Image("/resources/explosion" + i + ".png", explosionRadius*2, explosionRadius*2, false, false);
+       }
+   }
 
     public static void main(String[] args) {
         launch(args);
