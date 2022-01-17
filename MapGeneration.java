@@ -44,6 +44,7 @@ class MapGeneration {
             int minHeight = (App.height / boxSize) / 2; // blocks from the top of the stage.
             if (y_coordinate < minHeight) {
                 y_coordinate = minHeight + ran.nextInt(minHeight - 2);
+                System.out.println(y_coordinate);
             }
             
             int maxWidth = 5;
@@ -112,10 +113,9 @@ class MapGeneration {
     public void drawMap(GraphicsContext gc) {
        
 
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, App.width, App.height);
-        gc.setFill(Color.BEIGE);
+        gc.drawImage(App.backGroundImage,0,0);
         gc.setStroke(Color.BLACK);
+        gc.setLineWidth(4);
 
         for (int i = 0; i < houses.size(); i++) {
                         
@@ -123,7 +123,7 @@ class MapGeneration {
                 houseImage = houseImageArray[houses.get(i).get(j)[2]][houses.get(i).get(j)[3]];
                
                 gc.drawImage(houseImage, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
-                gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
+                 gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
 
                 
 
