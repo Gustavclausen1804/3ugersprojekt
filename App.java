@@ -314,7 +314,7 @@ public class App extends Application {
             if (name.length() == 0) {
                 name = "Player " + i;
             }
-            if (toggleButtonList.get(i - 1).isSelected() == true && i == 2) { // ADD ENENMY TOOGLE HERE
+            if (toggleButtonList.get(i - 1).isSelected() == true) { // ADD ENENMY TOOGLE HERE
                 spiller.add(new Enemy(i, name));
             }
             if (toggleButtonList.get(i - 1).isSelected() == false) {
