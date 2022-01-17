@@ -311,7 +311,7 @@ public class App extends Application {
 
         map = new MapGeneration();
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(5), e -> run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
 
         // Creates scores and players in arrayLists
@@ -324,9 +324,7 @@ public class App extends Application {
                 name = "Player " + i;
             }
             if (toggleButtonList.get(i - 1).isSelected() == true) { // ADD ENENMY TOOGLE HERE
-                spiller.add(new Enemy(i, name, EnemyLevelList.get(i - 1))); // Skal hente .get(i-1) fra EnemyLevelList,
-                                                                            // er dog ikke helt sikker på den kaldes
-                                                                            // sådan her.
+                spiller.add(new Enemy(i, name, 0));
             }
             if (toggleButtonList.get(i - 1).isSelected() == false) {
                 spiller.add(new Player(i, name));
