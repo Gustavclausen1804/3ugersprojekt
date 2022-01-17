@@ -102,6 +102,8 @@ public class App extends Application {
     
     static int explosionRadius = 50;
 
+    
+    boolean enemyEnable = true;
     static int frameCount = 0;
 
     boolean Ting;
@@ -116,6 +118,8 @@ public class App extends Application {
         // line 1
         CustomLabel Players = new CustomLabel("How many players:");
         grid.add(Players, 0, 1);
+
+        
 
         Slider playerSlider = new Slider(2, 8, 1);
         playerSlider.setMajorTickUnit(1);
@@ -296,8 +300,10 @@ public class App extends Application {
 
         map = new MapGeneration();
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(5), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
+
+        
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
@@ -308,8 +314,11 @@ public class App extends Application {
             if (name.length() == 0) {
                 name = "Player " + i;
             }
-
-            spiller.add(new Player(i, name));
+            if (enemyEnable == true && i == 2){
+                spiller.add(new Enemy( i, name));
+            } else {
+            spiller.add(new Player( i, name));
+            }
         }
 
         root.getChildren().add(canvas);

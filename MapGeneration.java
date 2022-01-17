@@ -123,7 +123,7 @@ class MapGeneration {
                 houseImage = houseImageArray[houses.get(i).get(j)[2]][houses.get(i).get(j)[3]];
                
                 gc.drawImage(houseImage, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
-                 gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
+                gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
 
                 
 
