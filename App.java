@@ -324,7 +324,7 @@ public class App extends Application {
                 name = "Player " + i;
             }
             if (toggleButtonList.get(i - 1).isSelected() == true) { // ADD ENENMY TOOGLE HERE
-                spiller.add(new Enemy(i, name, 0));
+                spiller.add(new Enemy(i, name, (int)EnemyLevelList.get(i).getValue()));
             }
             if (toggleButtonList.get(i - 1).isSelected() == false) {
                 spiller.add(new Player(i, name));
