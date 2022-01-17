@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
@@ -63,6 +64,7 @@ public class App extends Application {
 
     public static ArrayList<Player> spiller;
     public static ArrayList<Player> modstander;
+    public static ArrayList<ToggleButton> toggleButtonList = new ArrayList<>();
 
     MapGeneration map;
 
@@ -99,10 +101,9 @@ public class App extends Application {
     static Image backGroundImage;
     static ArrayList<Image[]> playerImage = new ArrayList<Image[]>();
     static Image[] explosionImage = new Image[12];
-    
+
     static int explosionRadius = 50;
 
-    
     boolean enemyEnable = true;
     static int frameCount = 0;
 
@@ -118,8 +119,6 @@ public class App extends Application {
         // line 1
         CustomLabel Players = new CustomLabel("How many players:");
         grid.add(Players, 0, 1);
-
-        
 
         Slider playerSlider = new Slider(2, 8, 1);
         playerSlider.setMajorTickUnit(1);
@@ -180,7 +179,7 @@ public class App extends Application {
 
         Scene scene = new Scene(grid, width, height);
         scene.getStylesheets().add("stylesheet.css");
-        Image backG = new Image("resources/background.png",App.width,App.height,false,false);
+        Image backG = new Image("resources/background.png", App.width, App.height, false, false);
         BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT,
@@ -199,15 +198,18 @@ public class App extends Application {
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
         ArrayList<CustomLabel> playerLabel = new ArrayList<>();
+
         for (int i = 0; i < playerAmount; i++) {
             playerLabel.add(new CustomLabel("Player " + (i + 1) + " name: "));
             nameGrid.add(playerLabel.get(i), 0, i);
             playerNameTextField.add(new TextField("Player " + (i + 1)));
             nameGrid.add(playerNameTextField.get(i), 1, i);
+            toggleButtonList.add(new ToggleButton("Toggle AI"));
+            nameGrid.add(toggleButtonList.get(i), 2, i);
         }
 
         CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
-        nameGrid.add(scoreLabel,0,playerAmount);
+        nameGrid.add(scoreLabel, 0, playerAmount);
 
         Slider scoreSlider = new Slider(1, 10, 1);
         scoreSlider.setMajorTickUnit(1);
@@ -220,7 +222,7 @@ public class App extends Application {
 
         CustomButton btn = new CustomButton("Begin");
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        nameGrid.add(btn, 1, playerAmount+1);
+        nameGrid.add(btn, 1, playerAmount + 1);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -303,8 +305,6 @@ public class App extends Application {
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(5), e -> run(gc)));
         tl.setCycleCount(Timeline.INDEFINITE);
 
-        
-
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
         modstander = new ArrayList<Player>();
@@ -314,10 +314,11 @@ public class App extends Application {
             if (name.length() == 0) {
                 name = "Player " + i;
             }
-            if (enemyEnable == true && i == 2){
-                spiller.add(new Enemy( i, name));
-            } else {
-            spiller.add(new Player( i, name));
+            if (toggleButtonList.get(i - 1).isSelected() == true && i == 2) { // ADD ENENMY TOOGLE HERE
+                spiller.add(new Enemy(i, name));
+            }
+            if (toggleButtonList.get(i - 1).isSelected() == false) {
+                spiller.add(new Player(i, name));
             }
         }
 
@@ -418,7 +419,7 @@ public class App extends Application {
     }
 
     private void run(GraphicsContext gc) {
-       
+
         map.drawMap(gc);
 
         spiller.forEach((playerList) -> { // Runs through all registered playerobjects
@@ -442,11 +443,11 @@ public class App extends Application {
             // }
             // }
 
-            //Check if a Player Won
-            if(playerList.playerScore.counter == winnerScore){
-                if(!gameEnded){
-                gameEnded = true;
-                Score.toJSONString();
+            // Check if a Player Won
+            if (playerList.playerScore.counter == winnerScore) {
+                if (!gameEnded) {
+                    gameEnded = true;
+                    Score.toJSONString();
                 }
                 gc.setFont(Font.font("Verdana", 30));
                 gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
@@ -457,8 +458,6 @@ public class App extends Application {
             turn = 1;
             System.out.println("turn " + turn);
         }
-
-        
 
         frameCount++;
     }
@@ -492,36 +491,39 @@ public class App extends Application {
          */
     }
 
-    void loadSprites(){
+    void loadSprites() {
         shotExplosionBilleder();
         LoadPlayerPictures();
 
-        //Load background
-        backGroundImage = new Image("/resources/background.png",App.width,App.height,false,false);
+        // Load background
+        backGroundImage = new Image("/resources/background.png", App.width, App.height, false, false);
     }
 
     void shotExplosionBilleder() {
         // Load explosion images into array.
-        Image explosionSprite = new Image("/resources/explosionSprite.png",explosionRadius*12*2,explosionRadius*2,false,false);
-        double width = explosionSprite.getWidth()/12;
+        Image explosionSprite = new Image("/resources/explosionSprite.png", explosionRadius * 12 * 2,
+                explosionRadius * 2, false, false);
+        double width = explosionSprite.getWidth() / 12;
         PixelReader reader = explosionSprite.getPixelReader();
-        
+
         for (int i = 0; i < explosionImage.length; i++) {
-            explosionImage[i] = new WritableImage(reader,(int) width*i,0, (int) width, (int) explosionSprite.getHeight());
+            explosionImage[i] = new WritableImage(reader, (int) width * i, 0, (int) width,
+                    (int) explosionSprite.getHeight());
         }
     }
 
-    void LoadPlayerPictures(){
-            // Load player images into array.
-            for(int j = 0; j < 4; j++){
-                playerImage.add(new Image[4]);
-                Image playerSprite = new Image("/resources/player" + j + ".png", 30*4, 30,false, false);
-                double width = playerSprite.getWidth()/4;
-                PixelReader reader = playerSprite.getPixelReader();
-                for (int i = 0; i < playerImage.get(j).length; i++) {
-                    playerImage.get(j)[i] = new WritableImage(reader,(int) width*i,0, (int) width, (int) playerSprite.getHeight());
-                }
+    void LoadPlayerPictures() {
+        // Load player images into array.
+        for (int j = 0; j < 4; j++) {
+            playerImage.add(new Image[4]);
+            Image playerSprite = new Image("/resources/player" + j + ".png", 30 * 4, 30, false, false);
+            double width = playerSprite.getWidth() / 4;
+            PixelReader reader = playerSprite.getPixelReader();
+            for (int i = 0; i < playerImage.get(j).length; i++) {
+                playerImage.get(j)[i] = new WritableImage(reader, (int) width * i, 0, (int) width,
+                        (int) playerSprite.getHeight());
             }
+        }
     }
 
     public static void main(String[] args) {
