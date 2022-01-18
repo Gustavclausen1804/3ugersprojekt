@@ -1,22 +1,9 @@
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.swing.SwingUtilities;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.Light.Point;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
-import java.util.Random;
 
 class Player extends App {
 
@@ -113,7 +100,6 @@ class Player extends App {
             for (int i = 0; i < MapGeneration.houses.size(); i++) { // Loops through the column of blocks
                 for (int j = 0; j < MapGeneration.houses.get(i).size(); j++) {
                     int mapX = MapGeneration.houses.get(i).get(j)[0],
-                            mapY = MapGeneration.houses.get(i).get(j)[0],
                             mapSize = MapGeneration.boxSize;
                     if (xPos > mapX && xPos < mapX + mapSize) {
                         xPos = mapX;

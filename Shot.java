@@ -1,15 +1,5 @@
-import java.awt.Canvas;
-import java.util.Map;
-
-import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
-
-import javafx.event.EventType;
-import javafx.css.Size;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
 
 public class Shot {
     public double xDir = 0;
