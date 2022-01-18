@@ -34,20 +34,6 @@ import javafx.scene.layout.GridPane;
 import com.google.gson.*;
 import javafx.geometry.Pos;
 
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-
-import javafx.scene.control.TextField;
-
-import javafx.scene.layout.GridPane;
-
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class App extends Application {
 
@@ -521,7 +507,7 @@ public class App extends Application {
                                 File file = new File(location.getPath());
                                 java.awt.Desktop desktop = java.awt.Desktop.getDesktop();  
                                 desktop.open(file);
-                                TimeUnit.SECONDS.sleep(5);
+                                TimeUnit.SECONDS.sleep(2);
                                 Platform.exit();
 
                                 

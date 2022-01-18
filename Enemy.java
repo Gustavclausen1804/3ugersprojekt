@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
  
@@ -7,19 +8,27 @@ public class Enemy extends Player{
       
       boolean lightBruteForce = false; //TODO: Bruges til at få AI til hrutigt at finde et skud.
       int difficulty = 0;
+      int currentFrame;
 
       public Enemy(int id, String name,int difficulty) {
             super(id,name);
             this.difficulty = difficulty;
       }
       public void shoot(double angle, double force) {
+            
             double[] shot = enemyDifficulty(enemyShot(xPos+size/2, yPos+size/2), difficulty);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
             angle = shot[0];
             force = shot[1];
             
+            try {
+                  TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+            }
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
             playerShot.applyForce(angle, force);
-    }
+      }
 
       public double[] enemyShot(int x, int y) {
 
