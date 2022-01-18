@@ -21,6 +21,8 @@ class MapGeneration {
     // Creates two arraylists which are used for the generation of houses
     ArrayList<int[]> housesStart = new ArrayList<int[]>();
     static ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
+    Image[][] houseImageArray = new Image[buildColorsAmount][buildAmount];
+    Image houseImage;
 
     MapGeneration() {
 
@@ -42,11 +44,7 @@ class MapGeneration {
                                                                                                    // of the
                                                                                                    // stage.
 
-<<<<<<< Updated upstream
-            int minHeight = (App.height / boxSize) / 5; // blocks from the top of the stage.
-=======
             int minHeight = (App.height / boxSize) / 2; // Integer given in blocks from the top of the stage.
->>>>>>> Stashed changes
             if (y_coordinate < minHeight) {
                 y_coordinate = minHeight + ran.nextInt(minHeight - 2);
             }
@@ -74,17 +72,6 @@ class MapGeneration {
         }
 
         GenerateHouse();
-
-        // Byg dine egne huse medfølgende.
-        // Generating integer
-
-        // Method to generate house. x_coordinate, y_coordinate, width.
-        // GenerateHouse(buttons, nxt, 10, 3);
-        // GenerateHouse(buttons, 11, 14, 5);
-        // GenerateHouse(buttons, 20, 5, 2);
-        // GenerateHouse(buttons, 25, 12, 2);
-
-        // mapRoot.getChildren().add(tilePane);
     }
 
     // Koordinater af canvas y: 0-17, x: 0-31
@@ -92,11 +79,7 @@ class MapGeneration {
     // Metode som genere huset baseret på x-koordinat, y-koordinat og ønsket bredde
     // af huset.
     public void GenerateHouse() {
-<<<<<<< Updated upstream
-        System.out.println(housesStart.size());
-=======
 
->>>>>>> Stashed changes
         Random ran = new Random();
         for (int k = 0; k < housesStart.size(); k++) {
             // creates variables so it is easier to keep track of code
@@ -104,11 +87,6 @@ class MapGeneration {
             int y_coordinate = housesStart.get(k)[1];
             int width = housesStart.get(k)[2];
             int colorID = housesStart.get(k)[3];
-<<<<<<< Updated upstream
-            
-            
-=======
->>>>>>> Stashed changes
 
             int max_height_of_house = (App.height / boxSize);
 
@@ -139,31 +117,6 @@ class MapGeneration {
                 }
             }
         }
-<<<<<<< Updated upstream
-    }
-
-    
-    Image img11 = new Image("buildings/yellowA.png");
-    Image img12 = new Image("buildings/yellowW.png");
-    Image img13 = new Image("buildings/yellowWC.png");
-    Image img14 = new Image("buildings/yellowWL.png");
-    Image img21 = new Image("buildings/blueA.png");
-    Image img22 = new Image("buildings/blueW.png");
-    Image img23 = new Image("buildings/blueWC.png");
-    Image img24 = new Image("buildings/blueWL.png");
-    Image img31 = new Image("buildings/purpleA.png");
-    Image img32 = new Image("buildings/purpleW.png");
-    Image img33 = new Image("buildings/purpleWC.png");
-    Image img34 = new Image("buildings/purpleWL.png");
-    Image img41 = new Image("buildings/greenA.png");
-    Image img42 = new Image("buildings/greenW.png");
-    Image img43 = new Image("buildings/greenWC.png");
-    Image img44 = new Image("buildings/greenWL.png");
-    Image img;
-  
- 
-
-=======
         for (int i = 0; i < buildColorsAmount; i++) {
             for (int j = 0; j < buildAmount; j++) {
                 houseImageArray[i][j] = new Image("/buildings/" + i + "" + j + ".png");
@@ -171,75 +124,18 @@ class MapGeneration {
         }
     }
 
->>>>>>> Stashed changes
     public void drawMap(GraphicsContext gc) {
 
-<<<<<<< Updated upstream
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, App.width, App.height);
-        gc.setFill(Color.BEIGE);
-=======
         gc.drawImage(App.backGroundImage, 0, 0);
->>>>>>> Stashed changes
         gc.setStroke(Color.BLACK);
+        gc.setLineWidth(4);
 
         for (int i = 0; i < houses.size(); i++) {
 
             for (int j = 0; j < houses.get(i).size(); j++) {
-<<<<<<< Updated upstream
-                
-                if (houses.get(i).get(j)[2]==1){
-                    if (houses.get(i).get(j)[3]==1){
-                        img = img11;
-                    }else if(houses.get(i).get(j)[3]==2){
-                        img = img12;
-                    }else if(houses.get(i).get(j)[3]==3){
-                        img = img13;
-                    }else{
-                        img = img14;
-                    }
-                     
-                }else if (houses.get(i).get(j)[2]==2){
-                    if (houses.get(i).get(j)[3]==1){
-                        img = img21;
-                    }else if(houses.get(i).get(j)[3]==2){
-                        img = img22;
-                    }else if(houses.get(i).get(j)[3]==3){
-                        img = img23;
-                    }else{
-                        img = img24;
-                    }
-
-                }else if (houses.get(i).get(j)[2]==3){
-                    if (houses.get(i).get(j)[3]==1){
-                        img = img31;
-                    }else if(houses.get(i).get(j)[3]==2){
-                        img = img32;
-                    }else if(houses.get(i).get(j)[3]==3){
-                        img = img33;
-                    }else{
-                        img = img34;
-                    }
-
-                }else{
-                    if (houses.get(i).get(j)[3]==1){
-                        img = img41;
-                    }else if(houses.get(i).get(j)[3]==2){
-                        img = img42;
-                    }else if(houses.get(i).get(j)[3]==3){
-                        img = img43;
-                    }else{
-                        img = img44;
-                    }
-                    
-                }
-                //gc.fillRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
-                gc.drawImage(img, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
-=======
                 houseImage = houseImageArray[houses.get(i).get(j)[2]][houses.get(i).get(j)[3]];
 
                 gc.drawImage(houseImage, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
->>>>>>> Stashed changes
                 gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
 
             }
