@@ -62,7 +62,7 @@ public class Shot {
                 //Ball
                 gc.setFill(Color.BLACK);
                 // gc.fillRect(200, 200, 30, 30);
-                gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+                gc.fillOval(ballXPos-BALL_R/2,ballYPos-BALL_R/2,BALL_R,BALL_R);
             }
         }
     }
@@ -314,7 +314,7 @@ public class Shot {
         }
     }
 
-    void explosionAnimation(GraphicsContext gc) {
+    void explosionAnimation(GraphicsContext gc) { // animates an explosion
         if (explosionActive) {
             gc.drawImage(App.explosionImage[currentImage], this.ballXPos - (explosion_R / 2),
                     this.ballYPos - (explosion_R / 2));

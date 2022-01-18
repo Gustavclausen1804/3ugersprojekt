@@ -28,7 +28,7 @@ class Player extends App {
     boolean parameterChosen = false;
 
     Group playerRoot = new Group();
-    CustomButton btn = new CustomButton("Shoot");
+    CustomButton shootButton = new CustomButton("Shoot");
 
     String name;
     final int size = 30;
@@ -45,15 +45,15 @@ class Player extends App {
         this.id = id;
         this.name = name;
 
-        btn.setMaxSize(200, 100);
+        shootButton.setMaxSize(200, 100);
         
-        btn.setLayoutX(640-100);
-        btn.setLayoutY(140);
+        shootButton.setLayoutX(640-100);
+        shootButton.setLayoutY(140);
         
-        btn.setVisible(false);
+        shootButton.setVisible(false);
 
-        
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        //Creates a button
+        shootButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
@@ -62,7 +62,7 @@ class Player extends App {
                     if (parameterChosen) {
                         shootsFired = true;
                         shoot(shootingAngle, shootingForce);
-                        btn.setVisible(false);
+                        shootButton.setVisible(false);
                         parameterChosen = false;
                     }
                 } catch (Exception e1) {
@@ -72,7 +72,7 @@ class Player extends App {
             }
         });
 
-        playerRoot.getChildren().add(btn);
+        playerRoot.getChildren().add(shootButton);
 
         playerScore = new Score(id);
 
@@ -95,10 +95,11 @@ class Player extends App {
 
         if(!App.gameEnded){
             if (id == App.turn) {
-                textDisplay(gc);
+                textDisplay(gc); 
             }
         }
 
+        //draws each players score on the top
         playerScore.draw(gc);
     }
 
