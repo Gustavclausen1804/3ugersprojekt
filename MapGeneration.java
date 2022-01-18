@@ -20,7 +20,7 @@ class MapGeneration {
     static int buildAmount = 4; //amount of pictures pr color
 
     //Creates two arraylists which are used for the generation of houses
-    ArrayList<int[]> housesStart = new ArrayList<int[]>(); 
+    static ArrayList<int[]> housesStart = new ArrayList<int[]>(); 
     static ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
     Image[][] houseImageArray = new Image[buildColorsAmount][buildAmount];
     Image houseImage;
@@ -44,7 +44,6 @@ class MapGeneration {
             int minHeight = (App.height / boxSize) / 2; // blocks from the top of the stage.
             if (y_coordinate < minHeight) {
                 y_coordinate = minHeight + ran.nextInt(minHeight - 2);
-                System.out.println(y_coordinate);
             }
             
             int maxWidth = 5;

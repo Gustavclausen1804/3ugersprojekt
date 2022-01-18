@@ -10,7 +10,6 @@ public class Enemy extends Player{
       public Enemy(int id, String name,int difficulty) {
             super(id,name);
             this.difficulty = difficulty;
-            System.out.println("ENEMY OPRETTET");
       }
       public void shoot(double angle, double force) {
             double[] shot = enemyDifficulty(enemyShot(xPos+size/2,      yPos+size/2), difficulty);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
@@ -19,10 +18,10 @@ public class Enemy extends Player{
             
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
             playerShot.applyForce(angle, force);
-    }
+      }
+
 
       public double[] enemyShot(int x, int y) {
-            System.out.println("Enemy, shoot()");
 
             int iteration = 2500; // 1000/30FPS = 30sec simulering, but devided by refinement factor
 
@@ -93,7 +92,6 @@ public class Enemy extends Player{
                   }
             }
 
-            System.out.println("Antal mulige skud: " +liste.size() + ", cleanShot:" + cleanShot);
 
 
             if (!cleanShot) {
@@ -105,7 +103,6 @@ public class Enemy extends Player{
                         }
                   }
             }
-            System.out.println("Modstander: " + bestShot[0] + " " + bestShot[1]);
             return bestShot;
 
       }

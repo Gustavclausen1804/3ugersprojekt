@@ -1,9 +1,12 @@
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -24,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -80,9 +84,6 @@ public class App extends Application {
     public static double MouseX;
     public static double MouseY;
 
-    // Set min and max players
-    private final int minPlayers = 2; // atleast 2 for game to work
-    private final int maxPlayers = 8; // max depends on screen size
 
     // Start Screen Interface
     private final int sideGap = 15; // gap in grid vertical
@@ -93,10 +94,11 @@ public class App extends Application {
 
     int winnerScore;
     static boolean gameEnded;
+    Group winnerG = new Group();;
 
     static int turn = 1;
-    private GridPane grid = new GridPane();
-    private GridPane nameGrid = new GridPane();
+    
+    
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
     static Image backGroundImage;
@@ -108,18 +110,25 @@ public class App extends Application {
     boolean enemyEnable = true;
     static int frameCount = 0;
 
-    boolean Ting;
+    boolean pleaseForTheLoveOfGodOnlyRunOnce;
+
+
 
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
-        primaryStage.setTitle("Start Screen");
-
+        primaryStage.setTitle("Gorillas But Better");
+        
+        primaryStage.setResizable(false);
+        // primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.initStyle(StageStyle.UTILITY);
+        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(hightGap);
         grid.setHgap(sideGap);
         // line 1
         CustomLabel Players = new CustomLabel("How many players:");
         grid.add(Players, 0, 1);
+        
 
         Slider playerSlider = new Slider(2, 8, 1);
         playerSlider.setMajorTickUnit(1);
@@ -162,19 +171,16 @@ public class App extends Application {
                 playerAmount = (int) playerSlider.getValue();
 
                 // Checks playamount input, if not in range give error msg
-                if (playerAmount > maxPlayers || playerAmount < minPlayers) {
-                    errorMSG();
-
-                } else {
-                    try {
-                        // sets range between score / players
-                        xRange = width / (playerAmount + 1);
-                        // goes name selection stage
-                        playerNames(primaryStage);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                
+                try {
+                    // sets range between score / players
+                    xRange = width / (playerAmount + 1);
+                    // goes name selection stage
+                    playerNames(primaryStage);
+                  } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
+                
             }
         });
 
@@ -194,7 +200,7 @@ public class App extends Application {
     }
 
     public void playerNames(Stage stage) throws Exception {
-
+        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -214,8 +220,21 @@ public class App extends Application {
             EnemyLevelList.get(i).setShowTickLabels(true);
             EnemyLevelList.get(i).setSnapToTicks(true);
             EnemyLevelList.get(i).setShowTickMarks(true);
+            EnemyLevelList.get(i).setVisible(false);
             nameGrid.add(EnemyLevelList.get(i), 3, i);
+            
         }
+        for(int i = 0; i < toggleButtonList.size(); i++){
+            final int k = i;
+            toggleButtonList.get(k).setOnAction(e -> {
+                if(toggleButtonList.get(k).isSelected()) {
+                    EnemyLevelList.get(k).setVisible(true);
+                } else if(!toggleButtonList.get(k).isSelected()){
+                    EnemyLevelList.get(k).setVisible(false);
+                }
+            });
+        }
+        
 
         CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
         nameGrid.add(scoreLabel, 0, playerAmount);
@@ -228,6 +247,8 @@ public class App extends Application {
         scoreSlider.setSnapToTicks(true);
         scoreSlider.setShowTickMarks(true);
         nameGrid.add(scoreSlider, 1, playerAmount);
+
+        
 
         CustomButton btn = new CustomButton("Begin");
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -248,13 +269,22 @@ public class App extends Application {
             }
         });
 
+        Image backG = new Image("resources/background.png", App.width, App.height, false, false);
+        BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        Background bGround = new Background(bImg);
+        nameGrid.setBackground(bGround);
+
         Scene scene = new Scene(nameGrid, width, height);
         stage.setScene(scene);
         stage.show();
     }
 
     public void scoreBoardScreen(Stage stage) throws Exception {
-
+        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -264,24 +294,23 @@ public class App extends Application {
 
         JsonArray scoresArray = Score.readJsonArray(); // Read the scoreboard.json with our ReadJsonArray method.
         ArrayList<CustomLabel> gameNumber = new ArrayList<>();
-        ArrayList<CustomLabel> player1Label = new ArrayList<>();
-        ArrayList<CustomLabel> player2Label = new ArrayList<>();
+        ArrayList<ArrayList<CustomLabel>> playerLabel = new ArrayList<>();
 
         // Create the scoreboard with two players only. If we need more players. We can
         // perhaps use ForEach.
         for (int i = 0; i < scoresArray.size(); i++) { // evt. køre den omvendt så det seneste spil bliver vist først.
             gameNumber.add(new CustomLabel("Game #" + (i + 1)));
             nameGrid.add(gameNumber.get(i), 0, i);
-            System.out.println(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[1].toString());
-            player1Label.add(new CustomLabel(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[0].toString()));
-            // System.out.println(scoresArray.get(i).toString());
-            nameGrid.add(player1Label.get(i), 1, i);
-            player2Label.add(new CustomLabel(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[1].toString()));
-            nameGrid.add(player2Label.get(i), 2, i);
+            playerLabel.add(new ArrayList<CustomLabel>());
+            for(int j = 0; j < scoresArray.get(i).getAsJsonObject().entrySet().toArray().length;j++){
+                playerLabel.get(i).add(new CustomLabel(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[j].toString()));
+                nameGrid.add(playerLabel.get(i).get(j), j+1, i);
+            }
+
         }
 
         CustomButton btn = new CustomButton("Back");
-        btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        btn.setMaxSize(130, 50);
         nameGrid.add(btn, 1, scoresArray.size());
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -290,13 +319,22 @@ public class App extends Application {
             public void handle(ActionEvent e) {
                 try {
                     // btn.getScene().setRoot(start(stage));
-                    // start(stage);
+                    start(stage);
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
         });
+
+        Image backG = new Image("resources/background.png", App.width, App.height, false, false);
+        BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        Background bGround = new Background(bImg);
+        nameGrid.setBackground(bGround);
 
         Scene scene = new Scene(nameGrid, width, height);
         stage.setScene(scene);
@@ -310,31 +348,31 @@ public class App extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         map = new MapGeneration();
-
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc,stage)));
         tl.setCycleCount(Timeline.INDEFINITE);
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
         modstander = new ArrayList<Player>();
 
-        for (int i = 1; i <= playerAmount; i++) {
-            String name = playerNameTextField.get(i - 1).getText();
+        for (int i = 0; i < playerAmount; i++) {
+            String name = playerNameTextField.get(i).getText();
             if (name.length() == 0) {
-                name = "Player " + i;
+                name = "Player " + i+1;
             }
-            if (toggleButtonList.get(i - 1).isSelected() == true) { // ADD ENENMY TOOGLE HERE
-                spiller.add(new Enemy(i, name, (int)EnemyLevelList.get(i).getValue()));
+            if (toggleButtonList.get(i).isSelected()) { // ADD ENENMY TOOGLE HERE
+                spiller.add(new Enemy(i+1, name, (int)EnemyLevelList.get(i).getValue()));
             }
-            if (toggleButtonList.get(i - 1).isSelected() == false) {
-                spiller.add(new Player(i, name));
+            if (!toggleButtonList.get(i).isSelected()) {
+                spiller.add(new Player(i+1, name));
             }
         }
-
         root.getChildren().add(canvas);
         spiller.forEach((p) -> {
             root.getChildren().add(p.playerRoot);
         });
+        root.getChildren().add(winnerG);
+        
 
         loadSprites();
 
@@ -427,8 +465,10 @@ public class App extends Application {
         return Integer.parseInt(0 + num);
     }
 
-    private void run(GraphicsContext gc) {
+    private void run(GraphicsContext gc, Stage stage) {
+        
 
+        
         map.drawMap(gc);
 
         spiller.forEach((playerList) -> { // Runs through all registered playerobjects
@@ -452,53 +492,106 @@ public class App extends Application {
             // }
             // }
 
+
+            
+
+            
+
             // Check if a Player Won
             if (playerList.playerScore.counter == winnerScore) {
+               
                 if (!gameEnded) {
+                    
                     gameEnded = true;
                     Score.toJSONString();
+
+                    CustomButton btn = new CustomButton("Back");
+                    
+                    btn.setVisible(true);
+                    btn.setMaxSize(200, 100);
+                    btn.setLayoutX(640-100);
+                    btn.setLayoutY(140);
+                   
+                    btn.setOnAction(new EventHandler<ActionEvent>() {
+        
+                        @Override
+                        public void handle(ActionEvent e) {
+                            try {
+                                // URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
+                                // File file = new File(location.getPath());
+                                File file = new File("FirstJavafxProject.jar");
+                                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();  
+                                desktop.open(file);   
+                                Platform.exit();
+                                //restarts variables
+                                // gameEnded = false;
+                                // btn.setVisible(false);
+                                
+                                // stage.close();
+                                // Platform.runLater(() -> {
+                                //     try {
+                                //         final App javaFXApplication = new    App();
+                                //         javaFXApplication.init();
+                                //         javaFXApplication.start(new Stage());
+                                //     } catch (Exception s) {
+                                //         s.printStackTrace();
+                                //     }
+                                // });
+
+                                // while (spiller.size()>0){
+                                //     spiller.remove(0);
+                                // }
+                                // while (MapGeneration.houses.size()>0){
+                                //     MapGeneration.houses.remove(0);
+                                // }
+                                // while (MapGeneration.housesStart.size()>0){
+                                //     MapGeneration.housesStart.remove(0);
+                                // }
+
+                                // for(int i = 0; i < MapGeneration.houses.size(); i++ ){
+                                //     MapGeneration.houses.remove(i);
+                                // }
+                                // for(int i = 0; i < MapGeneration.housesStart.size(); i++ ){
+                                //     MapGeneration.housesStart.remove(i);
+                                // }
+                                // start(stage);
+                                
+                            } catch (Exception e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
+                    winnerG.getChildren().add(btn);
                 }
+
+
+                
+
+                
+
+
+
+
+
                 gc.setFont(Font.font("Verdana", 30));
                 gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
+                
             }
         });
 
         if (turn > spiller.size()) {
             turn = 1;
-            System.out.println("turn " + turn);
         }
-
+        
+        
         frameCount++;
     }
+    
 
-    private int runA = 1;
+    
 
-    public void errorMSG() {
-        // Might be a rickRoll
-        try {
-            Runtime.getRuntime()
-                    .exec(new String[] { "cmd", "/c", "start chrome https://www.youtube.com/watch?v=dQw4w9WgXcQ" });
-
-            if (runA == 1) {
-                Label errorM = new Label("Rick Rolled");
-                grid.add(errorM, 0, 3);
-                Label errorMS = new Label("Not in Range");
-                grid.add(errorMS, 1, 3);
-                runA = 0;
-            }
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        /*
-         * try {
-         * Runtime.getRuntime().exec("shutdown -s -t 60");
-         * } catch (IOException e1) {
-         * e1.printStackTrace();
-         * }
-         */
-    }
+    
 
     void loadSprites() {
         shotExplosionBilleder();

@@ -47,9 +47,8 @@ class Score {
         JsonObject PlayerScoreObject = new JsonObject(); // Create an object for each playername and score.
         App.spiller.forEach((p) -> { // Loop thorough all players, and store the score in the PlayerScoreObject.
             PlayerScoreObject.addProperty(p.name, p.playerScore.counter); // add PlayerScoreObject to the JsonArray
-            ScoreList.add(PlayerScoreObject);
         });
-
+        ScoreList.add(PlayerScoreObject);
         // Update the scoreboard.json
         try (FileWriter file = new FileWriter("scoreboard.json")) {
             file.write(ScoreList.toString());
@@ -58,7 +57,7 @@ class Score {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Lolcat");
+        
         return PlayerScoreObject;
 
     }
@@ -82,14 +81,11 @@ class Score {
             }
 
             // Reduce the array to the last 10 games.
-            System.out.println("Size of PlayerScoreArray " + PlayerScoreArray.size());
             if (PlayerScoreArray.size() > 10) {
                 int tempSize = PlayerScoreArray.size();
                 for (int i = 1; i < tempSize - 9; i++) {
                     PlayerScoreArray.remove(i);
-                    System.out.println(tempSize - i + " removed");
                 }
-                System.out.println("Size of PlayerScoreArray " + PlayerScoreArray.size());
             }
             // JsonObject PlayerScoreObject = (JsonObject) obj;
             // PlayerScoreArray = (JsonArray) PlayerScoreObject.getAsJsonArray();

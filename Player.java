@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
@@ -44,9 +45,11 @@ class Player extends App {
         this.id = id;
         this.name = name;
 
-        btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        btn.setLayoutX(640);
+        btn.setMaxSize(200, 100);
+        
+        btn.setLayoutX(640-100);
         btn.setLayoutY(140);
+        
         btn.setVisible(false);
 
         
@@ -138,7 +141,6 @@ class Player extends App {
 
     public boolean removeShot() {
         if (this.playerShot.getRemoveShot()) {
-            System.out.println("Player, removeShot()");
             this.playerShot = null;
             return true;
         }
@@ -158,7 +160,6 @@ class Player extends App {
         // PointerInfo a = MouseInfo.getPointerInfo();
         // Point point = new Point(a.getLocation());
         // SwingUtilities.convertPointFromScreen(point, e.getComponent());
-        // System.out.println(point.x + "," + point.y);
 
         // Draws the arrow which show the angle of the shot
         gc.setStroke(Color.BLUE);
