@@ -528,6 +528,7 @@ public class App extends Application {
             if(playerList instanceof Enemy){
                 if(playerList.id == turn && !gameEnded && !playerList.shootsFired){
                     playerList.shoot(0,0);
+                    playerList.shootsFired = true;
                 }
             }
 
