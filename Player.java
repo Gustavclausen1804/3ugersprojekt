@@ -134,17 +134,16 @@ class Player extends App {
     }
 
     public void shoot(double angle, double force) {
-
-            this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
-            playerShot.applyForce(angle, force);
+            this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);   //Create a shot object
+            playerShot.applyForce(angle, force);                                    //Apply a force onto the shot
     }
 
-    public boolean removeShot() {
-        if (this.playerShot.getRemoveShot()) {
-            this.playerShot = null;
-            return true;
+    public boolean playerRemoveShot() {
+        if (this.playerShot.removeShotFlag) {       //Check the state of the shot's remove-flag
+            this.playerShot = null;                 //Set the pointer for the shot to nothing
+            return true;                            //Return upon removing
         }
-        return false;
+        return false;                               //Default return false
     }
 
     void textDisplay(GraphicsContext gc) {
@@ -156,11 +155,7 @@ class Player extends App {
         }
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Verdana", 15));
-
-        // PointerInfo a = MouseInfo.getPointerInfo();
-        // Point point = new Point(a.getLocation());
-        // SwingUtilities.convertPointFromScreen(point, e.getComponent());
-
+    
         // Draws the arrow which show the angle of the shot
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(5);

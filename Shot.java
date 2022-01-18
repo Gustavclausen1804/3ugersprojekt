@@ -230,25 +230,21 @@ public class Shot {
         return false;
     }
 
-    void removeShot() {
-        App.spiller.get(shooterId-1).shootsFired=false;
-        removeShotFlag = true;
-
+    void removeShot() {                                 //It is not possible to remove/forget the object inside the object, therefore set an flag for utilization on the player class
+        App.spiller.get(shooterId-1).shootsFired=false; //Reset the shootsFires flag
+        removeShotFlag = true;                          //Set the remove flag
     }
 
-    public boolean getRemoveShot() {
-        return removeShotFlag;
-    }
 
     boolean playerCollision(boolean enableCollision){
-        App.spiller.forEach((p) -> {
-            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
-                if(p.id == shooterId){
-                    if (leftShooter == true){
-                        if(countOnce == false){
-                            if (enableCollision == true){
-                                App.spiller.get(shooterId-1).playerScore.counter--;
-                                explosion();
+        App.spiller.forEach((p) -> {                                                                                   //Loops through all players
+            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){    //Checks if the projectile is inside the player's hitbox
+                if(p.id == shooterId){                                                                                 //If the players ID is identical to the one who fired the projectile
+                    if (leftShooter == true){                                                                          //Check if the projectile has left the shooters own hitbox
+                        if(countOnce == false){                                                                        //Check if any players already has gained a point for the hit.
+                            if (enableCollision == true){                                                              //Flag introduced in order for the simulation to utilize the method.
+                                App.spiller.get(shooterId-1).playerScore.counter--;                                    //If the projectile enters the shooters hitbox again, decrement the players score.
+                                explosion();                                                                           
                             }
                             countOnce = true;
                             
@@ -265,7 +261,7 @@ public class Shot {
                         ShotHitOpposite = true; //Due to the 'forEach' loop being a void, an object variable is nessecary for scope reasons.
                     }
                 }
-            } else {  //When the ball is not in contact with a player
+            } else {                     //When the ball is not in contact with a player
                 if(p.id == shooterId){  //The player which made the shot
                     leftShooter = true;
                 }
