@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import java.util.ArrayList;
 
 public class Shot {
     public double xDir = 0;
@@ -251,7 +252,7 @@ public class Shot {
                         ShotHitOpposite = true; //Due to the 'forEach' loop being a void, an object variable is nessecary for scope reasons.
                     }
                 }
-            } else {                     //When the ball is not in contact with a player
+            } else {  //When the ball is not in contact with a player
                 if(p.id == shooterId){  //The player which made the shot
                     leftShooter = true;
                 }

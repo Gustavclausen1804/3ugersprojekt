@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -33,6 +34,20 @@ import javafx.scene.layout.GridPane;
 import com.google.gson.*;
 import javafx.geometry.Pos;
 
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+
+import javafx.scene.control.TextField;
+
+import javafx.scene.layout.GridPane;
+
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class App extends Application {
 
@@ -40,6 +55,7 @@ public class App extends Application {
     public static ArrayList<Player> modstander;
     public static ArrayList<ToggleButton> toggleButtonList = new ArrayList<>();
     public static ArrayList<Slider> EnemyLevelList = new ArrayList<>();
+    ToggleButton toggleSimpleAi = new ToggleButton("Enable simple AI shots");
 
     MapGeneration map;
 
@@ -54,6 +70,9 @@ public class App extends Application {
     public static double MouseX;
     public static double MouseY;
 
+    // Set min and max players
+    private final int minPlayers = 2; // atleast 2 for game to work
+    private final int maxPlayers = 8; // max depends on screen size
 
     // Start Screen Interface
     private final int sideGap = 15; // gap in grid vertical
@@ -67,8 +86,9 @@ public class App extends Application {
     Group winnerG = new Group();;
 
     static int turn = 1;
-    
-    
+     
+    private GridPane grid = new GridPane();
+    private GridPane nameGrid = new GridPane();
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
     static Image backGroundImage;
@@ -83,6 +103,7 @@ public class App extends Application {
     boolean pleaseForTheLoveOfGodOnlyRunOnce;
 
 
+    boolean Ting;
 
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
@@ -101,7 +122,7 @@ public class App extends Application {
         grid.setVgap(hightGap);
         grid.setHgap(sideGap);
         // line 1
-        CustomLabel Players = new CustomLabel("How many players:");
+        CustomLabel Players = new CustomLabel("Select players: ");
         grid.add(Players, 0, 1);
         
         //Creates a slider, for the number of players playing
@@ -116,8 +137,8 @@ public class App extends Application {
         grid.add(playerSlider, 1, 1);
 
         // line 2
-        CustomLabel maxmin = new CustomLabel("min:2 max:8");
-        grid.add(maxmin, 0, 2);
+        // CustomLabel maxmin = new CustomLabel("min:2 max:8");
+        // grid.add(maxmin, 0, 2);
 
         //Creates the start Button, which upon pressing leads to the nameselect screen
         CustomButton startButtonMainScreen = new CustomButton("Play");
@@ -177,7 +198,6 @@ public class App extends Application {
     }
 
     public void playerNames(Stage stage) throws Exception {
-        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -189,6 +209,8 @@ public class App extends Application {
             nameGrid.add(playerLabel.get(i), 0, i);
             playerNameTextField.add(new TextField("Player " + (i + 1)));
             nameGrid.add(playerNameTextField.get(i), 1, i);
+            playerNameTextField.get(i).setPrefSize(130, 50);
+            playerNameTextField.get(i).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             //a Toggle button for if the player is an AI or not
             toggleButtonList.add(new ToggleButton("Toggle AI"));
             nameGrid.add(toggleButtonList.get(i), 2, i);
@@ -220,6 +242,7 @@ public class App extends Application {
         
         CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
         nameGrid.add(scoreLabel, 0, playerAmount);
+        nameGrid.add(toggleSimpleAi, 2, playerAmount);
 
         //Adds a slider in which you put in the number of points a player need to reach in order to win
         Slider scoreSlider = new Slider(1, 10, 1);
@@ -263,12 +286,12 @@ public class App extends Application {
         nameGrid.setBackground(bGround);
 
         Scene scene = new Scene(nameGrid, width, height);
+        scene.getStylesheets().add("players.css");
         stage.setScene(scene);
         stage.show();
     }
 
     public void scoreBoardScreen(Stage stage) throws Exception {
-        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -297,16 +320,15 @@ public class App extends Application {
 
         }
         //Creates a button which goes back to main screen
-        CustomButton btn = new CustomButton("Back");
-        btn.setMaxSize(130, 50);
-        nameGrid.add(btn, 1, scoresArray.size());
+        CustomButton backButton = new CustomButton("Back");
+        backButton.setMaxSize(130, 50);
+        nameGrid.add(backButton, 1, scoresArray.size());
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    // btn.getScene().setRoot(start(stage));
                     start(stage);
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
@@ -368,6 +390,8 @@ public class App extends Application {
         });
         root.getChildren().add(winnerG);
         
+
+        loadSprites();
 
         loadSprites();
 
@@ -517,6 +541,7 @@ public class App extends Application {
 
         if (turn > spiller.size()) { // when every player has had their turn the first player has their turn again
             turn = 1;
+            System.out.println("turn " + turn);
         }
         
         //keeps track of the number of frames, used for animation
@@ -562,6 +587,7 @@ public class App extends Application {
             }
         }
     }
+
 
     public static void main(String[] args) {
         launch(args);
