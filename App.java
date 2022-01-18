@@ -120,7 +120,11 @@ public class App extends Application {
         
         primaryStage.setResizable(false);
         // primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.initStyle(StageStyle.UTILITY);
+        if(!pleaseForTheLoveOfGodOnlyRunOnce){
+            primaryStage.initStyle(StageStyle.UTILITY);
+            pleaseForTheLoveOfGodOnlyRunOnce = true;
+        }
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(hightGap);
@@ -480,7 +484,7 @@ public class App extends Application {
                 playerList.playerShot.updateShot(); // Update the shot's position.
                 playerList.playerShot.drawShot(gc); // Draw the show on the screen.
 
-                if (playerList.removeShot() == true) { // When the shot i removed by colission or hit.
+                if (playerList.playerRemoveShot() == true) { // When the shot i removed by colission or hit.
                     turn++; // Next turn
                 }
             }
