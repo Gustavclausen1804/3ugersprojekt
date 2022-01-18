@@ -113,10 +113,9 @@ class MapGeneration {
     public void drawMap(GraphicsContext gc) {
        
 
-        gc.setFill(Color.WHITE);
-        // gc.fillRect(0, 0, App.width, App.height);
-        gc.setFill(Color.BEIGE);
+        gc.drawImage(App.backGroundImage,0,0);
         gc.setStroke(Color.BLACK);
+        gc.setLineWidth(4);
 
         for (int i = 0; i < houses.size(); i++) {
                         

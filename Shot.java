@@ -11,8 +11,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
-
-public class Shot{
+public class Shot {
     public double xDir = 0;
     public double yDir = 0;
 
@@ -25,7 +24,7 @@ public class Shot{
     public double dragCoefficient = 0.47;
     public double massObject = 1;
 
-    public static final int BALL_R = 15;   
+    public static final int BALL_R = 15;
     public int explosion_R = App.explosionRadius;
 
     public int shooterId;
@@ -54,27 +53,6 @@ public class Shot{
     }
 
 
-
-//     public boolean wallCollisionTEST(){
-//         for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
-//             for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
-//                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
-//                 int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
-//                 int wallSize = MapGeneration.boxSize; // gets the size of each block
-                
-//                 if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
-//                         return true;
-//                     }
-//             } 
-//     }
-//     return false;
-// }
-
-
-
-
-
-
     public void drawShot(GraphicsContext gc){
         if (this.show == true){
             collision();
@@ -89,8 +67,8 @@ public class Shot{
         }
     }
 
-    public void DrawDir(GraphicsContext gc){
-        //Vertical
+    public void DrawDir(GraphicsContext gc) {
+        // Vertical
         gc.setFill(Color.RED);
         if (yDir >= 0) {
             gc.fillRect(ballXPos, ballYPos + BALL_R / 2, BALL_R, yDir * 10);
@@ -98,21 +76,21 @@ public class Shot{
             gc.fillRect(ballXPos, (ballYPos + BALL_R / 2) - Math.abs(yDir * 10), BALL_R, Math.abs(yDir * 10));
         }
 
-        //Horisontal
+        // Horisontal
         gc.setFill(Color.GREEN);
         if (xDir >= 0) {
             gc.fillRect(ballXPos, ballYPos, xDir * 10, BALL_R);
         } else {
-            gc.fillRect(ballXPos-Math.abs(xDir * 10), ballYPos, Math.abs(xDir * 10), BALL_R);
+            gc.fillRect(ballXPos - Math.abs(xDir * 10), ballYPos, Math.abs(xDir * 10), BALL_R);
         }
     }
 
-    public void applyForce(double angle, double force){
-        this.xDir += Math.cos(Math.toRadians(angle))*force;
-        this.yDir += -Math.sin(Math.toRadians(angle))*force;
+    public void applyForce(double angle, double force) {
+        this.xDir += Math.cos(Math.toRadians(angle)) * force;
+        this.yDir += -Math.sin(Math.toRadians(angle)) * force;
     }
 
-    public void applyForce(String direction, double force){
+    public void applyForce(String direction, double force) {
         switch (direction) {
             case "upConstant":
                 yDir -= force;
@@ -133,11 +111,11 @@ public class Shot{
 
             case "follow":
                 double angle = getAngle();
- 
-                xDir += Math.cos(Math.toRadians(angle))*(force);
-                yDir += Math.sin(Math.toRadians(angle))*(force);   
-                break;                    
-        
+
+                xDir += Math.cos(Math.toRadians(angle)) * (force);
+                yDir += Math.sin(Math.toRadians(angle)) * (force);
+                break;
+
             default:
                 break;
         }
@@ -178,42 +156,44 @@ public class Shot{
         }
     
 
-    public void setMove(boolean state){
+    public void setMove(boolean state) {
         this.move = state;
     }
-        public void setShow(boolean state){
+
+    public void setShow(boolean state) {
         this.show = state;
     }
 
-    public double[] getPosition(){  //Returns the coordiantes of the shot.
-        double[] array = {ballXPos,ballYPos};
-        return array;  
+    public double[] getPosition() { // Returns the coordiantes of the shot.
+        double[] array = { ballXPos, ballYPos };
+        return array;
     }
 
-    public double[] GetDirection(){ //Returns the components of the directional vector
-        double[] array = {xDir,yDir};
-        return array;  
+    public double[] GetDirection() { // Returns the components of the directional vector
+        double[] array = { xDir, yDir };
+        return array;
     }
 
-    public double getAngle(){   //Returns the angle of the directional vector
-        //Calculate angle between components
-        double angle = Math.toDegrees(Math.atan((yDir)/xDir));   
+    public double getAngle() { // Returns the angle of the directional vector
+        // Calculate angle between components
+        double angle = Math.toDegrees(Math.atan((yDir) / xDir));
 
-        //Account for their placement, [-180:180]
-        if (xDir >= 0 && yDir >= 0){
+        // Account for their placement, [-180:180]
+        if (xDir >= 0 && yDir >= 0) {
             angle = angle;
-        } else if (xDir >= 0 && yDir <= 0){
+        } else if (xDir >= 0 && yDir <= 0) {
             angle = angle;
-        } else if (xDir <= 0 && yDir >= 0){
-            angle = 180+angle;
-        } else if (xDir <= 0 && yDir <= 0){
-            angle = angle-180;
+        } else if (xDir <= 0 && yDir >= 0) {
+            angle = 180 + angle;
+        } else if (xDir <= 0 && yDir <= 0) {
+            angle = angle - 180;
         }
         return angle;
-        
+
     }
-    public double getSpeed(){   //Returns the length of the directional vector
-        return Math.sqrt((Math.pow(xDir, 2)+Math.pow(yDir, 2)));
+
+    public double getSpeed() { // Returns the length of the directional vector
+        return Math.sqrt((Math.pow(xDir, 2) + Math.pow(yDir, 2)));
     }
 
     public void collision(){
@@ -227,10 +207,10 @@ public class Shot{
             explosion();
         }
         // Loops through the all houses(blocks)
-        for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
-            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
-                int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
-                int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
+        for (int i = 0; i < MapGeneration.houses.size(); i++) { // Loops through the column of blocks
+            for (int j = 0; j < MapGeneration.houses.get(i).size(); j++) { // Loops through the row of blocks
+                int xPosWall = MapGeneration.houses.get(i).get(j)[0]; // gets the x postion of the corner of each block
+                int yPosWall = MapGeneration.houses.get(i).get(j)[1]; // gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
                 
                 if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
@@ -249,23 +229,22 @@ public class Shot{
         }
         return false;
     }
-    void removeShot(){
-            removeShotFlag = true;
+
+    void removeShot() {                                 //It is not possible to remove/forget the object inside the object, therefore set an flag for utilization on the player class
+        App.spiller.get(shooterId-1).shootsFired=false; //Reset the shootsFires flag
+        removeShotFlag = true;                          //Set the remove flag
     }
 
-    public boolean getRemoveShot(){
-        return removeShotFlag;
-    }
 
     boolean playerCollision(boolean enableCollision){
-        App.spiller.forEach((p) -> {
-            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){
-                if(p.id == shooterId){
-                    if (leftShooter == true){
-                        if(countOnce == false){
-                            if (enableCollision == true){
-                                App.spiller.get(shooterId-1).playerScore.counter--;
-                                explosion();
+        App.spiller.forEach((p) -> {                                                                                   //Loops through all players
+            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){    //Checks if the projectile is inside the player's hitbox
+                if(p.id == shooterId){                                                                                 //If the players ID is identical to the one who fired the projectile
+                    if (leftShooter == true){                                                                          //Check if the projectile has left the shooters own hitbox
+                        if(countOnce == false){                                                                        //Check if any players already has gained a point for the hit.
+                            if (enableCollision == true){                                                              //Flag introduced in order for the simulation to utilize the method.
+                                App.spiller.get(shooterId-1).playerScore.counter--;                                    //If the projectile enters the shooters hitbox again, decrement the players score.
+                                explosion();                                                                           
                             }
                             countOnce = true;
                             
@@ -282,7 +261,7 @@ public class Shot{
                         ShotHitOpposite = true; //Due to the 'forEach' loop being a void, an object variable is nessecary for scope reasons.
                     }
                 }
-            } else {  //When the ball is not in contact with a player
+            } else {                     //When the ball is not in contact with a player
                 if(p.id == shooterId){  //The player which made the shot
                     leftShooter = true;
                 }
@@ -291,26 +270,35 @@ public class Shot{
         return ShotHitOpposite;
     }
 
-    void explosion(){
+    void explosion() {
         // Loops through the all houses(blocks)
         explosionActive = true;
-        this.move = false; //Immediatly makes the shot stationary
-        for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the column of blocks
-            for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through the row of blocks
-                int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of the corner of each block
-                int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of the corner of each block
+        this.move = false;
+        for (int i = 0; i < MapGeneration.houses.size(); i++) { // Loops through the column of blocks
+            for (int j = 0; j < MapGeneration.houses.get(i).size(); j++) { // Loops through the row of blocks
+                int xPosWall = MapGeneration.houses.get(i).get(j)[0]; // gets the x postion of the corner of each block
+                int yPosWall = MapGeneration.houses.get(i).get(j)[1]; // gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
-                for(int h = 0; h < 4; h++){
+                for (int h = 0; h < 4; h++) {
                     double x = 0, y = 0; // creates two empty variables x and y
-                    switch(h){ // This switch is used to create values for x and y which each represents each corner of the block
+                    switch (h) { // This switch is used to create values for x and y which each represents each
+                                 // corner of the block
                         case 0: // top left corner
-                        x = xPosWall; y = yPosWall; break;
+                            x = xPosWall;
+                            y = yPosWall;
+                            break;
                         case 1:
-                        x = xPosWall+wallSize; y = yPosWall; break; //top right corner
+                            x = xPosWall + wallSize;
+                            y = yPosWall;
+                            break; // top right corner
                         case 3:
-                        x = xPosWall; y = yPosWall+wallSize; break; // bottom left corner
+                            x = xPosWall;
+                            y = yPosWall + wallSize;
+                            break; // bottom left corner
                         case 4:
-                        x = xPosWall+wallSize; y = yPosWall+wallSize; break; // bottom right corner
+                            x = xPosWall + wallSize;
+                            y = yPosWall + wallSize;
+                            break; // bottom right corner
                     }
                     double distance = Math.sqrt(Math.pow(ballXPos - x, 2) + Math.pow(ballYPos - y, 2)); // calculates
                                                                                                         // the distance
@@ -321,22 +309,22 @@ public class Shot{
                     if (distance <= explosion_R) {
                         MapGeneration.houses.get(i).remove(j); // removes the shot if it
                     }
-                }  
+                }
             }
         }
     }
 
     void explosionAnimation(GraphicsContext gc) {
         if (explosionActive) {
-                gc.drawImage(App.explosionImage[currentImage], this.ballXPos-(explosion_R/2), this.ballYPos-(explosion_R/2));
-                if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
-                    currentImage++;
-                }
-                if(currentImage == App.explosionImage.length-1){
-                    removeShot();
-                }
+            gc.drawImage(App.explosionImage[currentImage], this.ballXPos - (explosion_R / 2),
+                    this.ballYPos - (explosion_R / 2));
+            if (animationTimer % 10 == 0 && currentImage < App.explosionImage.length) {
+                currentImage++;
+            }
+            if (currentImage == App.explosionImage.length - 1) {
+                removeShot();
+            }
             animationTimer++;
         }
     }
-
 }
