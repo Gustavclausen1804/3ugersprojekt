@@ -101,7 +101,7 @@ public class App extends Application {
         grid.setHgap(sideGap);
 
         // line 1
-        CustomLabel Players = new CustomLabel("How many players:");
+        CustomLabel Players = new CustomLabel("Select players: ");
         grid.add(Players, 0, 1);
 
         Slider playerSlider = new Slider(2, 8, 1);
@@ -118,8 +118,8 @@ public class App extends Application {
         grid.add(playerSlider, 1, 1);
 
         // line 2
-        CustomLabel maxmin = new CustomLabel("min:2 max:8");
-        grid.add(maxmin, 0, 2);
+        // CustomLabel maxmin = new CustomLabel("min:2 max:8");
+        // grid.add(maxmin, 0, 2);
 
         CustomButton btn = new CustomButton("Play");
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -175,6 +175,9 @@ public class App extends Application {
             playerLabel.add(new CustomLabel("Player " + (i + 1) + " name: "));
             nameGrid.add(playerLabel.get(i), 0, i);
             playerNameTextField.add(new TextField("Player " + (i + 1)));
+            playerNameTextField.get(i).setPrefSize(130, 50);
+            playerNameTextField.get(i).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
             nameGrid.add(playerNameTextField.get(i), 1, i);
         }
         CustomButton btn = new CustomButton("Begin");
@@ -196,6 +199,7 @@ public class App extends Application {
         });
 
         Scene scene = new Scene(nameGrid, width, height);
+        scene.getStylesheets().add("players.css");
         stage.setScene(scene);
         stage.show();
     }
@@ -217,8 +221,17 @@ public class App extends Application {
             if (name.length() == 0) {
                 name = "Player " + i;
             }
+<<<<<<< Updated upstream
             score.add(new Score(20, i));
             spiller.add(new Player(200, i, name));
+=======
+            if (toggleButtonList.get(i - 1).isSelected() == true) { // ADD ENENMY TOOGLE HERE
+                spiller.add(new Enemy(i, name, (int) EnemyLevelList.get(i).getValue()));
+            }
+            if (toggleButtonList.get(i - 1).isSelected() == false) {
+                spiller.add(new Player(i, name));
+            }
+>>>>>>> Stashed changes
         }
 
         root.getChildren().add(canvas);
