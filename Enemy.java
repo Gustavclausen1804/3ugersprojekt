@@ -20,12 +20,6 @@ public class Enemy extends Player{
             angle = shot[0];
             force = shot[1];
             
-            try {
-                  TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-            }
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
             playerShot.applyForce(angle, force);
       }

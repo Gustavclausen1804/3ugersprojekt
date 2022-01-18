@@ -522,12 +522,22 @@ public class App extends Application {
                 gc.setFont(Font.font("Verdana", 30));
                 gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
                 
+                
+                
             }
+            if(playerList instanceof Enemy){
+                if(playerList.id == turn && !gameEnded && !playerList.shootsFired){
+                    playerList.shoot(0,0);
+                }
+            }
+
+
         });
+
+        
 
         if (turn > spiller.size()) { // when every player has had their turn the first player has their turn again
             turn = 1;
-            System.out.println("turn " + turn);
         }
         
         //keeps track of the number of frames, used for animation
