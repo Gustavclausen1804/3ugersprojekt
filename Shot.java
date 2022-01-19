@@ -1,19 +1,11 @@
-import java.awt.Canvas;
-import java.util.Map;
-
-import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
-
-import javafx.event.EventType;
-import javafx.css.Size;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
 
 public class Shot {
     public double xDir = 0;
     public double yDir = 0;
+
+    public int microSteps = 10;
 
     public double ballXPos;
     public double ballYPos;
@@ -34,139 +26,33 @@ public class Shot {
     int animationTimer = 0;
     int currentImage = 0;
     boolean explosionActive;
-    boolean countOnce;
+    boolean countOnce = false;
     boolean shotGone;
+
+    boolean leftShooter = false;
+    boolean ShotHitOpposite = false;
 
     boolean removeShotFlag = false;
 
-    Shot(int x, int y, boolean move, boolean show, int id) {
+    Shot(int x, int y, boolean move, boolean show, int id){
         this.ballXPos = x;
         this.ballYPos = y;
         this.move = move;
         this.show = show;
-        this.shooterId = id;
+        this.shooterId = id; 
     }
 
-    public boolean wallCollisionTEST() {
-        // for(int i = 0; i < MapGeneration.houses.size();i++){ // Loops through the
-        // column of blocks
-        // for(int j = 0; j < MapGeneration.houses.get(i).size(); j++){ // Loops through
-        // the row of blocks
-        // int xPosWall = MapGeneration.houses.get(i).get(j)[0]; //gets the x postion of
-        // the corner of each block
-        // int yPosWall = MapGeneration.houses.get(i).get(j)[1]; //gets the y postion of
-        // the corner of each block
-        // int wallSize = MapGeneration.boxSize; // gets the size of each block
 
-        // //Skal skrives om
-        // if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize)
-        // && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){ //Checks if the
-        // shot hits a block
-        // return true;
-        // }
-        // }
-        // }
-        return false;
-    }
-
-    // Enemy shot
-    public double[] enemyShoot(int x, int y, int xGoal, int yGoal) {
-        int iteration = 1000; // 1000/30FPS = 30sek simulering
-
-        int iterationAngle = 180; // Antal udførte kast
-        int iterationForce = 50; // Antal udførte kast
-
-        double[] angleMinMax = { 0, 360 };
-        double[] forceMinMax = { 0, 100 };
-
-        ArrayList<ArrayList<Double>> liste = new ArrayList<ArrayList<Double>>();
-
-        for (int iA = 0; iA < iterationAngle; iA++) {
-            for (int iF = 0; iF < iterationForce; iF++) {
-
-                // Reset shot
-                this.ballXPos = x;
-                this.ballYPos = y;
-                this.xDir = 0;
-                this.yDir = 0;
-
-                // Calculate the step size.
-                double AngleStep = ((angleMinMax[1] - angleMinMax[0]) / iterationAngle);
-                double ForceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);
-
-                // Set-up for the variables for the next shot in line.
-                double angleNext = angleMinMax[0] + AngleStep * iA;
-                double forceNext = forceMinMax[0] + ForceStep * iF;
-
-                this.xDir += Math.cos(Math.toRadians(angleNext)) * (forceNext);
-                this.yDir += -Math.sin(Math.toRadians(angleNext)) * (forceNext);
-
-                int collisionCounter = 0;
-
-                ArrayList<Double> data = new ArrayList<Double>(); // Initialize and reset arraylist for every iteration.
-                for (int i = 0; i < iteration; i++) {
-
-                    double distance = Math.sqrt(Math.pow((xGoal - x), 2) + Math.pow((yGoal - y), 2));
-
-                    if (wallCollisionTEST()) { // Attempt to quantify the amount of collision.
-                        collisionCounter++;
-                    }
-
-                    // Save shot infomation if balls hits the target.
-                    if ((this.ballXPos > 750) && (this.ballYPos < 50)) { // TODO: Collision mellem bold og player skal
-                                                                         // være her
-                        data.add(angleNext);
-                        data.add(forceNext);
-                        data.add(Double.valueOf(collisionCounter));
-                        data.add(Double.valueOf(i));
-
-                        liste.add(data);
-                        break;
-                    }
-                    // Simulate the ball according to applied forces on the map.
-                    updateShot();
-                }
-            }
-        }
-
-        double[] bestShot = { 0, 0, 0, iteration };
-
-        boolean cleanShot = false; // Flag if a clean hit upon the target is possible.
-
-        for (int i = 0; i < liste.size(); i++) {
-            if (liste.get(i).get(3) < bestShot[3] && liste.get(i).get(2) == 0) { // Lowest iteration number and no wall
-                                                                                 // collision
-                bestShot[0] = liste.get(i).get(0);
-                bestShot[1] = liste.get(i).get(1);
-                bestShot[2] = liste.get(i).get(2);
-                bestShot[3] = liste.get(i).get(3);
-                cleanShot = true;
-            }
-        }
-        if (!cleanShot) {
-            for (int i = 0; i < liste.size(); i++) {
-                if (liste.get(i).get(2) < bestShot[2]) { // Lowest amount of wall collision
-                    bestShot[0] = liste.get(i).get(0);
-                    bestShot[1] = liste.get(i).get(1);
-                    bestShot[2] = liste.get(i).get(2);
-                    bestShot[3] = liste.get(i).get(3);
-                }
-            }
-        }
-        return bestShot;
-    }
-
-    public void drawShot(GraphicsContext gc) {
-        if (show == true) {
-
+    public void drawShot(GraphicsContext gc){
+        if (this.show == true){
             collision();
             explosionAnimation(gc);
-            if (!explosionActive) {
-                DrawDir(gc);
-                // Ball
+            if(!explosionActive){
+                // DrawDir(gc);
+                //Ball
                 gc.setFill(Color.BLACK);
                 // gc.fillRect(200, 200, 30, 30);
-                gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
+                gc.fillOval(ballXPos-BALL_R/2,ballYPos-BALL_R/2,BALL_R,BALL_R);
             }
         }
     }
@@ -225,39 +111,40 @@ public class Shot {
         }
     }
 
-    public void updateShot() {
+    public void updateShot(){
+        int refinementFactor = 2;
+        if (move == true){
 
-        if (move == true) {
+                //Update the balls position according to its direction vector components
+                this.ballXPos += xDir/refinementFactor;
+                this.ballYPos += yDir/refinementFactor;
 
-            // Update the balls position according to its direction vector components
-            this.ballXPos += xDir;
-            this.ballYPos += yDir;
-
-            // Make sure it is within the screen, if not, correct it.
-            if (this.ballXPos > App.width - 1) { // Account for the 0-offset
-                this.ballXPos = App.width - 1;
-                this.xDir *= -1;
+                //Make sure it is within the screen, if not, correct it.
+                if (this.ballXPos > App.width-1){  //Account for the 0-offset
+                    this.ballXPos = App.width-1;
+                    this.xDir *= -1;
+                }
+                if (this.ballXPos < 0){
+                    this.ballXPos = 0;
+                    this.xDir *= -1;
+                }
+                // if (this.ballYPos > App.height-1){
+                //     this.ballYPos = App.height-1;
+                //     this.yDir *= -1;
+                // }
+                // if (this.ballYPos < 0){
+                //     this.ballYPos = 0;
+                //     this.yDir *= -1;
+                // }
+                //Wind resistiance
+                if(getSpeed() > 0){
+                    applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));
+                }
+                //Gravity
+                applyForce("downConstant", ((massObject*gravityForce)/70)/refinementFactor);
             }
-            if (this.ballXPos < 0) {
-                this.ballXPos = 0;
-                this.xDir *= -1;
-            }
-            if (this.ballYPos > App.height - 1) {
-                this.ballYPos = App.height - 1;
-                this.yDir *= -1;
-            }
-            // if (this.ballYPos < 0) {
-            //     this.ballYPos = 0;
-            //     this.yDir *= -1;
-            // }
-            // Wind resistiance
-            if (getSpeed() > 0) {
-                applyForce("follow", -(Math.pow(getSpeed(), 2) / 500));
-            }
-            // Gravity
-            applyForce("downConstant", (massObject * gravityForce) / 75);
         }
-    }
+    
 
     public void setMove(boolean state) {
         this.move = state;
@@ -299,16 +186,15 @@ public class Shot {
         return Math.sqrt((Math.pow(xDir, 2) + Math.pow(yDir, 2)));
     }
 
-    public void collision() {
-        playerCollision();
-        wallCollision();
+    public void collision(){
+        playerCollision(true);
+        wallCollision(true);
 
     }
 
-    void wallCollision() {
-        if (ballYPos >= App.height - 2 * BALL_R) {
+    public boolean wallCollision(boolean enableCollision){
+        if(ballYPos >= App.height-2*BALL_R && enableCollision == true){
             explosion();
-
         }
         // Loops through the all houses(blocks)
         for (int i = 0; i < MapGeneration.houses.size(); i++) { // Loops through the column of blocks
@@ -316,50 +202,62 @@ public class Shot {
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; // gets the x postion of the corner of each block
                 int yPosWall = MapGeneration.houses.get(i).get(j)[1]; // gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
+                
+                if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
 
-                // Skal skrives om
-                if ((ballXPos >= xPosWall && ballXPos <= xPosWall + wallSize)
-                        && (ballYPos >= yPosWall && ballYPos <= yPosWall + wallSize)) { // Checks if the shot hits a
-                                                                                        // block
+                        if (enableCollision == true){
+                            MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit
+                            explosion();
+                            break;
+                        }
 
-                    MapGeneration.houses.get(i).remove(j); // Removes the block which the shot hit
-                    explosion();
-                    break;
-                }
+                        return true;
 
+                    }
+                   
             }
         }
-        // if((ballXPos >= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos >= p.yPos &&
-        // ballYPos<= p.yPos+p.size)){
+        return false;
     }
 
-    void removeShot() {
-        App.spiller.get(shooterId-1).shootsFired=false;
-        removeShotFlag = true;
-
+    void removeShot() {                                 //It is not possible to remove/forget the object inside the object, therefore set an flag for utilization on the player class
+        App.spiller.get(shooterId-1).shootsFired=false; //Reset the shootsFires flag
+        removeShotFlag = true;                          //Set the remove flag
     }
 
-    public boolean getRemoveShot() {
-        return removeShotFlag;
-    }
 
-    void playerCollision() {
-        App.spiller.forEach((p) -> {
-            if (countOnce == false) {
-                if ((ballXPos >= p.xPos && ballXPos <= p.xPos + p.size)
-                        && (ballYPos >= p.yPos && ballYPos <= p.yPos + p.size)) {
-                    if (p.id == shooterId) {
-                        App.spiller.get(shooterId - 1).playerScore.counter--;
-                    } else {
-                        App.spiller.get(shooterId - 1).playerScore.counter++;
+    boolean playerCollision(boolean enableCollision){
+        App.spiller.forEach((p) -> {                                                                                   //Loops through all players
+            if((ballXPos>= p.xPos && ballXPos<= p.xPos+p.size) && (ballYPos>= p.yPos && ballYPos<= p.yPos+p.size)){    //Checks if the projectile is inside the player's hitbox
+                if(p.id == shooterId){                                                                                 //If the players ID is identical to the one who fired the projectile
+                    if (leftShooter == true){                                                                          //Check if the projectile has left the shooters own hitbox
+                        if(countOnce == false){                                                                        //Check if any players already has gained a point for the hit.
+                            if (enableCollision == true){                                                              //Flag introduced in order for the simulation to utilize the method.
+                                App.spiller.get(shooterId-1).PlayerScore.counter--;                                    //If the projectile enters the shooters hitbox again, decrement the players score.
+                                explosion();                                                                           
+                            }
+                            countOnce = true;
+                            
+                        }
                     }
-                    countOnce = true;
-                    explosion();
-                    
                 }
-            }
-
+                else {
+                    if(countOnce == false){
+                        if (enableCollision == true){
+                            App.spiller.get(shooterId-1).PlayerScore.counter++;
+                            explosion();
+                        }
+                        countOnce = true;
+                        ShotHitOpposite = true; //Due to the 'forEach' loop being a void, an object variable is nessecary for scope reasons.
+                    }
+                }
+            } else {  //When the ball is not in contact with a player
+                if(p.id == shooterId){  //The player which made the shot
+                    leftShooter = true;
+                }
+            } 
         });
+        return ShotHitOpposite;
     }
 
     void explosion() {
@@ -406,7 +304,7 @@ public class Shot {
         }
     }
 
-    void explosionAnimation(GraphicsContext gc) {
+    void explosionAnimation(GraphicsContext gc) { // animates an explosion
         if (explosionActive) {
             gc.drawImage(App.explosionImage[currentImage], this.ballXPos - (explosion_R / 2),
                     this.ballYPos - (explosion_R / 2));
@@ -419,58 +317,4 @@ public class Shot {
             animationTimer++;
         }
     }
-
-    // //Enemy shot
-    // public void enemyShot(int x, int y){
-    // int iterationAngle = 150; //Antal udførte kast
-    // int iterationForce = 20; //Antal udførte kast
-
-    // double[] angleMinMax = {0,180};
-    // double[] forceMinMax = {0,20};
-
-    // double AngleStep = ((angleMinMax[1]-angleMinMax[0])/iterationAngle);
-    // double ForceStep = ((forceMinMax[1]-forceMinMax[0])/iterationForce);
-
-    // double[][] liste = new double[iterationAngle][];
-
-    // for (int iA = 0; iA < iterationAngle; iA++){
-    // for (int iF = 0; iF < iterationForce; iF++){
-
-    // //Reset shot
-    // this.ballXPos = x;
-    // this.ballYPos = y;
-    // this.xDir = 0;
-    // this.yDir = 0;
-
-    // double angleNext = angleMinMax[0]+AngleStep*iA;
-    // double forceNext = forceMinMax[0]+ForceStep*iF;
-
-    // System.out.println(xDir + " " + yDir);
-
-    // this.xDir += Math.cos(Math.toRadians(angleNext))*(forceNext);
-    // this.yDir += -Math.sin(Math.toRadians(angleNext))*(forceNext);
-
-    // int iteration = 1000; // 1000/30FPS = 30sek simulering
-    // double[] insert = {-1,-1,-1}; //Load standard value if no hit
-    // for (int i = 0; i < iteration; i++){
-    // move_ball();
-    // if ((ballXPos > 700) && (ballYPos > 700)){
-    // insert[0] = angleMinMax[0]+AngleStep*i;
-    // insert[1] = forceMinMax[0]+ForceStep*i;
-    // insert[2] = i;
-
-    // //Leave iteration loop
-    // //break
-    // }
-    // }
-
-    // //Gem værdier
-    // liste[iA] = insert;
-    // if (insert[0] != -1 && insert[1] != -1){
-    // System.out.println(insert[0] + " " + insert[1]);
-    // }
-    // }
-    // }
-    // }
-
 }

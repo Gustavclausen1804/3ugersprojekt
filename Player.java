@@ -1,32 +1,22 @@
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.swing.SwingUtilities;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.Light.Point;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
+
 
 class Player extends App {
 
     Shot playerShot;
 
-    Score playerScore;
+    Score PlayerScore;
 
     int xPos, yPos;
     boolean parameterChosen = false;
 
     Group playerRoot = new Group();
-    CustomButton btn = new CustomButton("Shoot");
+    CustomButton shootButton = new CustomButton("Shoot");
 
     String name;
     final int size = 30;
@@ -35,17 +25,23 @@ class Player extends App {
     double shootingForce, shootingAngle;
     double[] forceAndAngle;
 
+    int animationTimer = 0;
+    int currentImage = 0;
+
     public Player(int id, String name) {
         this.xPos = App.xRange * id;
         this.id = id;
         this.name = name;
 
-        btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        btn.setLayoutX(640);
-        btn.setLayoutY(140);
-        btn.setVisible(false);
+        shootButton.setMaxSize(200, 100);
+        
+        shootButton.setLayoutX(640-100);
+        shootButton.setLayoutY(140);
+        
+        shootButton.setVisible(false);
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        //Creates a button
+        shootButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
@@ -54,34 +50,44 @@ class Player extends App {
                     if (parameterChosen) {
                         shootsFired = true;
                         shoot(shootingAngle, shootingForce);
-                        btn.setVisible(false);
+                        shootButton.setVisible(false);
                         parameterChosen = false;
                     }
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
         });
 
-        playerRoot.getChildren().add(btn);
+        playerRoot.getChildren().add(shootButton);
 
-        playerScore = new Score(id);
+        PlayerScore = new Score(id);
 
     }
 
     public void draw(GraphicsContext gc) {
 
         // Draws the players
-        gc.setFill(Color.BLACK);
-        gc.fillRect(xPos, yPos, size, size);
+        gc.drawImage(App.playerImage.get(id%4)[currentImage], xPos,
+        yPos);
+        if (animationTimer % 10 == 0 && currentImage < App.playerImage.get(id%4).length) {
+            currentImage++;
+        }
+        if (currentImage == App.playerImage.get(id%4).length - 1) {
+            currentImage = 0;
+        }
+        animationTimer++;
+
+
+
         if(!App.gameEnded){
             if (id == App.turn) {
-                textDisplay(gc);
+                textDisplay(gc); 
             }
         }
 
-        playerScore.draw(gc);
+        //draws each players score on the top
+        PlayerScore.draw(gc);
     }
 
     public void startLocation() {
@@ -94,7 +100,6 @@ class Player extends App {
             for (int i = 0; i < MapGeneration.houses.size(); i++) { // Loops through the column of blocks
                 for (int j = 0; j < MapGeneration.houses.get(i).size(); j++) {
                     int mapX = MapGeneration.houses.get(i).get(j)[0],
-                            mapY = MapGeneration.houses.get(i).get(j)[0],
                             mapSize = MapGeneration.boxSize;
                     if (xPos > mapX && xPos < mapX + mapSize) {
                         xPos = mapX;
@@ -116,27 +121,16 @@ class Player extends App {
     }
 
     public void shoot(double angle, double force) {
-        Double sizeD = Math.sqrt(Math.pow(size / 2, 2) + Math.pow(size / 2, 2));
-        Double shootingAngleRadian = Math.toRadians(angle);
-        // skud.add(new Shot(xPos + (size / 2) + (sizeD *
-        // Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD *
-        // Math.sin(shootingAngleRadian) * (-1)), true, false));
-        this.playerShot = new Shot(xPos + 20, yPos + 2, true, true, id);
-        // this.playerShot = new Shot(xPos + (size / 2) + (sizeD *
-        // Math.cos(shootingAngleRadian)), yPos + (size / 2) + (sizeD *
-        // Math.sin(shootingAngleRadian) * (-1)), true, true);
-
-        playerShot.applyForce(angle, force);
-
+            this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);   //Create a shot object
+            playerShot.applyForce(angle, force);                                    //Apply a force onto the shot
     }
 
-    public boolean removeShot() {
-        if (this.playerShot.getRemoveShot()) {
-            System.out.println("Player, removeShot()");
-            this.playerShot = null;
-            return true;
+    public boolean playerRemoveShot() {
+        if (this.playerShot.removeShotFlag) {       //Check the state of the shot's remove-flag
+            this.playerShot = null;                 //Set the pointer for the shot to nothing
+            return true;                            //Return upon removing
         }
-        return false;
+        return false;                               //Default return false
     }
 
     void textDisplay(GraphicsContext gc) {
@@ -148,12 +142,7 @@ class Player extends App {
         }
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Verdana", 15));
-
-        // PointerInfo a = MouseInfo.getPointerInfo();
-        // Point point = new Point(a.getLocation());
-        // SwingUtilities.convertPointFromScreen(point, e.getComponent());
-        // System.out.println(point.x + "," + point.y);
-
+    
         // Draws the arrow which show the angle of the shot
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(5);
@@ -174,12 +163,21 @@ class Player extends App {
 
     }
 
-    public static double round(double value, int places) {
 
+    public static double round(double value, int places) {
+        if(value > 40){
+            value = 40;
+        }
         java.math.BigDecimal decimal = java.math.BigDecimal.valueOf(value);
         decimal = decimal.setScale(places, java.math.RoundingMode.HALF_UP);
 
         return decimal.doubleValue();
     }
+    
+
+
+
+
+
 
 }
