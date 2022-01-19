@@ -62,6 +62,9 @@ public class App extends Application {
     public static int playerAmount = 2; // Default value
     public static int xRange;
 
+    boolean lightBruteForce = false; //TODO: Skal have en boolean
+
+
     int winnerScore;
     static boolean gameEnded;
     Group winnerG = new Group();;
