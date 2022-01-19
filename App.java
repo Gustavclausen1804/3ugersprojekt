@@ -8,7 +8,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -19,7 +18,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -44,10 +43,6 @@ public class App extends Application {
     ToggleButton toggleSimpleAi = new ToggleButton("Enable simple AI shots");
 
     MapGeneration map;
-
-    // Billede
-    // ImageView imageView = new ImageView();
-
     // Screen Size
     static final int width = 1280;
     static final int height = 720;
@@ -73,8 +68,7 @@ public class App extends Application {
 
     static int turn = 1;
      
-    private GridPane grid = new GridPane();
-    private GridPane nameGrid = new GridPane();
+    
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
     static Image backGroundImage;
@@ -88,16 +82,12 @@ public class App extends Application {
 
     boolean pleaseForTheLoveOfGodOnlyRunOnce;
 
-
-    boolean Ting;
-
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
         primaryStage.setTitle("Gorillas But Better");
         primaryStage.setResizable(false); 
         Image icon = new Image("paul.png");
         primaryStage.getIcons().add(icon);
-        // primaryStage.initStyle(StageStyle.UNDECORATED);
         if(!pleaseForTheLoveOfGodOnlyRunOnce){
             primaryStage.initStyle(StageStyle.UNDECORATED);
             pleaseForTheLoveOfGodOnlyRunOnce = true;
@@ -112,7 +102,7 @@ public class App extends Application {
         grid.add(Players, 0, 1);
         
         //Creates a slider, for the number of players playing
-        Slider playerSlider = new Slider(2, 8, 1);
+        Slider playerSlider = new Slider(minPlayers, maxPlayers, 1);
         playerSlider.setMajorTickUnit(1);
         playerSlider.setBlockIncrement(1);
         playerSlider.setMinorTickCount(0);
@@ -121,10 +111,6 @@ public class App extends Application {
         playerSlider.setShowTickMarks(true);
 
         grid.add(playerSlider, 1, 1);
-
-        // line 2
-        // CustomLabel maxmin = new CustomLabel("min:2 max:8");
-        // grid.add(maxmin, 0, 2);
 
         //Creates the start Button, which upon pressing leads to the nameselect screen
         CustomButton startButtonMainScreen = new CustomButton("Play");
@@ -184,6 +170,7 @@ public class App extends Application {
     }
 
     public void playerNames(Stage stage) throws Exception {
+        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -255,7 +242,6 @@ public class App extends Application {
                     winnerScore = (int) scoreSlider.getValue();
                     gamestart(stage);
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -278,6 +264,7 @@ public class App extends Application {
     }
 
     public void scoreBoardScreen(Stage stage) throws Exception {
+        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -317,7 +304,6 @@ public class App extends Application {
                 try {
                     start(stage);
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -486,7 +472,7 @@ public class App extends Application {
             }
 
             // Check if a Player Won
-            if (playerList.playerScore.counter == winnerScore) {
+            if (playerList.PlayerScore.counter == winnerScore) {
                
                 if (!gameEnded) { // this code is only run once
                     
@@ -515,7 +501,6 @@ public class App extends Application {
 
                                 
                             } catch (Exception e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             }
                         }

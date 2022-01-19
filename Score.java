@@ -42,7 +42,7 @@ class Score {
         JsonArray ScoreList = readJsonArray();
         JsonObject PlayerScoreObject = new JsonObject(); // Create an object for each playername and score.
         App.spiller.forEach((p) -> { // Loop thorough all players, and store the score in the PlayerScoreObject.
-            PlayerScoreObject.addProperty(p.name, p.playerScore.counter); // add PlayerScoreObject to the JsonArray
+            PlayerScoreObject.addProperty(p.name, p.PlayerScore.counter); // add PlayerScoreObject to the JsonArray
         });
         ScoreList.add(PlayerScoreObject);
         // Update the scoreboard.json

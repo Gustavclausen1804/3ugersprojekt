@@ -3,16 +3,14 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
-import java.util.Random;
 
 
 class Player extends App {
 
     Shot playerShot;
 
-    Score playerScore;
+    Score PlayerScore;
 
     int xPos, yPos;
     boolean parameterChosen = false;
@@ -56,7 +54,6 @@ class Player extends App {
                         parameterChosen = false;
                     }
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -64,7 +61,7 @@ class Player extends App {
 
         playerRoot.getChildren().add(shootButton);
 
-        playerScore = new Score(id);
+        PlayerScore = new Score(id);
 
     }
 
@@ -90,7 +87,7 @@ class Player extends App {
         }
 
         //draws each players score on the top
-        playerScore.draw(gc);
+        PlayerScore.draw(gc);
     }
 
     public void startLocation() {

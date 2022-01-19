@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 
  
 public class Enemy extends Player{
       
-      boolean lightBruteForce = false; //TODO: Bruges til at få AI til hrutigt at finde et skud.
+      boolean lightBruteForce = false;
       int difficulty = 0;
       int currentFrame;
 
@@ -47,8 +46,8 @@ public class Enemy extends Player{
                   }
 
                   for (int iF = 0; iF <= iterationForce; iF++) {
-                        double ForceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);                        // Calculate the step size
-                        double forceNext = forceMinMax[0] + ForceStep * iF;
+                        double forceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);                        // Calculate the step size
+                        double forceNext = forceMinMax[0] + forceStep * iF;
 
                         Shot simulation = new Shot(x, y, true, false, this.id);
                         simulation.applyForce(angleNext,forceNext);
