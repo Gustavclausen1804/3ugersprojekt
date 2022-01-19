@@ -91,8 +91,6 @@ class Score {
                 }
                 System.out.println("Size of PlayerScoreArray " + PlayerScoreArray.size());
             }
-            // JsonObject PlayerScoreObject = (JsonObject) obj;
-            // PlayerScoreArray = (JsonArray) PlayerScoreObject.getAsJsonArray();
         }
 
         return PlayerScoreArray;
