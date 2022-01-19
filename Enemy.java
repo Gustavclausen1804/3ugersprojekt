@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 
  
 public class Enemy extends Player{
       
-      boolean lightBruteForce = false; //TODO: Bruges til at få AI til hrutigt at finde et skud.
+      boolean lightBruteForce = false;
       int difficulty = 0;
       int currentFrame;
 

@@ -1,6 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
 
 public class Shot {
     public double xDir = 0;

@@ -68,7 +68,11 @@ class Score {
         // instead.
         if (Files.isRegularFile(path)) {
             try {
+                PlayerScoreArray = parser.parse(new FileReader("scoreboard.json")).getAsJsonArray();
             } catch (JsonIOException | JsonSyntaxException | FileNotFoundException e) {
+                // This code should not run due to the if statement. IF something goes wrong. We
+                // get an error
+                e.printStackTrace();
                 System.out.println("Scoreboard.json file NOT FOUND!");
             }
 

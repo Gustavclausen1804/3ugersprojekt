@@ -3,9 +3,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
-import java.util.Random;
 
 
 class Player extends App {
@@ -35,12 +33,6 @@ class Player extends App {
         this.id = id;
         this.name = name;
 
-        playerScore = new Score(id);
-        
-        playerSetup();
-    }
-
-    void playerSetup(){
         shootButton.setMaxSize(200, 100);
         
         shootButton.setLayoutX(640-100);
@@ -62,13 +54,15 @@ class Player extends App {
                         parameterChosen = false;
                     }
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
         });
 
         playerRoot.getChildren().add(shootButton);
+
+        playerScore = new Score(id);
+
     }
 
     public void draw(GraphicsContext gc) {
@@ -94,6 +88,11 @@ class Player extends App {
 
         //draws each players score on the top
         playerScore.draw(gc);
+    }
+
+    public void startLocation() {
+        this.xPos = App.xRange * id;
+
     }
 
     public void move() {
@@ -166,7 +165,6 @@ class Player extends App {
 
 
     public static double round(double value, int places) {
-
         if(value > 40){
             value = 40;
         }
