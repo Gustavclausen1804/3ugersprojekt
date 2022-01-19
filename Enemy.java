@@ -46,8 +46,8 @@ public class Enemy extends Player{
                   }
 
                   for (int iF = 0; iF <= iterationForce; iF++) {
-                        double ForceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);                        // Calculate the step size
-                        double forceNext = forceMinMax[0] + ForceStep * iF;
+                        double forceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);                        // Calculate the step size
+                        double forceNext = forceMinMax[0] + forceStep * iF;
 
                         Shot simulation = new Shot(x, y, true, false, this.id);
                         simulation.applyForce(angleNext,forceNext);

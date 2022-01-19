@@ -10,7 +10,7 @@ class Player extends App {
 
     Shot playerShot;
 
-    Score playerScore;
+    Score PlayerScore;
 
     int xPos, yPos;
     boolean parameterChosen = false;
@@ -61,7 +61,7 @@ class Player extends App {
 
         playerRoot.getChildren().add(shootButton);
 
-        playerScore = new Score(id);
+        PlayerScore = new Score(id);
 
     }
 
@@ -87,7 +87,7 @@ class Player extends App {
         }
 
         //draws each players score on the top
-        playerScore.draw(gc);
+        PlayerScore.draw(gc);
     }
 
     public void startLocation() {

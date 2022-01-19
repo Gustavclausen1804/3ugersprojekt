@@ -68,7 +68,7 @@ public class App extends Application {
 
     static int turn = 1;
      
-    private GridPane nameGrid = new GridPane();
+    
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
     static Image backGroundImage;
@@ -82,16 +82,12 @@ public class App extends Application {
 
     boolean pleaseForTheLoveOfGodOnlyRunOnce;
 
-
-    boolean Ting;
-
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
         primaryStage.setTitle("Gorillas But Better");
         primaryStage.setResizable(false); 
         Image icon = new Image("paul.png");
         primaryStage.getIcons().add(icon);
-        // primaryStage.initStyle(StageStyle.UNDECORATED);
         if(!pleaseForTheLoveOfGodOnlyRunOnce){
             primaryStage.initStyle(StageStyle.UNDECORATED);
             pleaseForTheLoveOfGodOnlyRunOnce = true;
@@ -174,6 +170,7 @@ public class App extends Application {
     }
 
     public void playerNames(Stage stage) throws Exception {
+        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -267,6 +264,7 @@ public class App extends Application {
     }
 
     public void scoreBoardScreen(Stage stage) throws Exception {
+        GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
         nameGrid.setVgap(hightGap);
         nameGrid.setHgap(sideGap);
@@ -474,7 +472,7 @@ public class App extends Application {
             }
 
             // Check if a Player Won
-            if (playerList.playerScore.counter == winnerScore) {
+            if (playerList.PlayerScore.counter == winnerScore) {
                
                 if (!gameEnded) { // this code is only run once
                     
