@@ -74,10 +74,8 @@ class MapGeneration {
         GenerateHouse();
     }
 
-    // Koordinater af canvas y: 0-17, x: 0-31
-
-    // Metode som genere huset baseret på x-koordinat, y-koordinat og ønsket bredde
-    // af huset.
+    // Metode som generer de specifikek Blokke som Husene skal består af,
+    // baseret på x-koordinat, y-koordinat, ønsket bredde og farve
     public void GenerateHouse() {
 
         Random ran = new Random();
@@ -95,25 +93,10 @@ class MapGeneration {
                 for (int j = 0; j < max_height_of_house; j++) {
                     int imageID = ran.nextInt(buildAmount);
 
+                    // Adds an array with 4 spaces which holds the x, y, colorID and imageID of each
+                    // block.
                     houses.get(i).add(
-                            new int[] { (x_coordinate + i) * boxSize, (y_coordinate + j) * boxSize, colorID, imageID }); // Adds
-                                                                                                                         // an
-                                                                                                                         // array
-                                                                                                                         // with
-                                                                                                                         // 4
-                                                                                                                         // spaces
-                                                                                                                         // which
-                                                                                                                         // holds
-                                                                                                                         // the
-                                                                                                                         // x-
-                                                                                                                         // ,
-                                                                                                                         // y-postion
-                                                                                                                         // colorId
-                                                                                                                         // and
-                                                                                                                         // ImageId
-                                                                                                                         // of
-                                                                                                                         // each
-                                                                                                                         // block
+                            new int[] { (x_coordinate + i) * boxSize, (y_coordinate + j) * boxSize, colorID, imageID });
                 }
             }
         }
