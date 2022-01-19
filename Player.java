@@ -35,6 +35,12 @@ class Player extends App {
         this.id = id;
         this.name = name;
 
+        playerScore = new Score(id);
+        
+        playerSetup();
+    }
+
+    void playerSetup(){
         shootButton.setMaxSize(200, 100);
         
         shootButton.setLayoutX(640-100);
@@ -63,9 +69,6 @@ class Player extends App {
         });
 
         playerRoot.getChildren().add(shootButton);
-
-        playerScore = new Score(id);
-
     }
 
     public void draw(GraphicsContext gc) {
@@ -91,11 +94,6 @@ class Player extends App {
 
         //draws each players score on the top
         playerScore.draw(gc);
-    }
-
-    public void startLocation() {
-        this.xPos = App.xRange * id;
-
     }
 
     public void move() {
