@@ -167,6 +167,9 @@ class Player extends App {
 
     public static double round(double value, int places) {
 
+        if(value > 40){
+            value = 40;
+        }
         java.math.BigDecimal decimal = java.math.BigDecimal.valueOf(value);
         decimal = decimal.setScale(places, java.math.RoundingMode.HALF_UP);
 

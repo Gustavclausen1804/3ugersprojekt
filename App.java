@@ -409,6 +409,9 @@ public class App extends Application {
                 if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their shot, 
                                                             // and a shot hasn't been created yet
                     p.shootingAngle = p.forceAndAngle[1];  // takes the value and saves it in an array
+                    if(p.forceAndAngle[0] > 40){
+                        p.forceAndAngle[0] = 40;
+                    }
                     p.shootingForce = p.forceAndAngle[0];
                     p.parameterChosen = true;  
                     p.shootButton.setVisible(true);  // shows the button which shoots a bullet
