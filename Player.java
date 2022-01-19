@@ -5,11 +5,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+
 class Player extends App {
 
     Shot playerShot;
 
-    Score playerScore;
+    Score PlayerScore;
 
     int xPos, yPos;
     boolean parameterChosen = false;
@@ -53,7 +54,6 @@ class Player extends App {
                         parameterChosen = false;
                     }
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -61,7 +61,7 @@ class Player extends App {
 
         playerRoot.getChildren().add(shootButton);
 
-        playerScore = new Score(id);
+        PlayerScore = new Score(id);
 
     }
 
@@ -87,7 +87,7 @@ class Player extends App {
         }
 
         //draws each players score on the top
-        playerScore.draw(gc);
+        PlayerScore.draw(gc);
     }
 
     public void startLocation() {
@@ -170,7 +170,9 @@ class Player extends App {
     }
 
     public static double round(double value, int places) {
-
+        if(value > 40){
+            value = 40;
+        }
         java.math.BigDecimal decimal = java.math.BigDecimal.valueOf(value);
         decimal = decimal.setScale(places, java.math.RoundingMode.HALF_UP);
 

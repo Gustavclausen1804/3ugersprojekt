@@ -224,7 +224,7 @@ public class Shot {
                     if (leftShooter == true){                                                                          //Check if the projectile has left the shooters own hitbox
                         if(countOnce == false){                                                                        //Check if any players already has gained a point for the hit.
                             if (enableCollision == true){                                                              //Flag introduced in order for the simulation to utilize the method.
-                                App.spiller.get(shooterId-1).playerScore.counter--;                                    //If the projectile enters the shooters hitbox again, decrement the players score.
+                                App.spiller.get(shooterId-1).PlayerScore.counter--;                                    //If the projectile enters the shooters hitbox again, decrement the players score.
                                 explosion();                                                                           
                             }
                             countOnce = true;
@@ -235,14 +235,14 @@ public class Shot {
                 else {
                     if(countOnce == false){
                         if (enableCollision == true){
-                            App.spiller.get(shooterId-1).playerScore.counter++;
+                            App.spiller.get(shooterId-1).PlayerScore.counter++;
                             explosion();
                         }
                         countOnce = true;
                         ShotHitOpposite = true; //Due to the 'forEach' loop being a void, an object variable is nessecary for scope reasons.
                     }
                 }
-            } else {                     //When the ball is not in contact with a player
+            } else {  //When the ball is not in contact with a player
                 if(p.id == shooterId){  //The player which made the shot
                     leftShooter = true;
                 }

@@ -1,12 +1,51 @@
+
+
 .text-field {
-  -fx-font-family: "Quicksand";
   -fx-font-size: 16;
   -fx-padding: 1, 1, 1, 1;
-  -fx-border-color: rgb(255, 208, 0);
+  -fx-border-color: rgba(255, 255, 255, 0);
   -fx-border-width: 2;
   -fx-border-radius: 1;
   -fx-border: gone;
-  -fx-text-fill: grey;
+  -fx-text-fill: rgb(31, 0, 0);
   -fx-background-color: transparent;
-  -fx-background-image: url("/resources/yellow_button.png");
+  -fx-background-image: url("/resources/yellow_button_pressed.png");
+  -fx-background-repeat: no-repeat;
+}
+
+.toggle-button {
+  -fx-background-color: rgb(255, 209, 30);
+  -fx-text-base-color: rgb(0, 0, 0);
+}
+
+.toggle-button:selected {
+  -fx-background-color: rgb(19, 134, 4);
+  -fx-text-base-color: rgb(250, 250, 250);
+}
+
+/* Styling the slider track */
+.slider > .track {
+  -fx-background-color: rgb(255, 209, 30);
+}
+
+/* Styling the slider thumb */
+.slider > .thumb {
+  -fx-background-color: rgba(39, 25, 0, 0.911);
+}
+
+/* Styling the filled track */
+.slider > .colored-track {
+  -fx-background-color: rgb(255, 209, 30);
+}
+
+/* Styling the animated thumb */
+.slider > .animated-thumb {
+  -fx-background-color: rgb(255, 209, 30);
+}
+
+.slider > .axis {
+  -fx-fill: rgb(0, 0, 0);
+  -fx-stroke: rgb(0, 0, 0);
+  -fx-tick-label-fill: rgb(0, 0, 0);
+  -fx-axis-tick-mark: rgb(0, 0, 0);
 }

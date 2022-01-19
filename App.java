@@ -18,7 +18,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -40,12 +40,9 @@ public class App extends Application {
     public static ArrayList<Player> modstander;
     public static ArrayList<ToggleButton> toggleButtonList = new ArrayList<>();
     public static ArrayList<Slider> EnemyLevelList = new ArrayList<>();
+    ToggleButton toggleSimpleAi = new ToggleButton("Enable simple AI shots");
 
     MapGeneration map;
-
-    // Billede
-    // ImageView imageView = new ImageView();
-
     // Screen Size
     static final int width = 1280;
     static final int height = 720;
@@ -54,6 +51,9 @@ public class App extends Application {
     public static double MouseX;
     public static double MouseY;
 
+    // Set min and max players
+    private final int minPlayers = 2; // atleast 2 for game to work
+    private final int maxPlayers = 8; // max depends on screen size
 
     // Start Screen Interface
     private final int sideGap = 15; // gap in grid vertical
@@ -70,7 +70,7 @@ public class App extends Application {
     Group winnerG = new Group();;
 
     static int turn = 1;
-    
+     
     
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
@@ -85,15 +85,12 @@ public class App extends Application {
 
     boolean pleaseForTheLoveOfGodOnlyRunOnce;
 
-
-
     public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
         primaryStage.setTitle("Gorillas But Better");
         primaryStage.setResizable(false); 
         Image icon = new Image("paul.png");
         primaryStage.getIcons().add(icon);
-        // primaryStage.initStyle(StageStyle.UNDECORATED);
         if(!pleaseForTheLoveOfGodOnlyRunOnce){
             primaryStage.initStyle(StageStyle.UNDECORATED);
             pleaseForTheLoveOfGodOnlyRunOnce = true;
@@ -104,11 +101,11 @@ public class App extends Application {
         grid.setVgap(hightGap);
         grid.setHgap(sideGap);
         // line 1
-        CustomLabel Players = new CustomLabel("How many players:");
+        CustomLabel Players = new CustomLabel("Select players: ");
         grid.add(Players, 0, 1);
         
         //Creates a slider, for the number of players playing
-        Slider playerSlider = new Slider(2, 8, 1);
+        Slider playerSlider = new Slider(minPlayers, maxPlayers, 1);
         playerSlider.setMajorTickUnit(1);
         playerSlider.setBlockIncrement(1);
         playerSlider.setMinorTickCount(0);
@@ -117,10 +114,6 @@ public class App extends Application {
         playerSlider.setShowTickMarks(true);
 
         grid.add(playerSlider, 1, 1);
-
-        // line 2
-        CustomLabel maxmin = new CustomLabel("min:2 max:8");
-        grid.add(maxmin, 0, 2);
 
         //Creates the start Button, which upon pressing leads to the nameselect screen
         CustomButton startButtonMainScreen = new CustomButton("Play");
@@ -192,6 +185,8 @@ public class App extends Application {
             nameGrid.add(playerLabel.get(i), 0, i);
             playerNameTextField.add(new TextField("Player " + (i + 1)));
             nameGrid.add(playerNameTextField.get(i), 1, i);
+            playerNameTextField.get(i).setPrefSize(130, 50);
+            playerNameTextField.get(i).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             //a Toggle button for if the player is an AI or not
             toggleButtonList.add(new ToggleButton("Toggle AI"));
             nameGrid.add(toggleButtonList.get(i), 2, i);
@@ -223,6 +218,7 @@ public class App extends Application {
         
         CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
         nameGrid.add(scoreLabel, 0, playerAmount);
+        nameGrid.add(toggleSimpleAi, 2, playerAmount);
 
         //Adds a slider in which you put in the number of points a player need to reach in order to win
         Slider scoreSlider = new Slider(1, 10, 1);
@@ -249,7 +245,6 @@ public class App extends Application {
                     winnerScore = (int) scoreSlider.getValue();
                     gamestart(stage);
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -266,6 +261,7 @@ public class App extends Application {
         nameGrid.setBackground(bGround);
 
         Scene scene = new Scene(nameGrid, width, height);
+        scene.getStylesheets().add("players.css");
         stage.setScene(scene);
         stage.show();
     }
@@ -300,19 +296,17 @@ public class App extends Application {
 
         }
         //Creates a button which goes back to main screen
-        CustomButton btn = new CustomButton("Back");
-        btn.setMaxSize(130, 50);
-        nameGrid.add(btn, 1, scoresArray.size());
+        CustomButton backButton = new CustomButton("Back");
+        backButton.setMaxSize(130, 50);
+        nameGrid.add(backButton, 1, scoresArray.size());
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        backButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    // btn.getScene().setRoot(start(stage));
                     start(stage);
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -374,6 +368,8 @@ public class App extends Application {
 
         loadSprites();
 
+        loadSprites();
+
         Scene scene = new Scene(root, width, height);
         //adds detection if certin events are triggered
         scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey); //KeyPressed
@@ -402,6 +398,9 @@ public class App extends Application {
                 if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their shot, 
                                                             // and a shot hasn't been created yet
                     p.shootingAngle = p.forceAndAngle[1];  // takes the value and saves it in an array
+                    if(p.forceAndAngle[0] > 40){
+                        p.forceAndAngle[0] = 40;
+                    }
                     p.shootingForce = p.forceAndAngle[0];
                     p.parameterChosen = true;  
                     p.shootButton.setVisible(true);  // shows the button which shoots a bullet
@@ -476,7 +475,7 @@ public class App extends Application {
             }
 
             // Check if a Player Won
-            if (playerList.playerScore.counter == winnerScore) {
+            if (playerList.PlayerScore.counter == winnerScore) {
                
                 if (!gameEnded) { // this code is only run once
                     
@@ -500,12 +499,11 @@ public class App extends Application {
                                 File file = new File(location.getPath());
                                 java.awt.Desktop desktop = java.awt.Desktop.getDesktop();  
                                 desktop.open(file);
-                                TimeUnit.SECONDS.sleep(5);
+                                TimeUnit.SECONDS.sleep(2);
                                 Platform.exit();
 
                                 
                             } catch (Exception e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             }
                         }
@@ -515,8 +513,20 @@ public class App extends Application {
                 gc.setFont(Font.font("Verdana", 30));
                 gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
                 
+                
+                
             }
+            if(playerList instanceof Enemy){
+                if(playerList.id == turn && !gameEnded && !playerList.shootsFired){
+                    playerList.shoot(0,0);
+                    playerList.shootsFired = true;
+                }
+            }
+
+
         });
+
+        
 
         if (turn > spiller.size()) { // when every player has had their turn the first player has their turn again
             turn = 1;
@@ -565,6 +575,7 @@ public class App extends Application {
             }
         }
     }
+
 
     public static void main(String[] args) {
         launch(args);

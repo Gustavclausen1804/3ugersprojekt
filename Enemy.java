@@ -6,12 +6,14 @@ import java.util.Random;
 public class Enemy extends Player{
       
       int difficulty = 0;
+      int currentFrame;
 
       public Enemy(int id, String name, int difficulty) {
             super(id,name);
             this.difficulty = difficulty;
       }
       public void shoot(double angle, double force) {
+            
             double[] shot = enemyDifficulty(enemyShot(xPos+size/2, yPos+size/2), difficulty);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
             angle = shot[0];
             force = shot[1];
@@ -19,7 +21,7 @@ public class Enemy extends Player{
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
 
             playerShot.applyForce(angle, force);
-    }
+      }
 
       public double[] enemyShot(int x, int y) {
 
@@ -47,8 +49,8 @@ public class Enemy extends Player{
                   }
 
                   for (int iF = 0; iF <= iterationForce; iF++) {
-                        double ForceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);                        // Calculate the step size
-                        double forceNext = forceMinMax[0] + ForceStep * iF;
+                        double forceStep = ((forceMinMax[1] - forceMinMax[0]) / iterationForce);                        // Calculate the step size
+                        double forceNext = forceMinMax[0] + forceStep * iF;
 
                         Shot simulation = new Shot(x, y, true, false, this.id);
                         simulation.applyForce(angleNext,forceNext);

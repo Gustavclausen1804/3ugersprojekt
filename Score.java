@@ -42,11 +42,11 @@ class Score {
         JsonArray ScoreList = readJsonArray();
         JsonObject PlayerScoreObject = new JsonObject(); // Create an object for each playername and score.
         App.spiller.forEach((p) -> { // Loop thorough all players, and store the score in the PlayerScoreObject.
-            PlayerScoreObject.addProperty(p.name, p.playerScore.counter); // add PlayerScoreObject to the JsonArray
+            PlayerScoreObject.addProperty(p.name, p.PlayerScore.counter); // add PlayerScoreObject to the JsonArray
         });
         ScoreList.add(PlayerScoreObject);
         // Update the scoreboard.json
-        try (FileWriter file = new FileWriter("src/data/scoreboard.json")) {
+        try (FileWriter file = new FileWriter("scoreboard.json")) {
             file.write(ScoreList.toString());
             file.flush();
 
@@ -61,14 +61,14 @@ class Score {
     // Reads the JsonFile.
     public static JsonArray readJsonArray() {
         JsonParser parser = new JsonParser();
-        Path path = Paths.get("src/data/scoreboard.json");
+        Path path = Paths.get("scoreboard.json");
         JsonArray PlayerScoreArray = new JsonArray();
 
         // If the scoreboard.json file already exsits then read that as the json array
         // instead.
         if (Files.isRegularFile(path)) {
             try {
-                PlayerScoreArray = parser.parse(new FileReader("src/data/scoreboard.json")).getAsJsonArray();
+                PlayerScoreArray = parser.parse(new FileReader("scoreboard.json")).getAsJsonArray();
             } catch (JsonIOException | JsonSyntaxException | FileNotFoundException e) {
                 // This code should not run due to the if statement. IF something goes wrong. We
                 // get an error
