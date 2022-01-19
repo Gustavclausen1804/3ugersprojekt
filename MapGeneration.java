@@ -1,7 +1,5 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javafx.application.HostServices;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -20,7 +18,7 @@ class MapGeneration {
     static int buildAmount = 4; //amount of pictures pr color
 
     //Creates two arraylists which are used for the generation of houses
-    ArrayList<int[]> housesStart = new ArrayList<int[]>(); 
+    static ArrayList<int[]> housesStart = new ArrayList<int[]>(); 
     static ArrayList<ArrayList<int[]>> houses = new ArrayList<>();
     Image[][] houseImageArray = new Image[buildColorsAmount][buildAmount];
     Image houseImage;
@@ -29,22 +27,25 @@ class MapGeneration {
 
         // Generere tilfældige tal til kortet.
         Random ran = new Random();
-        int max_random_house = (App.width / boxSize);
+        int max_random_house = (App.width / boxSize); // Max houses on the map.
 
-        int widthh = 0;
+        int width_of_house = 0; // width of the house.
         int x_coordinate_in_loop = 0;
         for (int i = 0; i < max_random_house; i++) {
             // generating integer
-            x_coordinate_in_loop = x_coordinate_in_loop + widthh; // ran.nextInt(App.width / boxSize);
-            int y_coordinate = ran.nextInt((App.height / boxSize) - ((App.height / boxSize) / 5)); // blocks from
+            x_coordinate_in_loop = x_coordinate_in_loop + width_of_house; // top left X_coordinate of the house.
+            int y_coordinate = ran.nextInt((App.height / boxSize) - ((App.height / boxSize) / 5)); // top left
+                                                                                                   // y_coordnat.
+                                                                                                   // Integer Given in
+                                                                                                   // Blocks
+                                                                                                   // from
                                                                                                    // the bottom
                                                                                                    // of the
                                                                                                    // stage.
 
-            int minHeight = (App.height / boxSize) / 2; // blocks from the top of the stage.
+            int minHeight = (App.height / boxSize) / 2; // Integer given in blocks from the top of the stage.
             if (y_coordinate < minHeight) {
                 y_coordinate = minHeight + ran.nextInt(minHeight - 2);
-                System.out.println(y_coordinate);
             }
             
             int maxWidth = 5;
@@ -53,19 +54,19 @@ class MapGeneration {
             if (random < minWidth) {
                 random = minWidth;
             }
-            widthh = random;
+            width_of_house = random;
             int colorID = ran.nextInt(buildColorsAmount);
             housesStart.add(new int[4]); // adds an array with 4 spaces to the houses start arraylist
             housesStart.get(i)[0] = x_coordinate_in_loop; // represents the x coordinate for the top left of the house
             housesStart.get(i)[1] = y_coordinate; // represents the y coordinate for the top left of the house
-            housesStart.get(i)[2] = widthh; // represents the width of the house (number of blocks)
+            housesStart.get(i)[2] = width_of_house; // represents the width of the house (number of blocks)
             housesStart.get(i)[3] = colorID;
             int antalBlocks = 0;
-            for(int j = 0; j < housesStart.size(); j++){
-                antalBlocks+=housesStart.get(j)[2];
+            for (int j = 0; j < housesStart.size(); j++) {
+                antalBlocks += housesStart.get(j)[2];
             }
-            if(antalBlocks >= max_random_house){
-                i = max_random_house +1;
+            if (antalBlocks >= max_random_house) {
+                i = max_random_house + 1;
             }
         }
 
@@ -100,9 +101,9 @@ class MapGeneration {
                 }
             }
         }
-        for(int i = 0; i < buildColorsAmount; i++){
-            for(int j = 0; j <buildAmount; j++){
-                houseImageArray[i][j] = new Image("/buildings/"+i+""+j+".png");
+        for (int i = 0; i < buildColorsAmount; i++) {
+            for (int j = 0; j < buildAmount; j++) {
+                houseImageArray[i][j] = new Image("/buildings/" + i + "" + j + ".png");
             }
         }
     }
@@ -113,32 +114,29 @@ class MapGeneration {
     public void drawMap(GraphicsContext gc) {
        
 
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, App.width, App.height);
-        gc.setFill(Color.BEIGE);
+        gc.drawImage(App.backGroundImage, 0, 0);
         gc.setStroke(Color.BLACK);
+        gc.setLineWidth(4);
 
         for (int i = 0; i < houses.size(); i++) {
                         
             for (int j = 0; j < houses.get(i).size(); j++) {
                 houseImage = houseImageArray[houses.get(i).get(j)[2]][houses.get(i).get(j)[3]];
-               
+
                 gc.drawImage(houseImage, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
                 gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
-
-                
 
             }
         }
         mapMove();
     }
 
-    void mapMove(){
-        if(App.frameCount % 20 == 0){
-            for (int i = 0; i < houses.size(); i++) {   
+    void mapMove() {
+        if (App.frameCount % 20 == 0) {
+            for (int i = 0; i < houses.size(); i++) {
                 for (int j = 0; j < houses.get(i).size(); j++) {
-                    if(houses.get(i).get(j)[1] + boxSize < App.height){
-                        if(houses.get(i).get(j)[1] + boxSize != houses.get(i).get(j+1)[1]){
+                    if (houses.get(i).get(j)[1] + boxSize < App.height) {
+                        if (houses.get(i).get(j)[1] + boxSize != houses.get(i).get(j + 1)[1]) {
                             houses.get(i).get(j)[1] += boxSize;
                         }
                     }
