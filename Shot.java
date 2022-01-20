@@ -18,7 +18,7 @@ public class Shot{
 
     
     
-    Shot(Double ballXPos, Double ballYPos, double angle, double force, int shooterId){
+    Shot(double ballXPos, double ballYPos, double angle, double force, int shooterId){
         
         this.ballXPos = ballXPos;
         this.ballYPos = ballYPos;
@@ -30,22 +30,6 @@ public class Shot{
     public void draw_ball(GraphicsContext gc){
         move_ball();
         collision();
-
-        // //Vertical
-        // gc.setFill(Color.RED);
-        // if (ballYVector >= 0) {
-        //     gc.fillRect(ballXPos, ballYPos + BALL_R / 2, BALL_R, ballYVector * 10);
-        // } else {
-        //     gc.fillRect(ballXPos, (ballYPos + BALL_R / 2) - Math.abs(ballYVector * 10), BALL_R, Math.abs(ballYVector * 10));
-        // }
-
-        // //Horisontal
-        // gc.setFill(Color.GREEN);
-        // if (ballXVector >= 0) {
-        //     gc.fillRect(ballXPos, ballYPos, ballXVector * 10, BALL_R);
-        // } else {
-        //     gc.fillRect(ballXPos-Math.abs(ballXVector * 10), ballYPos, Math.abs(ballXVector * 10), BALL_R);
-        // }
 
         //Ball
         gc.setFill(Color.BLACK);
@@ -59,26 +43,7 @@ public class Shot{
         ballYPos += ballYVector;
         ballYVector += (gravity_force / 100);
 
-
-
-        //Vindmodstand X
-        // if (ballXVector >= 0) {
-        //     ballXVector -= (ballXVector * ballXVector) / 500;
-        //     } else {
-        //     ballXVector += (ballXVector * ballXVector) / 500;
-        //     }
-
-        //Vindmodstand Y
-        // if (ballYVector >= 0) {
-        // ballYVector -= (ballYVector * ballYVector) / 500;
-        // } else {
-        // ballYVector += (ballYVector * ballYVector) / 500;
-        // }
-
         // makes sure the ball stays in the canvas
-        if (ballYPos > Player.height || ballYPos < 0) {
-            ballYVector *= -1;
-        }
         if (ballXPos > Player.width|| ballXPos < 0) {
             ballXVector *= -1;
         }
@@ -90,15 +55,15 @@ public class Shot{
 
     }
     void wallCollision(){
-        if(ballYPos == App.height){
-            // removeShot();
+        if(ballYPos > App.height){
+            removeShot();
         }
     }
     void removeShot(){
         //Player.skud.remove(this);  //Der skal findes en ordentlig måde at slette de her på
                 //Dårlig hack for nu
-                ballXPos = 0;
-                ballYPos = 0;
+                ballXPos = -BALL_R;
+                ballYPos = -BALL_R;
                 ballXVector = 0;
                 ballYVector = 0;
                 gravity_force = 0;

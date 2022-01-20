@@ -20,9 +20,9 @@ class Player extends App{
    int id;
    boolean shootsFired;
    double shootingForce, shootingAngle;
-    Player(int yPos, int id){
-        this.xPos = 0;
-        this.yPos = yPos;
+    Player(int xPos, int id){
+        this.xPos = xPos;
+        this.yPos = App.height-size;
         this.id = id;
         //laver 
         textFieldAngle.setVisible(false);
@@ -38,18 +38,14 @@ class Player extends App{
         gc.setFill(Color.BLACK);
         gc.fillRect( xPos, yPos,size,size);
         textDisplay(gc);
-        //.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
     }
 
-    public void startLocation() {
-        this.xPos = App.xRange*id;
-    }
 
     public void shoot(){
         
         if(shootsFired == false){
-            Double sizeD = Math.sqrt(Math.pow(size/2,2)+Math.pow(size/2,2));
-            Double shootingAngleRadian = Math.toRadians(shootingAngle);
+            double sizeD = Math.sqrt(Math.pow(size/2,2)+Math.pow(size/2,2));
+            double shootingAngleRadian = Math.toRadians(shootingAngle);
             skud.add(new Shot(xPos+(size/2)+(sizeD*Math.cos(shootingAngleRadian)),yPos+(size/2)+(sizeD*Math.sin(shootingAngleRadian)*(-1)),shootingAngle,shootingForce,id));
             myTurn = false;
             shootsFired = true;

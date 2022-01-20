@@ -9,9 +9,9 @@ class Score {
 
     static final int size = 30;
    
-    Score(int yPos, int id){
-        this.xPos = 0;
-        this.yPos = yPos;
+    Score(int xPos, int id){
+        this.xPos = xPos;
+        this.yPos = 20;
         this.counter = 0;
         this.id = id;
     }
@@ -23,9 +23,6 @@ class Score {
         gc.fillText("Player"+ id +": "+ counter,xPos, yPos);
     }
 
-    public void xLocation(){
-        this.xPos = App.xRange*id;   
-    }
 
 
 }
