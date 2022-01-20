@@ -125,6 +125,9 @@ class Player extends App {
             playerShot.applyForce(angle, force);                                    //Apply a force onto the shot
     }
 
+    public void shoot(){
+    }
+
     public boolean playerRemoveShot() {
         if (this.playerShot.removeShotFlag) {       //Check the state of the shot's remove-flag
             this.playerShot = null;                 //Set the pointer for the shot to nothing

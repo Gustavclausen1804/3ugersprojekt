@@ -12,23 +12,15 @@ public class Enemy extends Player{
             super(id,name);
             this.difficulty = difficulty;
       }
-      public void shoot(double angle, double force) {
-            
+      public void shoot() {
             double[] shot = enemyDifficulty(enemyShot(xPos+size/2, yPos+size/2), difficulty);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
-            angle = shot[0];
-            force = shot[1];
-            
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
-
-            playerShot.applyForce(angle, force);
+            playerShot.applyForce(shot[0], shot[1]);
       }
 
       public double[] enemyShot(int x, int y) {
 
-
-
-
-            int iteration = 1500; //Number of updateBall() iterations per brute force simulation
+            int iteration = 1500; //Number of max updateBall() iterations per brute force simulation
 
             int iterationAngle = 90; // Antal udførte kast
             int iterationForce = 20; // Antal udførte kast
@@ -118,7 +110,6 @@ public class Enemy extends Player{
             return bestShot;
       }
 
-
       public double[] doubleObjectToPrimitive(ArrayList<Double> object){
             double[] primitive = new double[object.size()];
             for (int i = 0; i < object.size(); i++){
@@ -126,9 +117,6 @@ public class Enemy extends Player{
             }
             return primitive;
       }
-
-
-
 
     public double[] enemyDifficulty(double[] shot, int difficulty){
         Random rand = new Random();
