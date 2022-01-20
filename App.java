@@ -32,6 +32,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import com.google.gson.*;
 import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
 
 
 public class App extends Application {
@@ -41,6 +42,9 @@ public class App extends Application {
     public static ArrayList<ToggleButton> toggleButtonList = new ArrayList<>();
     public static ArrayList<Slider> EnemyLevelList = new ArrayList<>();
     ToggleButton toggleSimpleAi = new ToggleButton("Enable simple AI shots");
+    ToggleButton pauseButton = new ToggleButton("\u23f8");
+    CustomButton exitButton = new CustomButton("EXIT");
+    CustomButton backToMainButton = new CustomButton("Main");
 
     MapGeneration map;
     // Screen Size
@@ -62,12 +66,16 @@ public class App extends Application {
     public static int playerAmount = 2; // Default value
     public static int xRange;
 
+    boolean lightBruteForce = false; //TODO: Skal have en boolean
+
+
     int winnerScore;
     static boolean gameEnded;
     Group winnerG = new Group();;
 
     static int turn = 1;
      
+    boolean gamePaused;
     
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
@@ -361,13 +369,33 @@ public class App extends Application {
             root.getChildren().add(p.playerRoot);
         });
         root.getChildren().add(winnerG);
+
+        //Pause Button
+        pauseButton.setLayoutX(0); pauseButton.setLayoutY(0); pauseButton.setMaxSize(28, 28); pauseButton.setMinSize(28, 28);
+        //Exit Button
+        exitButton.setMaxSize(200, 100);exitButton.setLayoutX(640-100);exitButton.setLayoutY(140+120); exitButton.setVisible(false);
+        exitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                    Platform.exit();
+            }
+        });
+        //Back to main Button
+        backToMainButton.setMaxSize(200, 100);backToMainButton.setLayoutX(640-100);backToMainButton.setLayoutY(140); backToMainButton.setVisible(false);
+        backToMainButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                backToMain();
+            }
+        });
+        winnerG.getChildren().addAll(pauseButton,exitButton,backToMainButton);
+        
         
 
         loadSprites();
 
-        loadSprites();
-
         Scene scene = new Scene(root, width, height);
+        scene.getStylesheets().add("players.css");
         //adds detection if certin events are triggered
         scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey); //KeyPressed
         scene.setOnMouseMoved(this::handleMouseMove);   //mouseMoved
@@ -383,28 +411,32 @@ public class App extends Application {
     private void handleMouseMove(MouseEvent event) { // is triggered when the mousese is moved
 
         // gets the  Mouse' x & y coordinate
+        if(!gamePaused){
         this.MouseX = event.getX();
         this.MouseY = event.getY();
+        }
         
     }
 
     private void handleMousePressed(MouseEvent event) { // is triggered when the mousese is Pressed
-
-        spiller.forEach((p) -> {
-            if (turn == p.id && !gameEnded) { // If it is a players turn and the game hasn't ended the following is run
-                if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their shot, 
-                                                            // and a shot hasn't been created yet
-                    p.shootingAngle = p.forceAndAngle[1];  // takes the value and saves it in an array
-                    if(p.forceAndAngle[0] > 40){
-                        p.forceAndAngle[0] = 40;
+        if(!gamePaused){
+            
+            spiller.forEach((p) -> {
+                if (turn == p.id && !gameEnded) { // If it is a players turn and the game hasn't ended the following is run
+                    if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their shot, 
+                                                                // and a shot hasn't been created yet
+                        p.shootingAngle = p.forceAndAngle[1];  // takes the value and saves it in an array
+                        if(p.forceAndAngle[0] > 40){
+                            p.forceAndAngle[0] = 40;
+                        }
+                        p.shootingForce = p.forceAndAngle[0];
+                        p.parameterChosen = true;  
+                        p.shootButton.setVisible(true);  // shows the button which shoots a bullet
                     }
-                    p.shootingForce = p.forceAndAngle[0];
-                    p.parameterChosen = true;  
-                    p.shootButton.setVisible(true);  // shows the button which shoots a bullet
-                }
 
-            }
-        });
+                }
+            });
+        }
     }
 
     static double[] getForcesFromMouse(double[] PlayerPos, double[] mousePosition) {
@@ -475,37 +507,26 @@ public class App extends Application {
             if (playerList.PlayerScore.counter == winnerScore) {
                
                 if (!gameEnded) { // this code is only run once
-                    
+                    pauseButton.setVisible(false);
                     gameEnded = true;
 
                     //Updates the score to scoreboard file
                     Score.toJSONString();
 
                     //Creates a button which leads back to the main page
-                    CustomButton btn = new CustomButton("Back");
-                    btn.setVisible(true);
-                    btn.setMaxSize(200, 100);
-                    btn.setLayoutX(640-100);
-                    btn.setLayoutY(140);
-                    btn.setOnAction(new EventHandler<ActionEvent>() {
+                    CustomButton backButton = new CustomButton("Back");
+                    backButton.setVisible(true);
+                    backButton.setMaxSize(200, 100);
+                    backButton.setLayoutX(640-100);
+                    backButton.setLayoutY(140);
+                    backButton.setOnAction(new EventHandler<ActionEvent>() {
         
                         @Override
                         public void handle(ActionEvent e) {
-                            try {
-                                URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
-                                File file = new File(location.getPath());
-                                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();  
-                                desktop.open(file);
-                                TimeUnit.SECONDS.sleep(2);
-                                Platform.exit();
-
-                                
-                            } catch (Exception e1) {
-                                e1.printStackTrace();
-                            }
+                            backToMain();
                         }
                     });
-                    winnerG.getChildren().add(btn);
+                    winnerG.getChildren().add(backButton);
                 }
                 gc.setFont(Font.font("Verdana", 30));
                 gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
@@ -513,16 +534,41 @@ public class App extends Application {
                 
                 
             }
-            if(playerList instanceof Enemy){
-                if(playerList.id == turn && !gameEnded && !playerList.shootsFired){
-                    playerList.shoot(0,0);
-                    playerList.shootsFired = true;
+            if(!gamePaused){
+                if(playerList instanceof Enemy){
+                    if(playerList.id == turn && !gameEnded && !playerList.shootsFired){
+                        playerList.shoot();
+                        playerList.shootsFired = true;
+                    }
                 }
             }
 
 
         });
+        
 
+
+        //Pause Button
+        if(pauseButton.isSelected() && !gameEnded) {
+            gc.setGlobalAlpha(0.7);
+            pauseButton.setText("\u25b6");
+            gc.setFill(Color.WHITE);
+            gc.fillRect(0, 0, width, height);
+            gc.setGlobalAlpha(1);
+            gamePaused = true;
+            gc.setFill(Color.BLACK);
+            gc.setFont(Font.font("Verdana", 40));
+            gc.fillText("PAUSE", 640, 100);
+            backToMainButton.setVisible(true);
+            exitButton.setVisible(true);
+            
+
+        } else if(!pauseButton.isSelected()){
+            pauseButton.setText("\u23f8");
+            gamePaused = false;
+            backToMainButton.setVisible(false);
+            exitButton.setVisible(false);
+        }
         
 
         if (turn > spiller.size()) { // when every player has had their turn the first player has their turn again
@@ -570,6 +616,19 @@ public class App extends Application {
                 playerImage.get(j)[i] = new WritableImage(reader, (int) width * i, 0, (int) width,
                         (int) playerSprite.getHeight());
             }
+        }
+    }
+
+    void backToMain(){
+        try {
+            URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
+            File file = new File(location.getPath());
+            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();  
+            desktop.open(file);
+            TimeUnit.SECONDS.sleep(2);
+            Platform.exit();   
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
     }
 

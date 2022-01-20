@@ -5,27 +5,22 @@ import java.util.Random;
  
 public class Enemy extends Player{
       
-      boolean lightBruteForce = false;
       int difficulty = 0;
       int currentFrame;
 
-      public Enemy(int id, String name,int difficulty) {
+      public Enemy(int id, String name, int difficulty) {
             super(id,name);
             this.difficulty = difficulty;
       }
-      public void shoot(double angle, double force) {
-            
+      public void shoot() {
             double[] shot = enemyDifficulty(enemyShot(xPos+size/2, yPos+size/2), difficulty);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
-            angle = shot[0];
-            force = shot[1];
-            
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
-            playerShot.applyForce(angle, force);
+            playerShot.applyForce(shot[0], shot[1]);
       }
 
       public double[] enemyShot(int x, int y) {
 
-            int iteration = 2500; //Number of updateBall() iterations per brute force simulation
+            int iteration = 1500; //Number of max updateBall() iterations per brute force simulation
 
             int iterationAngle = 90; // Antal udførte kast
             int iterationForce = 20; // Antal udførte kast
@@ -54,7 +49,6 @@ public class Enemy extends Player{
 
                         int collisionQuantification = 0;
 
-
                         ArrayList<Double> data = new ArrayList<Double>(); // Initialize and reset arraylist for every iteration
                         for (int i = 0; i < iteration; i++) {
 
@@ -62,7 +56,7 @@ public class Enemy extends Player{
                                     collisionQuantification++;
                               }
 
-                              // Save infomation if balls hits the target.
+                              // Save infomation if balls hits the target.½
                               if (simulation.playerCollision(false)) {
 
                                     data.add(angleNext);
@@ -77,7 +71,7 @@ public class Enemy extends Player{
                               }
                               simulation.updateShot();                              // Simulate the ball according to applied forces on the map.
                         }
-                        simulation = null;                                          //Remove pointer to shot-object.
+                        // simulation = null;                                          //Remove pointer to shot-object.
                   
                   
                   
@@ -90,6 +84,7 @@ public class Enemy extends Player{
                         break;
                   }
             }
+
 
             double[] bestShot = new double[liste.get(0).size()];  //Initialize an empty array the size of the arraylist, nessecary for the following code not to throw errors.
 
@@ -111,10 +106,9 @@ public class Enemy extends Player{
                         }
                   }
             }
-            System.out.println(bestShot[0] + " " +bestShot[1] + " " + bestShot[2]);
+            System.out.println(bestShot[0] + " " +bestShot[1] + " " + bestShot[2] + " " + cleanShot);
             return bestShot;
       }
-
 
       public double[] doubleObjectToPrimitive(ArrayList<Double> object){
             double[] primitive = new double[object.size()];
@@ -123,9 +117,6 @@ public class Enemy extends Player{
             }
             return primitive;
       }
-
-
-
 
     public double[] enemyDifficulty(double[] shot, int difficulty){
         Random rand = new Random();
@@ -160,5 +151,5 @@ public class Enemy extends Player{
 
         return shot;
     }
-
 }
+

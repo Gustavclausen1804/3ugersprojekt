@@ -120,26 +120,17 @@ public class Shot {
                 this.ballYPos += yDir/refinementFactor;
 
                 //Make sure it is within the screen, if not, correct it.
-                if (this.ballXPos > App.width-1){  //Account for the 0-offset
-                    this.ballXPos = App.width-1;
-                    this.xDir *= -1;
+                if (this.ballXPos > App.width-1){   //Account for the 0-offset
+                    this.ballXPos = App.width-1;    //Return the projectile to the area of the screen.
+                    this.xDir *= -1;                //-1 equvilant to 100% energy conservation. <1 meaning energy loss, and >1 energy gain.
                 }
                 if (this.ballXPos < 0){
                     this.ballXPos = 0;
                     this.xDir *= -1;
                 }
-                // if (this.ballYPos > App.height-1){
-                //     this.ballYPos = App.height-1;
-                //     this.yDir *= -1;
-                // }
-                // if (this.ballYPos < 0){
-                //     this.ballYPos = 0;
-                //     this.yDir *= -1;
-                // }
+
                 //Wind resistiance
-                if(getSpeed() > 0){
-                    applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));
-                }
+                applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));
                 //Gravity
                 applyForce("downConstant", ((massObject*gravityForce)/70)/refinementFactor);
             }

@@ -120,9 +120,12 @@ class Player extends App {
         }
     }
 
-    public void shoot(double angle, double force) {
+    public void shoot(double angle, double force) throws InterruptedException {
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);   //Create a shot object
             playerShot.applyForce(angle, force);                                    //Apply a force onto the shot
+    }
+
+    public void shoot(){
     }
 
     public boolean playerRemoveShot() {
@@ -163,6 +166,11 @@ class Player extends App {
 
     }
 
+
+    public int[] getPosition() { // Returns the coordiantes of the shot.
+        int[] array = { xPos, yPos };
+        return array;
+    }
 
     public static double round(double value, int places) {
         if(value > 40){
