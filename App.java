@@ -90,6 +90,12 @@ public class App extends Application {
     public static int playerAmount = 2; // Default value
     public static int xRange;
 
+<<<<<<< Updated upstream
+=======
+    boolean lightBruteForce = false;
+
+
+>>>>>>> Stashed changes
     int winnerScore;
     static boolean gameEnded;
 

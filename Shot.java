@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import java.awt.Canvas;
 import java.util.Map;
 
@@ -5,6 +6,10 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
 
 import javafx.event.EventType;
 import javafx.css.Size;
+=======
+import java.util.concurrent.TimeUnit;
+
+>>>>>>> Stashed changes
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -44,6 +49,9 @@ public class Shot {
 
     boolean removeShotFlag = false;
 
+    int enemyShotDelay = 500;   //Experimentally determented
+
+
     Shot(int x, int y, boolean move, boolean show, int id){
         this.ballXPos = x;
         this.ballYPos = y;
@@ -55,14 +63,29 @@ public class Shot {
 
     public void drawShot(GraphicsContext gc){
         if (this.show == true){
+
             collision();
-            explosionAnimation(gc);
+            explosionAnimation(gc); 
             if(!explosionActive){
                 // DrawDir(gc);
                 //Ball
                 gc.setFill(Color.BLACK);
+<<<<<<< Updated upstream
                 // gc.fillRect(200, 200, 30, 30);
                 gc.fillOval(ballXPos,ballYPos,BALL_R,BALL_R);
+=======
+                gc.fillOval(ballXPos-BALL_R/2,ballYPos-BALL_R/2,BALL_R,BALL_R);
+>>>>>>> Stashed changes
+            }
+
+            //Wait loop for enemy to make its shot.
+            if ((App.spiller.get(App.turn-1))instanceof Enemy){
+                if (enemyShotDelay == 0){
+                (App.spiller.get(App.turn-1)).playerShot.setMove(true);
+                enemyShotDelay--;
+                } else if(enemyShotDelay > 0) {
+                    enemyShotDelay--;
+                }
             }
         }
     }
@@ -124,6 +147,7 @@ public class Shot {
     public void updateShot(){
         int refinementFactor = 2;
         if (move == true){
+            
 
                 //Update the balls position according to its direction vector components
                 this.ballXPos += xDir/refinementFactor;
@@ -212,8 +236,9 @@ public class Shot {
                 int xPosWall = MapGeneration.houses.get(i).get(j)[0]; // gets the x postion of the corner of each block
                 int yPosWall = MapGeneration.houses.get(i).get(j)[1]; // gets the y postion of the corner of each block
                 int wallSize = MapGeneration.boxSize; // gets the size of each block
-                
+
                 if((ballXPos >= xPosWall && ballXPos<= xPosWall+wallSize) && (ballYPos>= yPosWall && ballYPos <= yPosWall+wallSize)){  //Checks if the shot hits a block
+                    // System.out.println("lolcar");
 
                         if (enableCollision == true){
                             MapGeneration.houses.get(i).remove(j); //Removes the block which the shot hit

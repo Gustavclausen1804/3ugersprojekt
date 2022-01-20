@@ -135,6 +135,12 @@ class Player extends App {
             playerShot.applyForce(angle, force);                                    //Apply a force onto the shot
     }
 
+<<<<<<< Updated upstream
+=======
+    public void shoot(){    //Function which gets overriden by Enemy-subclass and makes App.java stable.
+    }
+
+>>>>>>> Stashed changes
     public boolean playerRemoveShot() {
         if (this.playerShot.removeShotFlag) {       //Check the state of the shot's remove-flag
             this.playerShot = null;                 //Set the pointer for the shot to nothing

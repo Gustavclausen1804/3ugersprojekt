@@ -15,12 +15,18 @@ public class Enemy extends Player{
       }
       public void shoot(double angle, double force) {
             double[] shot = enemyDifficulty(enemyShot(xPos+size/2, yPos+size/2), difficulty);  //Inner function finds shot by bruteforce, outer function adds variability to shot.
+<<<<<<< Updated upstream
             angle = shot[0];
             force = shot[1];
             
             this.playerShot = new Shot(xPos+size/2, yPos+size/2, true, true, id);
             playerShot.applyForce(angle, force);
     }
+=======
+            this.playerShot = new Shot(xPos+size/2, yPos+size/2, false, true, id);
+            playerShot.applyForce(shot[0], shot[1]);
+      }
+>>>>>>> Stashed changes
 
       public double[] enemyShot(int x, int y) {
             System.out.println("Enemy, shoot()");
