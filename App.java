@@ -50,6 +50,7 @@ public class App extends Application {
     // Screen Size
     static final int width = 1280;
     static final int height = 720;
+    static final double frameRate = 60;
 
     // Mouse x & y coordinate
     public static double MouseX;
@@ -65,6 +66,7 @@ public class App extends Application {
 
     public static int playerAmount = 2; // Default value
     public static int xRange;
+    public static int maxForce = 50;
 
     boolean lightBruteForce = false; //TODO: Skal have en boolean
 
@@ -90,7 +92,7 @@ public class App extends Application {
 
     boolean pleaseForTheLoveOfGodOnlyRunOnce;
 
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {    
         // start Screen forwards to gamestart
         primaryStage.setTitle("Gorillas But Better");
         primaryStage.setResizable(false); 
@@ -341,8 +343,9 @@ public class App extends Application {
         map = new MapGeneration();
 
         //creates a timeline which is used to create a method which keeps running
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc,stage)));
+        Timeline tl = new Timeline(frameRate,new KeyFrame(Duration.millis(10), e -> run(gc,stage)));    //33 being the max time for a keyframe with 30 fps, eventhandler, e, renderer starter run()
         tl.setCycleCount(Timeline.INDEFINITE);
+
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
@@ -426,8 +429,8 @@ public class App extends Application {
                     if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their shot, 
                                                                 // and a shot hasn't been created yet
                         p.shootingAngle = p.forceAndAngle[1];  // takes the value and saves it in an array
-                        if(p.forceAndAngle[0] > 40){
-                            p.forceAndAngle[0] = 40;
+                        if(p.forceAndAngle[0] > maxForce){
+                            p.forceAndAngle[0] = maxForce;
                         }
                         p.shootingForce = p.forceAndAngle[0];
                         p.parameterChosen = true;  

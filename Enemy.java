@@ -23,12 +23,12 @@ public class Enemy extends Player{
             int iteration = 1500; //Number of max updateBall() iterations per brute force simulation
 
             int iterationAngle = 90; // Antal udførte kast
-            int iterationForce = 20; // Antal udførte kast
+            int iterationForce = 25; // Antal udførte kast
 
             double[] angleMinMax = { 0, 180 };
-            double[] forceMinMax = { 0, 40 };
+            double[] forceMinMax = { 0, App.maxForce};
 
-            ArrayList<ArrayList<Double>> liste = new ArrayList<ArrayList<Double>>();
+            ArrayList<ArrayList<Double>> succesfulShots = new ArrayList<ArrayList<Double>>();
 
             for (int iA = 0; iA <= iterationAngle; iA++) {
                   
@@ -66,7 +66,7 @@ public class Enemy extends Player{
                                     data.add(simulation.ballXPos);
                                     data.add(simulation.ballYPos);
 
-                                    liste.add(data);
+                                    succesfulShots.add(data);
                                     break;                                          //Break out of the respective simulation loop.
                               }
                               simulation.updateShot();                              // Simulate the ball according to applied forces on the map.
@@ -76,23 +76,20 @@ public class Enemy extends Player{
                   
                   
                   //Break the double for loop if lightBruteForce is on, and a hit is found.
-                        if (liste.size() >= 1 && lightBruteForce){
-                              break;
+                        if (succesfulShots.size() >= 1 && toggleSimpleAi.isSelected()){
+                              return doubleObjectToPrimitive(succesfulShots.get(0));
                         }
-                  }
-                  if (liste.size() >= 1 && lightBruteForce){
-                        break;
                   }
             }
 
 
-            double[] bestShot = new double[liste.get(0).size()];  //Initialize an empty array the size of the arraylist, nessecary for the following code not to throw errors.
+            double[] bestShot = new double[succesfulShots.get(0).size()];  //Initialize an empty array the size of the arraylist, nessecary for the following code not to throw errors.
 
             boolean cleanShot = false; // Flag if a clean hit upon the target is possible.
 
-            for (int i = 0; i < liste.size(); i++) {
-                  if (liste.get(i).get(5) <= App.height && liste.get(i).get(2) == 0) { // highest hit and no wall collision
-                        bestShot = doubleObjectToPrimitive(liste.get(i));
+            for (int i = 0; i < succesfulShots.size(); i++) {
+                  if (succesfulShots.get(i).get(5) <= App.height && succesfulShots.get(i).get(2) == 0) { // highest hit and no wall collision
+                        bestShot = doubleObjectToPrimitive(succesfulShots.get(i));
                         cleanShot = true;
                   }     
             }
@@ -100,9 +97,9 @@ public class Enemy extends Player{
 
             if (!cleanShot) {
                   bestShot[2] = 10000;
-                  for (int i = 0; i < liste.size(); i++) {
-                        if (liste.get(i).get(2) < bestShot[2]) {              // Lowest amount of wall collision
-                              bestShot = doubleObjectToPrimitive(liste.get(i));
+                  for (int i = 0; i < succesfulShots.size(); i++) {
+                        if (succesfulShots.get(i).get(2) < bestShot[2]) {              // Lowest amount of wall collision
+                              bestShot = doubleObjectToPrimitive(succesfulShots.get(i));
                         }
                   }
             }

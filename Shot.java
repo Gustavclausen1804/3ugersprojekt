@@ -5,13 +5,11 @@ public class Shot {
     public double xDir = 0;
     public double yDir = 0;
 
-    public int microSteps = 10;
-
     public double ballXPos;
     public double ballYPos;
 
     public double gravityForce = 9.82;
-    public double dragCoefficient = 0.47;
+    public double dragCoefficient = 0.47; //drag for a sphere.
     public double massObject = 1;
 
     public static final int BALL_R = 15;
@@ -44,14 +42,12 @@ public class Shot {
 
 
     public void drawShot(GraphicsContext gc){
-        if (this.show == true){
-            collision();
-            explosionAnimation(gc);
-            if(!explosionActive){
-                // DrawDir(gc);
-                //Ball
+        if (this.show == true){                   //Boolean for 
+            collision();                          //playerCollision and wallCollision
+            explosionAnimation(gc);               //Run explosion animation if projective explodes
+            if(!explosionActive){                 //Do not draw the projectile upon explosion
+                // DrawDir(gc);                   //Used for debuggin physics
                 gc.setFill(Color.BLACK);
-                // gc.fillRect(200, 200, 30, 30);
                 gc.fillOval(ballXPos-BALL_R/2,ballYPos-BALL_R/2,BALL_R,BALL_R);
             }
         }
@@ -82,26 +78,24 @@ public class Shot {
 
     public void applyForce(String direction, double force) {
         switch (direction) {
-            case "upConstant":
+            case "up":
                 yDir -= force;
                 break;
 
-            case "downConstant":
+            case "down":
                 yDir += force;
-
                 break;
 
-            case "rightConstant":
+            case "right":
                 xDir += force;
                 break;
 
-            case "leftConstant":
+            case "left":
                 xDir -= force;
                 break;
 
             case "follow":
                 double angle = getAngle();
-
                 xDir += Math.cos(Math.toRadians(angle)) * (force);
                 yDir += Math.sin(Math.toRadians(angle)) * (force);
                 break;
@@ -118,21 +112,21 @@ public class Shot {
                 //Update the balls position according to its direction vector components
                 this.ballXPos += xDir/refinementFactor;
                 this.ballYPos += yDir/refinementFactor;
-
                 //Make sure it is within the screen, if not, correct it.
                 if (this.ballXPos > App.width-1){   //Account for the 0-offset
                     this.ballXPos = App.width-1;    //Return the projectile to the area of the screen.
                     this.xDir *= -1;                //-1 equvilant to 100% energy conservation. <1 meaning energy loss, and >1 energy gain.
                 }
+
                 if (this.ballXPos < 0){
                     this.ballXPos = 0;
                     this.xDir *= -1;
                 }
 
                 //Wind resistiance
-                applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));
+                applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));     //Ended up experimtally determented
                 //Gravity
-                applyForce("downConstant", ((massObject*gravityForce)/70)/refinementFactor);
+                applyForce("down", 9.81/25/refinementFactor);                                //Ended up experimtally determented
             }
         }
     
