@@ -184,7 +184,7 @@ public class Shot {
     }
 
     public boolean wallCollision(boolean enableCollision){
-        if(ballYPos >= App.height-2*BALL_R && enableCollision == true){
+        if(ballYPos >= App.height-BALL_R && enableCollision == true){
             explosion();
         }
         // Loops through the all houses(blocks)
