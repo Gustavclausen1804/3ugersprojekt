@@ -122,24 +122,25 @@ class MapGeneration {
         }
         for (int i = 0; i < buildColorsAmount; i++) {
             for (int j = 0; j < buildAmount; j++) {
-                houseImageArray[i][j] = new Image("/buildings/" + i + "" + j + ".png");
+                houseImageArray[i][j] = new Image("/buildings/" + i + "" + j + ".png"); // adds pictures to the array, i is the color, 
+                                                                                        // j is the variation of the house
             }
         }
     }
 
     public void drawMap(GraphicsContext gc) {
 
-        gc.drawImage(App.backGroundImage, 0, 0);
+        gc.drawImage(App.backGroundImage, 0, 0); // draws the background
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(4);
 
-        for (int i = 0; i < houses.size(); i++) {
-
+        for (int i = 0; i < houses.size(); i++) { // Loops through the all houses(blocks)
             for (int j = 0; j < houses.get(i).size(); j++) {
-                houseImage = houseImageArray[houses.get(i).get(j)[2]][houses.get(i).get(j)[3]];
+                houseImage = houseImageArray[houses.get(i).get(j)[2]][houses.get(i).get(j)[3]]; //Gets the image which corresponds
+                                                                                                //to the houses color and image number
 
-                gc.drawImage(houseImage, houses.get(i).get(j)[0], houses.get(i).get(j)[1]);
-                gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize);
+                gc.drawImage(houseImage, houses.get(i).get(j)[0], houses.get(i).get(j)[1]); //draws the image at the houses location
+                gc.strokeRect(houses.get(i).get(j)[0], houses.get(i).get(j)[1], boxSize, boxSize); //draws a small outline around the block
 
             }
         }
@@ -148,11 +149,11 @@ class MapGeneration {
 
     void mapMove() {
         if (App.frameCount % 20 == 0) {
-            for (int i = 0; i < houses.size(); i++) {
+            for (int i = 0; i < houses.size(); i++) {         // Loops through the all houses(blocks)
                 for (int j = 0; j < houses.get(i).size(); j++) {
-                    if (houses.get(i).get(j)[1] + boxSize < App.height) {
-                        if (houses.get(i).get(j)[1] + boxSize != houses.get(i).get(j + 1)[1]) {
-                            houses.get(i).get(j)[1] += boxSize;
+                    if (houses.get(i).get(j)[1] + boxSize < App.height) { //check to see if the house isn't the bottom house
+                        if (houses.get(i).get(j)[1] + boxSize != houses.get(i).get(j + 1)[1]) { //If there isn't a house underneath
+                            houses.get(i).get(j)[1] += boxSize; // the houes is moved one block down
                         }
                     }
                 }
