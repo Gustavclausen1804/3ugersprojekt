@@ -1,6 +1,5 @@
 // Gustav Clausen s214940 - while loop, GenerateHouse - sammen med Muhammad Farooq s214950, som iøvrigt skrev MapMove, DrawMap
 
-
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 class MapGeneration {
-    // Group mapRoot = new Group();
 
     static int boxSize = 40;
     static int buildColorsAmount = 4; // Different colors of houses
@@ -20,7 +18,6 @@ class MapGeneration {
     Image[][] houseImageArray = new Image[buildColorsAmount][buildAmount];
     Image houseImage;
 
-    
     MapGeneration() {
 
         // Generere tilfældige tal til kortet.
@@ -34,7 +31,6 @@ class MapGeneration {
         // Generates house to the map in a while loop. Stops when the stage is filled.
         while (x_coordinate_in_loop < max_random_house - width_of_house) {
             // generating integer
-            System.out.println("Number of house" + i_counter);
             x_coordinate_in_loop = x_coordinate_in_loop + width_of_house; // top left X_coordinate of the house.
             int y_coordinate = ran.nextInt((App.height / boxSize) - ((App.height / boxSize) / 5)); // top left
                                                                                                    // y_coordnat.
@@ -76,8 +72,6 @@ class MapGeneration {
 
         GenerateHouse();
     }
-
-    // Koordinater af canvas y: 0-17, x: 0-31
 
     // Metode som genere huset baseret på x-koordinat, y-koordinat og ønsket bredde
     // af huset.

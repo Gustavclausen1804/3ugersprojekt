@@ -1,3 +1,4 @@
+
 //Andreas Bruun s214955
 //JSON objekter Gustav Clausen s214940, toJSON(), ReadJsonArray()
 import com.google.gson.*;
@@ -16,7 +17,6 @@ import javafx.scene.text.TextAlignment;
 
 class Score {
     int xPos, yPos = 20, counter = 0, id;
-    // public static JsonArray ScoreList = new JsonArray();
 
     static final int size = 30;
 
@@ -37,7 +37,6 @@ class Score {
 
     }
 
-    // Stores player Scores in JsonObject as name-value pairs. (String, int) input.
     public static JsonObject toJSONString() {
 
         // Read the scoreboard.json file, if it exsits, otherwise create new JsonArray.
@@ -55,7 +54,7 @@ class Score {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return PlayerScoreObject;
 
     }
@@ -85,8 +84,6 @@ class Score {
                     PlayerScoreArray.remove(i);
                 }
             }
-            // JsonObject PlayerScoreObject = (JsonObject) obj;
-            // PlayerScoreArray = (JsonArray) PlayerScoreObject.getAsJsonArray();
         }
         return PlayerScoreArray;
     }
