@@ -101,7 +101,8 @@ public class Shot {
 
             case "follow":
                 double angle = getAngle();
-                applyForce(angle, force);
+                xDir += Math.cos(Math.toRadians(angle)) * (force);
+                yDir += Math.sin(Math.toRadians(angle)) * (force);
                 break;
 
             default:
