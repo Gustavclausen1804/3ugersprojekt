@@ -3,7 +3,6 @@
 //Frederik Buk Henriksen s183643, movement concerning the shot in run()
 // Muhammad Muneeb Farooq s214950 run method, mousePressed, GetForcesFromMouse.
 
-
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import com.google.gson.*;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
-
 public class App extends Application {
 
     public static ArrayList<Player> spiller;
@@ -76,15 +74,14 @@ public class App extends Application {
 
     boolean lightBruteForce = false;
 
-
     int winnerScore;
     static boolean gameEnded;
     Group winnerG = new Group();;
 
     static int turn = 1;
-     
+
     boolean gamePaused;
-    
+
     ArrayList<TextField> playerNameTextField = new ArrayList<>();
 
     static Image backGroundImage;
@@ -98,13 +95,13 @@ public class App extends Application {
 
     boolean pleaseForTheLoveOfGodOnlyRunOnce;
 
-    public void start(Stage primaryStage) throws Exception {    
+    public void start(Stage primaryStage) throws Exception {
         // start Screen forwards to gamestart
         primaryStage.setTitle("Gorillas But Better");
-        primaryStage.setResizable(false); 
+        primaryStage.setResizable(false);
         Image icon = new Image("paul.png");
         primaryStage.getIcons().add(icon);
-        if(!pleaseForTheLoveOfGodOnlyRunOnce){
+        if (!pleaseForTheLoveOfGodOnlyRunOnce) {
             primaryStage.initStyle(StageStyle.UNDECORATED);
             pleaseForTheLoveOfGodOnlyRunOnce = true;
         }
@@ -116,8 +113,8 @@ public class App extends Application {
         // line 1
         CustomLabel Players = new CustomLabel("Select players: ");
         grid.add(Players, 0, 1);
-        
-        //Creates a slider, for the number of players playing
+
+        // Creates a slider, for the number of players playing
         Slider playerSlider = new Slider(minPlayers, maxPlayers, 1);
         playerSlider.setMajorTickUnit(1);
         playerSlider.setBlockIncrement(1);
@@ -128,12 +125,12 @@ public class App extends Application {
 
         grid.add(playerSlider, 1, 1);
 
-        //Creates the start Button, which upon pressing leads to the nameselect screen
+        // Creates the start Button, which upon pressing leads to the nameselect screen
         CustomButton startButtonMainScreen = new CustomButton("Play");
         startButtonMainScreen.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        grid.add( startButtonMainScreen, 1, 2);
+        grid.add(startButtonMainScreen, 1, 2);
 
-        //Creates a button which upon pressing lead to the score board screen
+        // Creates a button which upon pressing lead to the score board screen
         CustomButton ScoreBoardButton = new CustomButton("History");
         ScoreBoardButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         grid.add(ScoreBoardButton, 1, 3);
@@ -148,7 +145,7 @@ public class App extends Application {
             }
         });
 
-        //Code describes what happens, when pressing on the start button
+        // Code describes what happens, when pressing on the start button
         startButtonMainScreen.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -156,22 +153,22 @@ public class App extends Application {
                 playerAmount = (int) playerSlider.getValue();
 
                 // Checks playamount input, if not in range give error msg
-                
+
                 try {
                     // sets range between score / players
                     xRange = width / (playerAmount + 1);
                     // goes name selection stage
                     playerNames(primaryStage);
-                  } catch (Exception e1) {
+                } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-                
+
             }
         });
 
         Scene scene = new Scene(grid, width, height);
         scene.getStylesheets().add("stylesheet.css");
-        //Adds the background image and displays it
+        // Adds the background image and displays it
         Image backG = new Image("resources/background.png", App.width, App.height, false, false);
         BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -192,7 +189,7 @@ public class App extends Application {
         nameGrid.setHgap(sideGap);
         ArrayList<CustomLabel> playerLabel = new ArrayList<>();
 
-        //Creates a label for the number of players selected in main screen 
+        // Creates a label for the number of players selected in main screen
         for (int i = 0; i < playerAmount; i++) {
             playerLabel.add(new CustomLabel("Player " + (i + 1) + " name: "));
             nameGrid.add(playerLabel.get(i), 0, i);
@@ -200,7 +197,7 @@ public class App extends Application {
             nameGrid.add(playerNameTextField.get(i), 1, i);
             playerNameTextField.get(i).setPrefSize(130, 50);
             playerNameTextField.get(i).setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            //a Toggle button for if the player is an AI or not
+            // a Toggle button for if the player is an AI or not
             toggleButtonList.add(new ToggleButton("Toggle AI"));
             nameGrid.add(toggleButtonList.get(i), 2, i);
             // a slider for the level of the AI
@@ -211,29 +208,30 @@ public class App extends Application {
             EnemyLevelList.get(i).setShowTickLabels(true);
             EnemyLevelList.get(i).setSnapToTicks(true);
             EnemyLevelList.get(i).setShowTickMarks(true);
-            //Slider hidden by default
+            // Slider hidden by default
             EnemyLevelList.get(i).setVisible(false);
             nameGrid.add(EnemyLevelList.get(i), 3, i);
-            
+
         }
-        //If the toggle button is pressed the slider is shown, pressed again it is hidden
-        for(int i = 0; i < toggleButtonList.size(); i++){
+        // If the toggle button is pressed the slider is shown, pressed again it is
+        // hidden
+        for (int i = 0; i < toggleButtonList.size(); i++) {
             final int k = i;
             toggleButtonList.get(k).setOnAction(e -> {
-                if(toggleButtonList.get(k).isSelected()) {
+                if (toggleButtonList.get(k).isSelected()) {
                     EnemyLevelList.get(k).setVisible(true);
-                } else if(!toggleButtonList.get(k).isSelected()){
+                } else if (!toggleButtonList.get(k).isSelected()) {
                     EnemyLevelList.get(k).setVisible(false);
                 }
             });
         }
-        
-        
+
         CustomLabel scoreLabel = new CustomLabel("Score to Beat:");
         nameGrid.add(scoreLabel, 0, playerAmount);
         nameGrid.add(toggleSimpleAi, 2, playerAmount);
 
-        //Adds a slider in which you put in the number of points a player need to reach in order to win
+        // Adds a slider in which you put in the number of points a player need to reach
+        // in order to win
         Slider scoreSlider = new Slider(1, 10, 1);
         scoreSlider.setMajorTickUnit(1);
         scoreSlider.setBlockIncrement(1);
@@ -243,8 +241,7 @@ public class App extends Application {
         scoreSlider.setShowTickMarks(true);
         nameGrid.add(scoreSlider, 1, playerAmount);
 
-        
-        //Creates a button which upon pressing starts the game
+        // Creates a button which upon pressing starts the game
         CustomButton startButton = new CustomButton("Begin");
         startButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         nameGrid.add(startButton, 1, playerAmount + 1);
@@ -263,7 +260,7 @@ public class App extends Application {
             }
         });
 
-        //Adds the background
+        // Adds the background
         Image backG = new Image("resources/background.png", App.width, App.height, false, false);
         BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -279,7 +276,6 @@ public class App extends Application {
         stage.show();
     }
 
-
     public void scoreBoardScreen(Stage stage) throws Exception {
         GridPane nameGrid = new GridPane();
         nameGrid.setAlignment(Pos.CENTER);
@@ -290,26 +286,28 @@ public class App extends Application {
         // nameGrid.add(btn, 0, 0);
 
         JsonArray scoresArray = Score.readJsonArray(); // Read the scoreboard.json with our ReadJsonArray method.
-        //Creates an arraylist which contains a label, which has the number for match
+        // Creates an arraylist which contains a label, which has the number for match
         ArrayList<CustomLabel> gameNumber = new ArrayList<>();
-        //Creates an arraylist with an arralist which contains a label
-        //The outer arrayList keeps track of the matches, and the inner arrayList keeps track of the label for each player in said match
+        // Creates an arraylist with an arralist which contains a label
+        // The outer arrayList keeps track of the matches, and the inner arrayList keeps
+        // track of the label for each player in said match
         ArrayList<ArrayList<CustomLabel>> playerLabel = new ArrayList<>();
 
         // Create the scoreboard with the number of players on the match.
         for (int i = 0; i < scoresArray.size(); i++) {
-            //Adds the label with the number of the game
+            // Adds the label with the number of the game
             gameNumber.add(new CustomLabel("Game #" + (i + 1)));
             nameGrid.add(gameNumber.get(i), 0, i);
-            //Adds a label, each label with the player name and their respective score
+            // Adds a label, each label with the player name and their respective score
             playerLabel.add(new ArrayList<CustomLabel>());
-            for(int j = 0; j < scoresArray.get(i).getAsJsonObject().entrySet().toArray().length;j++){
-                playerLabel.get(i).add(new CustomLabel(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[j].toString()));
-                nameGrid.add(playerLabel.get(i).get(j), j+1, i);
+            for (int j = 0; j < scoresArray.get(i).getAsJsonObject().entrySet().toArray().length; j++) {
+                playerLabel.get(i)
+                        .add(new CustomLabel(scoresArray.get(i).getAsJsonObject().entrySet().toArray()[j].toString()));
+                nameGrid.add(playerLabel.get(i).get(j), j + 1, i);
             }
 
         }
-        //Creates a button which goes back to main screen
+        // Creates a button which goes back to main screen
         CustomButton backButton = new CustomButton("Back");
         backButton.setMaxSize(130, 50);
         nameGrid.add(backButton, 1, scoresArray.size());
@@ -325,7 +323,7 @@ public class App extends Application {
                 }
             }
         });
-        //Adds the background
+        // Adds the background
         Image backG = new Image("resources/background.png", App.width, App.height, false, false);
         BackgroundImage bImg = new BackgroundImage(backG, BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -346,32 +344,37 @@ public class App extends Application {
         Canvas canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        //Creates the map class
+        // Creates the map class
         map = new MapGeneration();
 
-        //creates a timeline which is used to create a method which keeps running
-        Timeline tl = new Timeline(frameRate,new KeyFrame(Duration.millis(10), e -> run(gc,stage)));    //33 being the max time for a keyframe with 30 fps, eventhandler, e, renderer starter run()
+        // creates a timeline which is used to create a method which keeps running
+        Timeline tl = new Timeline(frameRate, new KeyFrame(Duration.millis(10), e -> run(gc, stage))); // 33 being the
+                                                                                                       // max time for a
+                                                                                                       // keyframe with
+                                                                                                       // 30 fps,
+                                                                                                       // eventhandler,
+                                                                                                       // e, renderer
+                                                                                                       // starter run()
         tl.setCycleCount(Timeline.INDEFINITE);
-
 
         // Creates scores and players in arrayLists
         spiller = new ArrayList<Player>();
         modstander = new ArrayList<Player>();
 
-
         for (int i = 0; i < playerAmount; i++) {
-            // creates a variable which contains a players name, the field is left empty a default name i selected
+            // creates a variable which contains a players name, the field is left empty a
+            // default name i selected
             String name = playerNameTextField.get(i).getText();
             if (name.length() == 0) {
-                name = "Player " + i+1;
+                name = "Player " + i + 1;
             }
-            //If the toggle button was on an AI is created with the chosen name and level
+            // If the toggle button was on an AI is created with the chosen name and level
             if (toggleButtonList.get(i).isSelected()) {
-                spiller.add(new Enemy(i+1, name, (int)EnemyLevelList.get(i).getValue()));
+                spiller.add(new Enemy(i + 1, name, (int) EnemyLevelList.get(i).getValue()));
             }
-             //If the toggle button was off a player is created with the chosen name
+            // If the toggle button was off a player is created with the chosen name
             if (!toggleButtonList.get(i).isSelected()) {
-                spiller.add(new Player(i+1, name));
+                spiller.add(new Player(i + 1, name));
             }
         }
         root.getChildren().add(canvas);
@@ -380,37 +383,43 @@ public class App extends Application {
         });
         root.getChildren().add(winnerG);
 
-        //Pause Button
-        pauseButton.setLayoutX(0); pauseButton.setLayoutY(0); pauseButton.setMaxSize(28, 28); pauseButton.setMinSize(28, 28);
-        //Exit Button
-        exitButton.setMaxSize(200, 100);exitButton.setLayoutX(640-100);exitButton.setLayoutY(140+120); exitButton.setVisible(false);
+        // Pause Button
+        pauseButton.setLayoutX(0);
+        pauseButton.setLayoutY(0);
+        pauseButton.setMaxSize(28, 28);
+        pauseButton.setMinSize(28, 28);
+        // Exit Button
+        exitButton.setMaxSize(200, 100);
+        exitButton.setLayoutX(640 - 100);
+        exitButton.setLayoutY(140 + 120);
+        exitButton.setVisible(false);
         exitButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                    Platform.exit();
+                Platform.exit();
             }
         });
-        //Back to main Button
-        backToMainButton.setMaxSize(200, 100);backToMainButton.setLayoutX(640-100);backToMainButton.setLayoutY(140); backToMainButton.setVisible(false);
+        // Back to main Button
+        backToMainButton.setMaxSize(200, 100);
+        backToMainButton.setLayoutX(640 - 100);
+        backToMainButton.setLayoutY(140);
+        backToMainButton.setVisible(false);
         backToMainButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 backToMain();
             }
         });
-        winnerG.getChildren().addAll(pauseButton,exitButton,backToMainButton);
-        
-        
+        winnerG.getChildren().addAll(pauseButton, exitButton, backToMainButton);
 
         loadSprites();
 
         Scene scene = new Scene(root, width, height);
         scene.getStylesheets().add("players.css");
-        //adds detection if certin events are triggered
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey); //KeyPressed
-        scene.setOnMouseMoved(this::handleMouseMove);   //mouseMoved
-        scene.setOnMousePressed(this::handleMousePressed); //mousePressed
-
+        // adds detection if certin events are triggered
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey); // KeyPressed
+        scene.setOnMouseMoved(this::handleMouseMove); // mouseMoved
+        scene.setOnMousePressed(this::handleMousePressed); // mousePressed
 
         stage.setScene(scene);
         stage.show();
@@ -420,28 +429,30 @@ public class App extends Application {
 
     private void handleMouseMove(MouseEvent event) { // is triggered when the mousese is moved
 
-        // gets the  Mouse' x & y coordinate
-        if(!gamePaused){
-        this.MouseX = event.getX();
-        this.MouseY = event.getY();
+        // gets the Mouse' x & y coordinate
+        if (!gamePaused) {
+            this.MouseX = event.getX();
+            this.MouseY = event.getY();
         }
-        
+
     }
 
     private void handleMousePressed(MouseEvent event) { // is triggered when the mousese is Pressed
-        if(!gamePaused){
-            
+        if (!gamePaused) {
+
             spiller.forEach((p) -> {
-                if (turn == p.id && !gameEnded) { // If it is a players turn and the game hasn't ended the following is run
-                    if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their shot, 
+                if (turn == p.id && !gameEnded) { // If it is a players turn and the game hasn't ended the following is
+                                                  // run
+                    if (!p.parameterChosen && !p.shootsFired) { // if the player hasn't chosen force and angle for their
+                                                                // shot,
                                                                 // and a shot hasn't been created yet
-                        p.shootingAngle = p.forceAndAngle[1];  // takes the value and saves it in an array
-                        if(p.forceAndAngle[0] > maxForce){
+                        p.shootingAngle = p.forceAndAngle[1]; // takes the value and saves it in an array
+                        if (p.forceAndAngle[0] > maxForce) {
                             p.forceAndAngle[0] = maxForce;
                         }
                         p.shootingForce = p.forceAndAngle[0];
-                        p.parameterChosen = true;  
-                        p.shootButton.setVisible(true);  // shows the button which shoots a bullet
+                        p.parameterChosen = true;
+                        p.shootButton.setVisible(true); // shows the button which shoots a bullet
                     }
 
                 }
@@ -451,24 +462,33 @@ public class App extends Application {
 
     static double[] getForcesFromMouse(double[] PlayerPos, double[] mousePosition) {
         // player x & y coordinate
-        double ForceVectorX = (mousePosition[0] - PlayerPos[0]); // gets the distance between mouse and the player in the first axis
-        double ForceVectorY = (mousePosition[1] - PlayerPos[1]); // gets the distance between mouse and the player in the second axis
+        double ForceVectorX = (mousePosition[0] - PlayerPos[0]); // gets the distance between mouse and the player in
+                                                                 // the first axis
+        double ForceVectorY = (mousePosition[1] - PlayerPos[1]); // gets the distance between mouse and the player in
+                                                                 // the second axis
 
-        double[] vector1 = new double[] { ForceVectorX, ForceVectorY }; // Is the direct vector between the player and the mouse
-        double[] vector2 = new double[] { ForceVectorX, 0 }; // is the vector between the player and the mouse in first axis
+        double[] vector1 = new double[] { ForceVectorX, ForceVectorY }; // Is the direct vector between the player and
+                                                                        // the mouse
+        double[] vector2 = new double[] { ForceVectorX, 0 }; // is the vector between the player and the mouse in first
+                                                             // axis
 
-        // the following lines calculate the angle between the player and the mouse in degrees
+        // the following lines calculate the angle between the player and the mouse in
+        // degrees
         // the calculation is done according to the formuler cos(v) = (a*b)/(|a|*|b|)
-        double crossProduct = vector1[0] * vector2[0] + vector1[1] * vector2[1]; // calculates the crossproduct between the the two vector
+        double crossProduct = vector1[0] * vector2[0] + vector1[1] * vector2[1]; // calculates the crossproduct between
+                                                                                 // the the two vector
 
-        double vector1Length = Math.sqrt(Math.pow(vector1[0], 2) + Math.pow(vector1[1], 2));    // calculates the length of the first vector acording
-                                                                                                // acording to pythagors' therom
+        double vector1Length = Math.sqrt(Math.pow(vector1[0], 2) + Math.pow(vector1[1], 2)); // calculates the length of
+                                                                                             // the first vector
+                                                                                             // acording
+                                                                                             // acording to pythagors'
+                                                                                             // therom
 
-        double cosToAngle = crossProduct / (vector1Length * vector2[0]); 
+        double cosToAngle = crossProduct / (vector1Length * vector2[0]);
 
         double VectorAngle = Math.toDegrees(Math.acos(cosToAngle));
 
-        if (ForceVectorY > 0) {  // if the angle is creater than 180 degreess we minus 360 with angle
+        if (ForceVectorY > 0) { // if the angle is creater than 180 degreess we minus 360 with angle
             VectorAngle = 360 - VectorAngle;
         }
 
@@ -493,10 +513,8 @@ public class App extends Application {
         });
     }
 
+    private void run(GraphicsContext gc, Stage stage) { // the following is run every frame
 
-
-    private void run(GraphicsContext gc, Stage stage) { // the following is run every frame 
- 
         map.drawMap(gc); // the background and the map is draw first
 
         spiller.forEach((playerList) -> { // Runs through all registered playerobjects
@@ -515,22 +533,22 @@ public class App extends Application {
 
             // Check if a Player Won
             if (playerList.PlayerScore.counter == winnerScore) {
-               
+
                 if (!gameEnded) { // this code is only run once
                     pauseButton.setVisible(false);
                     gameEnded = true;
 
-                    //Updates the score to scoreboard file
+                    // Updates the score to scoreboard file
                     Score.toJSONString();
 
-                    //Creates a button which leads back to the main page
+                    // Creates a button which leads back to the main page
                     CustomButton backButton = new CustomButton("Back");
                     backButton.setVisible(true);
                     backButton.setMaxSize(200, 100);
-                    backButton.setLayoutX(640-100);
+                    backButton.setLayoutX(640 - 100);
                     backButton.setLayoutY(140);
                     backButton.setOnAction(new EventHandler<ActionEvent>() {
-        
+
                         @Override
                         public void handle(ActionEvent e) {
                             backToMain();
@@ -540,26 +558,21 @@ public class App extends Application {
                 }
                 gc.setFont(Font.font("Verdana", 30));
                 gc.fillText(playerList.name + " IS THE WINNER!!!!", 640, 100);
-                
-                
-                
+
             }
-            if(!gamePaused){
-                if(playerList instanceof Enemy){
-                    if(playerList.id == turn && !gameEnded && !playerList.shootsFired){
+            if (!gamePaused) {
+                if (playerList instanceof Enemy) {
+                    if (playerList.id == turn && !gameEnded && !playerList.shootsFired) {
                         playerList.shoot();
                         playerList.shootsFired = true;
                     }
                 }
             }
 
-
         });
-        
 
-
-        //Pause Button
-        if(pauseButton.isSelected() && !gameEnded) {
+        // Pause Button
+        if (pauseButton.isSelected() && !gameEnded) {
             gc.setGlobalAlpha(0.7);
             pauseButton.setText("\u25b6");
             gc.setFill(Color.WHITE);
@@ -571,28 +584,21 @@ public class App extends Application {
             gc.fillText("PAUSE", 640, 100);
             backToMainButton.setVisible(true);
             exitButton.setVisible(true);
-            
 
-        } else if(!pauseButton.isSelected()){
+        } else if (!pauseButton.isSelected()) {
             pauseButton.setText("\u23f8");
             gamePaused = false;
             backToMainButton.setVisible(false);
             exitButton.setVisible(false);
         }
-        
 
         if (turn > spiller.size()) { // when every player has had their turn the first player has their turn again
             turn = 1;
         }
-        
-        //keeps track of the number of frames, used for animation
+
+        // keeps track of the number of frames, used for animation
         frameCount++;
     }
-    
-
-    
-
-    
 
     void loadSprites() {
         shotExplosionBilleder();
@@ -629,19 +635,18 @@ public class App extends Application {
         }
     }
 
-    void backToMain(){
+    void backToMain() {
         try {
             URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
             File file = new File(location.getPath());
-            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();  
+            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
             desktop.open(file);
             TimeUnit.SECONDS.sleep(2);
-            Platform.exit();   
+            Platform.exit();
         } catch (Exception e1) {
             e1.printStackTrace();
         }
     }
-
 
     public static void main(String[] args) {
         launch(args);

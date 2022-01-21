@@ -159,9 +159,9 @@ public class Shot {
 
         // Account for their placement, [-180:180]
         if (xDir >= 0 && yDir >= 0) {
-            angle = angle;
+            angle = angle; //Just for clarification
         } else if (xDir >= 0 && yDir <= 0) {
-            angle = angle;
+            angle = angle; //Just for clarification
         } else if (xDir <= 0 && yDir >= 0) {
             angle = 180 + angle;
         } else if (xDir <= 0 && yDir <= 0) {
