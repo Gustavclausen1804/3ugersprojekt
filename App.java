@@ -501,7 +501,7 @@ public class App extends Application {
 
         spiller.forEach((playerList) -> { // Runs through all registered playerobjects
             playerList.move();
-            playerList.draw(gc);
+            playerList.draw(gc);    
 
             if (playerList.playerShot != null) { // Shot is 'null' when non-excisting or removed.
 

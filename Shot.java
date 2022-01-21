@@ -57,6 +57,7 @@ public class Shot {
         }
     }
 
+    //Draws direction components onto the shot. Used for testing/debuging.
     public void DrawDir(GraphicsContext gc) {
         // Vertical
         gc.setFill(Color.RED);
@@ -75,15 +76,15 @@ public class Shot {
         }
     }
 
-    public void applyForce(double angle, double force) {
-        this.xDir += Math.cos(Math.toRadians(angle)) * force;
-        this.yDir += -Math.sin(Math.toRadians(angle)) * force;
+    public void applyForce(double angle, double force) {    //Apply force by angle and force
+        this.xDir += Math.cos(Math.toRadians(angle)) * force;   //Calculate x-component of the force
+        this.yDir += -Math.sin(Math.toRadians(angle)) * force;  //Calculate y-component of the force
     }
 
     public void applyForce(String direction, double force) {
-        switch (direction) {
+        switch (direction) {    //Decides the direction of the force
             case "up":
-                yDir -= force;
+                yDir -= force;  //Applies the force to the direction
                 break;
 
             case "down":
@@ -100,8 +101,7 @@ public class Shot {
 
             case "follow":
                 double angle = getAngle();
-                xDir += Math.cos(Math.toRadians(angle)) * (force);
-                yDir += Math.sin(Math.toRadians(angle)) * (force);
+                applyForce(angle, force);
                 break;
 
             default:
@@ -128,9 +128,9 @@ public class Shot {
                 }
 
                 //Wind resistiance
-                applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));     //Ended up experimtally determented
+                applyForce("follow", -((Math.pow(getSpeed(), 2)/500)/refinementFactor));     //Ended up experimtally determented due to Timeline runtime
                 //Gravity
-                applyForce("down", 9.81/25/refinementFactor);                                //Ended up experimtally determented
+                applyForce("down", 9.81/25/refinementFactor);                                //Ended up experimtally determented due to Timeline runtime
             }
         }
     
@@ -208,6 +208,7 @@ public class Shot {
         }
         return false;
     }
+
 
     void removeShot() {                                 //It is not possible to remove/forget the object inside the object, therefore set an flag for utilization on the player class
         App.spiller.get(shooterId-1).shootsFired=false; //Reset the shootsFires flag
