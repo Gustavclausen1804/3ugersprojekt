@@ -1,3 +1,5 @@
+//Andreas Bruun s214955
+//JSON objekter Gustav Clausen s214940, toJSON(), ReadJsonArray()
 import com.google.gson.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

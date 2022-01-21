@@ -1,3 +1,7 @@
+//Muhammad Muneeb Farooq s214950, player class
+//Frederik Buk Henriksen s183643, Shoot(), Remove shot(), getPosition() 
+
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;

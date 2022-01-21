@@ -1,3 +1,9 @@
+//Andreas Bruun s214955 movement and generation between screens
+//Gustav Clausen s214940, ScoreBoard Screen, PlayerNames.
+//Frederik Buk Henriksen s183643, movement concerning the shot in run()
+// Muhammad Muneeb Farooq s214950 run method, mousePressed, GetForcesFromMouse.
+
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -68,7 +74,7 @@ public class App extends Application {
     public static int xRange;
     public static int maxForce = 50;
 
-    boolean lightBruteForce = false; //TODO: Skal have en boolean
+    boolean lightBruteForce = false;
 
 
     int winnerScore;
@@ -272,6 +278,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
 
     public void scoreBoardScreen(Stage stage) throws Exception {
         GridPane nameGrid = new GridPane();

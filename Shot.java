@@ -1,3 +1,7 @@
+//Frederik Buk Henriksen s183643, The Shot class, 
+//Muhammad Muneeb Farooq s214950 explosionAnimation, explosion, playerCollision, wallCollision
+
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -282,7 +286,7 @@ public class Shot {
                                                                                                         // corner of the
                                                                                                         // ball
                     if (distance <= explosion_R) {
-                        MapGeneration.houses.get(i).remove(j); // removes the shot if it
+                        MapGeneration.houses.get(i).remove(j); // removes the shot if it is with in radius
                     }
                 }
             }

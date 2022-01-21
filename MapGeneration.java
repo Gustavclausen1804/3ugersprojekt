@@ -1,3 +1,6 @@
+// Gustav Clausen s214940 - while loop, GenerateHouse - sammen med Muhammad Farooq s214950, som iøvrigt skrev MapMove, DrawMap
+
+
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,9 +20,11 @@ class MapGeneration {
     Image[][] houseImageArray = new Image[buildColorsAmount][buildAmount];
     Image houseImage;
 
+    
     MapGeneration() {
 
         // Generere tilfældige tal til kortet.
+
         Random ran = new Random();
         int max_random_house = (App.width / boxSize); // Max houses on the map.
 

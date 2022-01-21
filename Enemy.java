@@ -1,7 +1,7 @@
+//Frederik Buk Henriksen s183643, The enemy class
+
 import java.util.ArrayList;
 import java.util.Random;
-
-
  
 public class Enemy extends Player{
       
